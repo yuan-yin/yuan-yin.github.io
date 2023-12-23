@@ -7,13 +7,22 @@ nav: true
 nav_order: 3
 ---
 
+<div class="card mt-3 p-3">
+    <h3 class="card-title font-weight-medium">Introduction to C Programming (Éléments de programmation 2)</h3>
+    <h4 class="card-subtitle mb-2 text-muted">Spring 2021</h6>
+    <ul>
+      <li>Audience: 1st-year / L1 undergraduates</li>
+      <li>Duration: 11 weeks, 3.5 hours/week</li>
+      <li>Format: Practical Work sessions</li>
+    </ul>
+</div>
+
 ## 2020 - Navigating Teaching During the Pandemic
 
 ### *Introduction to C Programming* / *Éléments de programmation 2*
 - **Audience**: 1st-year / *Licence 1* students
 - **Duration**: Spring 2020, 11 weeks, 3.5 hours/week
 - **Format**: Practical Work sessions
-- **Note**: Commenced teaching before the pandemic, continued amidst challenges.
 
 ### *Introduction to Algorithmics* / *Algorithmique I*
 - **Audience**: 2nd-year / *Licence 2* students

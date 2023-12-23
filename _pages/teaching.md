@@ -7,27 +7,32 @@ nav: true
 nav_order: 5
 ---
 
-# 2020 - First year of my teaching, started before and ended during the pandemic. All courses were taught in French.
+## 2020 - Navigating Teaching During the Pandemic
 
-- Introduction to C programming / *Éléments de programmation 2*
-  - For 1st year / *Licence 1* students
-  - Spring 2020, 11 weeks, 3.5 hours/week, Practical Work
-  
-- Introduction to Algorithmics / *Algorithmique I*
-  - For 2nd year / *Licence 2* students
-  - Spring 2020, 11 weeks, 3.5 hours/week, Tutorial
+### *Introduction to C Programming* / *Éléments de programmation 2*
+- **Audience**: 1st-year / *Licence 1* students
+- **Duration**: Spring 2020, 11 weeks, 3.5 hours/week
+- **Format**: Practical Work sessions
+- **Note**: Commenced teaching before the pandemic, continued amidst challenges.
 
-# 2021 - Teaching for postgraduates from the first time.
+### *Introduction to Algorithmics* / *Algorithmique I*
+- **Audience**: 2nd-year / *Licence 2* students
+- **Duration**: Spring 2020, 11 weeks, 3.5 hours/week
+- **Format**: Tutorial-based instruction
 
-- [Research in Data Science and Methodology](https://dac.lip6.fr/master/dsrm/)
-  - For 2nd year students of Master DAC / *Master 2, DAC*
-  - Autumn 2020, 14 weeks, 2 hours/week
-  - Practical Work: Project monitoring, part of the jury of project defence.
+## 2021 - Expanding Horizons to Postgraduates
 
-- Introduction to C programming / *Éléments de programmation 2*
-  - For 1st year / *Licence 1* students
-  - Spring 2021, 11 weeks, 3.5 hours/week, Practical Work
-  
-- Introduction to Algorithmics / *Algorithmique I*
-  - For 2nd year / *Licence 2* students
-  - Spring 2021, 11 weeks, 3.5 hours/week, Tutorial
+### *Research in Data Science and Methodology* ([Course Link](https://dac.lip6.fr/master/dsrm/))
+- **Audience**: 2nd-year students of Master DAC / *Master 2, DAC*
+- **Duration**: Autumn 2020, 14 weeks, 2 hours/week
+- **Involvement**: Supervised project progress and served on project defense juries.
+
+### *Introduction to C Programming* / *Éléments de programmation 2*
+- **Audience**: 1st-year / *Licence 1* students
+- **Duration**: Spring 2021, 11 weeks, 3.5 hours/week
+- **Format**: Practical Work sessions
+
+### *Introduction to Algorithmics* / *Algorithmique I*
+- **Audience**: 2nd-year / *Licence 2* students
+- **Duration**: Spring 2021, 11 weeks, 3.5 hours/week
+- **Format**: Tutorial-based instruction

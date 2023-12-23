@@ -20,12 +20,23 @@
             - DL‑physics hybrid modeling
             - Generalization of DL modeling to seen and unseen systems
             - Continuous dynamics modeling with neural networks
-    - title: Federal teaching diploma
-      institution: Eidgenössische Technische Hochschule, Zurich, Switzerland
-      year: 1900
+    - title: Master of Science Yr 2
+      institution: Sorbonne Université
+      year: 2019
       description:
-        - Description 1.
-        - Description 2.
+        - Master Data Science Paris (DAC) 
+        - Succeeded with Highest Honor (Très Bien), ranked 1st
+    - title: Master of Science Yr 1
+      institution: Université Paris Cité
+      year: 2018
+      description:
+        - Parisian Master of Research in Computer Science (MPRI)
+        - Succeeded with Highest Honor (Très Bien)
+    - title: Bachelor of Sciences
+      institution: Beihang University
+      year: 2016
+      description:
+        - Applied Computer Science
 
 - title: Experience
   type: time_table

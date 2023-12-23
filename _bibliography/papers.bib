@@ -31,6 +31,7 @@
 	title = {Generalizing to New Physical Systems via Context-Informed Dynamics Model},
 	url = {https://proceedings.mlr.press/v162/kirchmeyer22a.html},
 	volume = {162},
+	arxiv = {2202.01889},
 	year = {2022}}
 
 @inproceedings{YinKFRG2022,
@@ -40,7 +41,7 @@
 	booktitle = {The Eleventh International Conference on Learning Representations, {ICLR} 2023, Kigali, Rwanda, May 1-5, 2023},
   publisher = {OpenReview.net},
 	url = {https://openreview.net/forum?id=B73niNjbPs},
-	arxiv = {https://arxiv.org/abs/2209.14855},
+	arxiv = {2209.14855},
 	abstract = {Effective data-driven PDE forecasting methods often rely on fixed spatial and / or temporal discretizations. This raises limitations in real-world applications like weather prediction where flexible extrapolation at arbitrary spatiotemporal locations is required. We address this problem by introducing a new data-driven approach, DINo, that models a PDE's flow with continuous-time dynamics of spatially continuous functions. This is achieved by embedding spatial observations independently of their discretization via Implicit Neural Representations in a small latent space temporally driven by a learned ODE. This separate and flexible treatment of time and space makes DINo the first data-driven model to combine the following advantages. It extrapolates at arbitrary spatial and temporal locations; it can learn from sparse irregular grids or manifolds; at test time, it generalizes to new grids or resolutions. DINo outperforms alternative neural PDE forecasters in a variety of challenging generalization scenarios on representative PDE systems.},
 	year = {2023}}
 
@@ -49,8 +50,8 @@
 	author = {Yuan Yin and Arthur Pajot and de B{\'e}zenac, Emmanuel and Patrick Gallinari},
 	title = {Unsupervised Spatiotemporal Data Inpainting},
 	url = {https://openreview.net/forum?id=rylqmxBKvH},
-	year = {2020},
-	bdsk-url-1 = {https://openreview.net/forum?id=rylqmxBKvH}}
+	month = {Sep},
+	year = {2020}}
 
 @inproceedings{yin2019,
   abbr={CI 2019},
@@ -75,7 +76,7 @@
   series = 	 {Proceedings of Machine Learning Research},
   publisher =    {PMLR},
   pdf = 	 {https://proceedings.mlr.press/v196/migus22a/migus22a.pdf},
-  url = 	 {https://proceedings.mlr.press/v196/migus22a.html},
+  html = 	 {https://proceedings.mlr.press/v196/migus22a.html},
 }
 
 @article{DBLP:journals/corr/abs-2306-05880,
@@ -93,10 +94,7 @@
   journal      = {CoRR},
   volume       = {abs/2306.05880},
   year         = {2023},
-  url          = {https://doi.org/10.48550/arXiv.2306.05880},
-  doi          = {10.48550/ARXIV.2306.05880},
-  eprinttype    = {arXiv},
-  eprint       = {2306.05880},
+  arxiv       = {2306.05880},
 }
 
 @inproceedings{serranoMYMG2023,
@@ -121,9 +119,8 @@
 	isbn = {2364-4168},
 	journal = {International Journal of Data Science and Analytics},
 	title = {Improving trust and confidence in medical skin lesion diagnosis through explainable deep learning},
-	url = {https://doi.org/10.1007/s41060-023-00401-z},
-	year = {2023},
-	bdsk-url-1 = {https://doi.org/10.1007/s41060-023-00401-z}}
+	html = {https://doi.org/10.1007/s41060-023-00401-z},
+	year = {2023}}
 	
 	@inproceedings{
 serrano2023operator,
@@ -131,7 +128,19 @@ serrano2023operator,
 title={Operator Learning with Neural Fields: Tackling {PDE}s on General Geometries},
 author={Louis Serrano and Le Boudec, Lise and Armand Kassaï Koupaï and Wang, Thomas X. and Yuan Yin and Jean-Noël Vittaut and Patrick Gallinari},
 booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
+month = {Dec},
 year={2023},
-url={https://openreview.net/forum?id=4jEjq5nhg1}
+arxiv={2306.07266},
+html={https://openreview.net/forum?id=4jEjq5nhg1}
 }
 
+@phdthesis{DBLP:phd/hal/Yin23,
+  author       = {Yuan Yin},
+  title        = {Physics-Aware Deep Learning and Dynamical Systems : Hybrid Modeling
+                  and Generalization. (Apprentissage profond pour la physique et les
+                  syst{\`{e}}mes dynamiques : mod{\'{e}}lisation hybride et g{\'{e}}n{\'{e}}ralisation)},
+  school       = {Sorbonne University, Paris, France},
+  year         = {2023},
+  month = {Jun},
+  html          = {https://tel.archives-ouvertes.fr/tel-04164673},
+}

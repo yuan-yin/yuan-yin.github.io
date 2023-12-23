@@ -6,7 +6,7 @@ subtitle: Sorbonne Université, ISIR, MLIA. 4 place Jussieu, 75005 PARIS.
 
 profile:
   align: right
-  image: prof_pic.jpg
+  image: https://avatars.githubusercontent.com/u/11399307
   image_circular: false # crops the image to make it circular
   more_info: >
     <p>Pyramide H20</p>

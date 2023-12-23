@@ -1,6 +1,4 @@
 <!-- _includes/talks.html -->
-<div class="grid-sizer"></div>
-<div class="grid-item">
   {% if talk.redirect -%}
   <a href="{{ talk.redirect }}">
     {%- else -%}
@@ -9,9 +7,8 @@
       <div class="card hoverable">
         <div class="card-body">
           <h5 class="card-title">{{ talk.title }}</h5>
-          <h6 class="card-subtitle">{{ talk.date }}</h6>
+          <h6 class="card-subtitle">{{ talk.date | date: "%b %-d, %Y" }}</h6>
           <p class="card-text">{{ talk.description }}</p>
         </div>
       </div>
     </a>
-</div>

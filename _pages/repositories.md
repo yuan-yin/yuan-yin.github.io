@@ -2,7 +2,7 @@
 layout: page
 permalink: /repositories/
 title: Repositories
-description: This is a list of repositories of open source implementation of my publicatinos
+description: This is a list of repositories of open source implementation of my publications
 nav: false
 ---
 

@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: <a href='#'>Sorbonne Université, ISIR, MLIA</a>. 4 place Jussieu, 75005 PARIS.
+subtitle: Sorbonne Université, ISIR, MLIA. 4 place Jussieu, 75005 PARIS.
 
 profile:
   align: right

@@ -1,14 +1,8 @@
 <!-- _includes/talks.html -->
-  {% if talk.redirect -%}
-  <a href="{{ talk.redirect }}">
-    {%- else -%}
-    <a href="{{ talk.url | relative_url }}">
-      {%- endif %}
-      <div class="card hoverable">
-        <div class="card-body">
-          <h5 class="card-title">{{ talk.title }}</h5>
-          <h6 class="card-subtitle">{{ talk.date | date: "%b %-d, %Y" }}</h6>
-          <p class="card-text">{{ talk.description }}</p>
-        </div>
-      </div>
-    </a>
+  <li class="list-group-item d-flex justify-content-between align-items-start">
+    <div class="ms-2 me-auto">
+      <div class="fw-bold">{{ talk.title }}</div>
+      {{ talk.description }}
+    </div>
+    <span class="badge bg-primary rounded-pill">{{ talk.date | date: "%b %-d, %Y" }}</span>
+  </li>

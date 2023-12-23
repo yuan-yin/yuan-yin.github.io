@@ -1,17 +1,17 @@
 ---
 layout: about
-title: about
+title: About
 permalink: /
-subtitle: <a href='#'>Affiliations</a>. Address. Contacts. Moto. Etc.
+subtitle: <a href='#'>Sorbonne Université, ISIR, MLIA</a>. 4 place Jussieu, 75005 PARIS.
 
 profile:
   align: right
   image: prof_pic.jpg
   image_circular: false # crops the image to make it circular
   more_info: >
-    <p>555 your office number</p>
-    <p>123 your address street</p>
-    <p>Your City, State 12345</p>
+    <p>Pyramide H20</p>
+    <p>4 place Jussieu</p>
+    <p>75005 PARIS</p>
 
 news: true  # includes a list of news items
 latest_posts: true  # includes a list of the newest posts
@@ -19,8 +19,10 @@ selected_papers: true # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-Write your biography here. Tell the world about yourself. Link to your favorite [subreddit](http://reddit.com). You can put a picture in, too. The code is already in, just name your picture `prof_pic.jpg` and put it in the `img/` folder.
+Hello, I'm Yuan Yin, currently a Postdoctoral Researcher in the [MLIA Team](https://www.isir.upmc.fr/equipes/mlia/) at [ISIR](https://www.isir.upmc.fr), [Sorbonne University](https://www.sorbonne-universite.fr).
 
-Put your address / P.O. box / other info right below your picture. You can also disable any of these elements by editing `profile` property of the YAML header of your `_pages/about.md`. Edit `_bibliography/papers.bib` and Jekyll will render your [publications page](/al-folio/publications/) automatically.
+My research focuses on machine learning and deep learning for spatiotemporal sequence modeling, prediction, and analysis of complex behaviors, with a special emphasis on physical dynamical systems. 
 
-Link to your social media connections, too. This theme is set up to use [Font Awesome icons](https://fontawesome.com/) and [Academicons](https://jpswalsh.github.io/academicons/), like the ones below. Add your Facebook, Twitter, LinkedIn, Google Scholar, or just disable all of them.
+I have explored the following directions in the past years: improving neural network-based dynamics modeling by leveraging physical models through hybrid modeling; extending the generalization power of dynamics models by learning commonalities from data of different dynamics to extrapolate to unseen systems; and handling free-form data and continuously predicting phenomena in time and space through continuous modeling. 
+
+I successfully defended my [PhD thesis](https://www.theses.fr/2023SORUS161) in June 2023, under the supervision of Professor [Patrick Gallinari](https://pages.isir.upmc.fr/gallinari/) and Associate Professor [Nicolas Baskiotis](https://www.isir.upmc.fr/personnel/baskiotis/). Prior to that, I earned my BSc in Computer Science from [Beihang University](https://ev.buaa.edu.cn) in 2016, followed by an MSc in Computer Science from [Paris Cité University](https://u-paris.fr) and [Sorbonne University](https://www.sorbonne-universite.fr) in 2019.

@@ -23,4 +23,6 @@ I have explored the following directions in the past years:
 - extending the generalization power of dynamics models by learning commonalities from data of different dynamics to extrapolate to unseen systems, and
 - handling free-form data and continuously predicting phenomena in time and space through continuous modeling. 
 
-I successfully defended my [PhD thesis](https://theses.hal.science/tel-04164673) in June 2023 at [Sorbonne University](https://www.sorbonne-universite.fr), under the supervision of Professor [Patrick Gallinari](https://pages.isir.upmc.fr/gallinari/) and Associate Professor [Nicolas Baskiotis](https://www.isir.upmc.fr/personnel/baskiotis/). Prior to that, I earned my BSc in Computer Science from [Beihang University](https://ev.buaa.edu.cn) in 2016, followed by an MSc in Computer Science from [Université Paris Cité](https://u-paris.fr) and [Sorbonne Université](https://www.sorbonne-universite.fr) in 2019.
+I successfully defended my [PhD thesis](https://theses.hal.science/tel-04164673) in June 2023 at [Sorbonne University](https://www.sorbonne-universite.fr), supervised by Prof. [Patrick Gallinari](https://pages.isir.upmc.fr/gallinari/) and Assoc. Prof. [Nicolas Baskiotis](https://www.isir.upmc.fr/personnel/baskiotis/). 
+
+Prior to that, I earned my BSc in Computer Science from [Beihang University](https://ev.buaa.edu.cn) back in 2016, followed by an MSc in Computer Science from [Université Paris Cité](https://u-paris.fr) and [Sorbonne Université](https://www.sorbonne-universite.fr) in 2019.

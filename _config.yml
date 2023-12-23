@@ -297,6 +297,7 @@ scholar:
   group_order: descending
 
   sort_by: year,month
+  order: descending
 
 # Display different badges withs stats for your publications
 enable_publication_badges:

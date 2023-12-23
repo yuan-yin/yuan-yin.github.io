@@ -84,8 +84,6 @@
               {%- endif -%}
               {%- endif -%}
               {% endfor -%}
-              {%- if site.enable_darkmode %}
-
               {% if site.blog_nav_title %}
               <!-- Blog -->
               <li class="nav-item {% if page.url contains 'blog' %}active{% endif %}">
@@ -96,7 +94,7 @@
                 </a>
               </li>
               {%- endif %}
-
+              {%- if site.enable_darkmode %}
               <!-- Toogle theme mode -->
               <li class="toggle-container">
                 <button id="light-toggle" title="Change theme">

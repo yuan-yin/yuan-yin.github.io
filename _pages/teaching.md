@@ -4,7 +4,7 @@ permalink: /teaching/
 title: Teaching
 description: Teaching experience
 nav: true
-nav_order: 5
+nav_order: 3
 ---
 
 ## 2020 - Navigating Teaching During the Pandemic

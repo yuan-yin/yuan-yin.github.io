@@ -257,11 +257,9 @@ blockquote {
   }
 }
 
-.navbar .nav-link.dropdown-toggle {
-  :focus {
-    background-color: var(--global-theme-color);
-    color: var(--global-hover-text-color);
-  }
+.nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  color: var(--global-bg-color);
+  background-color: var(--global-theme-color);
 }
 
 .dropdown-item {

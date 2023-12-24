@@ -241,9 +241,6 @@ blockquote {
 
   .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
     background-color: var(--global-bg-color);
-    border: 2px solid var(--global-theme-color);
-    box-sizing: border-box;
-    padding: 6px;
   }
 }
 

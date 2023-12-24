@@ -153,15 +153,21 @@ blockquote {
   }
 }
 
-// Card
+// List-group
 
 .list-group {
   background-color: var(--global-card-bg-color);
-  
+
   .list-group-item {
     width: auto;
     margin-bottom: 10px;
+    background-color: var(--global-card-bg-color);
+
+    .badge {
+      background-color: var(--global-theme-color);
+    }
   }
+
 }
 
 // Citation

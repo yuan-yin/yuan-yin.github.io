@@ -153,6 +153,17 @@ blockquote {
   }
 }
 
+// Card
+
+.list-group {
+  background-color: var(--global-card-bg-color);
+  
+  .list-group-item {
+    width: auto;
+    margin-bottom: 10px;
+  }
+}
+
 // Citation
 
 .citation,

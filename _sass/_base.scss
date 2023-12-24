@@ -975,12 +975,12 @@ progress::-moz-progress-bar {
 
     &:not(.active) {
       background-color: var(--global-bg-color) !important;
-      color: var(--global-text-color);
+      color: var(--global-text-color) !important;
     }
 
-    :focus {
-      background-color: var(--global-theme-color);
-      color: var(--global-bg-color);
+    &:active {
+      background-color: var(--global-theme-color) !important;
+      color: var(--global-bg-color) !important;
     }
 
     &:hover {

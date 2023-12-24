@@ -2,7 +2,7 @@
   <li class="list-group-item d-flex justify-content-between align-items-start">
     <div class="ms-2 me-auto">
       <div class="font-weight-bold">{{ talk.title }}</div>
-      {{ talk.description }}
+      <i>{{ talk.description }}</i>
     </div>
     <span class="badge" style="min-width: 120px;">{{ talk.date | date: "%b %-d, %Y" }}</span>
   </li>

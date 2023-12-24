@@ -248,11 +248,6 @@ blockquote {
     color: var(--global-text-color);
   }
 
-  a.active {
-    background-color: var(--global-theme-color);
-    color: var(--global-text-color);
-  }
-
   a:hover {
     color: var(--global-hover-color);
   }
@@ -981,6 +976,10 @@ progress::-moz-progress-bar {
     &:not(.active) {
       background-color: var(--global-bg-color) !important;
       color: var(--global-text-color);
+    }
+
+    &.active {
+      background-color: var(--global-theme-color) !important;
     }
 
     &:hover {

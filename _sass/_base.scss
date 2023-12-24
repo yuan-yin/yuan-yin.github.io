@@ -248,6 +248,11 @@ blockquote {
     color: var(--global-text-color);
   }
 
+  a.active {
+    background-color: var(--global-theme-color);
+    color: var(--global-text-color);
+  }
+
   a:hover {
     color: var(--global-hover-color);
   }

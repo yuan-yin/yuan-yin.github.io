@@ -978,8 +978,9 @@ progress::-moz-progress-bar {
       color: var(--global-text-color);
     }
 
-    &.active {
-      background-color: var(--global-theme-color) !important;
+    :focus {
+      background-color: var(--global-theme-color);
+      color: var(--global-bg-color);
     }
 
     &:hover {

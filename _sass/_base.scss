@@ -255,6 +255,11 @@ blockquote {
   .dropdown-divider {
     border-top: 1px solid var(--global-divider-color) !important;
   }
+
+  .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+    background-color: var(--global-bg-color);
+    border: 1px solid var(--global-theme-color);
+  }
 }
 
 .dropdown-item {

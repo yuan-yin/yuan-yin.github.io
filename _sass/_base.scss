@@ -883,7 +883,7 @@ code {
 .news {
   .table-responsive {
     background-image: linear-gradient(to top, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to top, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to bottom, var(--global-pill-bg-color), var(--global-transparent-color)), linear-gradient(to top, var(--global-pill-bg-color), var(--global-transparent-color));
-    background-position: top center, bottom center, top center, bottom center;
+    background-position: top -5px center, bottom -5px center, top center, bottom center;
     background-repeat: no-repeat;
     background-color: var(--global-bg-color);
     background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;

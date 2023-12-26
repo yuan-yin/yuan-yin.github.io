@@ -913,7 +913,7 @@ html.transition *:after {
     }
   }
 
-  article {
+  article{
     .news {
       .table-responsive {
         background-image: linear-gradient(to top, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to top, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to bottom, var(--global-pill-bg-color), var(--global-transparent-color)), linear-gradient(to top, var(--global-pill-bg-color), var(--global-transparent-color));
@@ -922,6 +922,8 @@ html.transition *:after {
         background-color: var(--global-bg-color);
         background-size: 100% 20px, 100% 20px, 100% 10px, 100% 10px;
         background-attachment: local, local, scroll, scroll;
+        transition: all 750ms;
+        transition-delay: 0;
       }
     }
   }

@@ -1124,7 +1124,7 @@ nav[data-toggle="toc"] {
 
 .news {
   .table-responsive {
-    background-image: linear-gradient(to right, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to right, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to right, var(--global-bg-color), rgba(255, 255, 255, 0)), linear-gradient(to left, var(--global-bg-color), rgba(255, 255, 255, 0));
+    background-image: linear-gradient(to top, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to bottom, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to bottom, var(--global-bg-color), rgba(255, 255, 255, 0)), linear-gradient(to top, var(--global-bg-color), rgba(255, 255, 255, 0));
     background-position: top center, bottom center, top center, bottom center;
     background-repeat: no-repeat;
     background-color: var(--global-bg-color);

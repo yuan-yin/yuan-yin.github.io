@@ -1121,3 +1121,14 @@ nav[data-toggle="toc"] {
 #toc-sidebar {
   z-index: 1;
 }
+
+.news {
+  .table-responsive {
+    background-image: linear-gradient(to right, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to right, var(--global-bg-color), var(--global-bg-color)), linear-gradient(to right, var(--global-bg-color), rgba(255, 255, 255, 0)), linear-gradient(to left, var(--global-bg-color), rgba(255, 255, 255, 0));
+    background-position: top center, bottom center, top center, bottom center;
+    background-repeat: no-repeat;
+    background-color: var(--global-bg-color);
+    background-size: 20px 100%, 20px 100%, 10px 100%, 10px 100%;
+    background-attachment: local, local, scroll, scroll;
+  }
+}

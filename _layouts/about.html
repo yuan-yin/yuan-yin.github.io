@@ -43,7 +43,7 @@ layout: default
 
           <!-- News -->
           {% if page.news and site.announcements.enabled -%}
-            <h2><a href="{{ '/news/' | relative_url }}" style="color: var(--global-text-color);">News</a></h2>
+            <h2>News <a href="{{ '/news/' | relative_url }}" style="font-size: 0.8rem; font-style: italic;">&gt;&gt;&gt;More</a></h2> 
             {%- include news.html limit=true %}
           {%- endif %}
 

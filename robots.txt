@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://yuan-yin.github.io/sitemap.xml
+Sitemap: https://yuan-yin.github.io/blog/sitemap.xml

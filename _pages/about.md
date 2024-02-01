@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: Postdoctoral Researcher in the <a href="https://www.isir.upmc.fr/equipes/mlia/">MLIA Team</a> at <a href="https://www.sorbonne-universite.fr">Sorbonne Université</a>, <a href="https://www.isir.upmc.fr">ISIR</a>.
+subtitle: PhD from the <a href="https://www.isir.upmc.fr/equipes/mlia/">MLIA Team</a> at <a href="https://www.sorbonne-universite.fr">Sorbonne Université</a>, <a href="https://www.isir.upmc.fr">ISIR</a>.
 
 profile:
   align: right

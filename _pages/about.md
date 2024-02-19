@@ -8,7 +8,7 @@ profile:
   align: right
   image: yuan-yin.jpeg
   image_circular: false # crops the image to make it circular
-  more_info: "<p>Younger me at the Rotterdam Centraal train station back in 2018. <br />Office address: Pyramide H20, 4 place Jussieu, 75005 PARIS, France.</p>"
+  more_info: "<p>Younger me at the Rotterdam Centraal train station back in 2018.</p>"
 
 news: true  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts

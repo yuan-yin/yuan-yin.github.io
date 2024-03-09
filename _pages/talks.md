@@ -14,7 +14,7 @@ nav_order: 4
   <!-- Generate cards for each project -->
   <ol class="list-group">
   {%- for talk in sorted_talks -%}
-    {% include talks.html %}
+    {% include talks.liquid %}
   {%- endfor %}
   </ol>
 </div>

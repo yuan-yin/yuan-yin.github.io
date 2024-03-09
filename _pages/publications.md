@@ -6,9 +6,10 @@ description: Publications by categories in reversed chronological order. * Equal
 nav: true
 nav_order: 2
 ---
+
 <!-- _pages/publications.md -->
 <div class="publications">
 
-{% bibliography -f {{ site.scholar.bibliography }} %}
+{% bibliography %}
 
 </div>

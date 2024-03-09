@@ -1,0 +1,22 @@
+<li class="list-group-item align-items-start">
+  <div class="d-flex justify-content-between">
+    <h5 class="mb-1" style="font-weight: bolder;">{{ talk.title }}</h5>
+    <h6 style="min-width: 120px; text-align: right;">{{ talk.date | date: "%b %-d, %Y" }}</h6>
+  </div>
+  <p class="mb-1 font-italic">{{ talk.description }}</p>
+  <div class="links">
+  {%- if talk.site %}
+    <a href="{{ talk.site }}" class="btn btn-sm z-depth-0" role="button">Site</a>
+  {%- endif %}
+  {%- if talk.slides %}
+    {% if talk.slides contains '://' -%}
+    <a href="{{ talk.slides }}" class="btn btn-sm z-depth-0" role="button">Slides</a>
+    {%- else -%}
+    <a href="{{ talk.slides | prepend: '/assets/pdf/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">Slides</a>
+    {%- endif %}
+  {%- endif %}
+  {%- if talk.video %}
+    <a href="{{ talk.video }}" class="btn btn-sm z-depth-0" role="button">Video</a>
+  {%- endif %}
+  </div>
+</li>

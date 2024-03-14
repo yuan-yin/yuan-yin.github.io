@@ -6,7 +6,7 @@ References
 @inproceedings{Yin2021LEADS,
   abbr={NeurIPS},
   selected={true},
-	author = {Yuan Yin and Ibrahim Ayed and Emmanuel {de B{\'{e}}zenac} and Nicolas Baskiotis and Patrick Gallinari},
+	author = {Yin, Yuan and Ayed, Ibrahim and de Bézenac, Emmanuel and Baskiotis, Nicolas and Gallinari, Patrick},
 	booktitle = {Advances in Neural Information Processing Systems 34: Annual Conference on Neural Information Processing Systems 2021, NeurIPS 2021, December 6-14, 2021, virtual},
 	editor = {Marc'Aurelio Ranzato and Alina Beygelzimer and Yann N. Dauphin and Percy Liang and Jennifer Wortman Vaughan},
 	pages = {7561--7573},
@@ -16,13 +16,14 @@ References
 	code = {https://github.com/yuan-yin/LEADS},
 	html = {https://proceedings.neurips.cc/paper/2021/hash/3df1d4b96d8976ff5986393e8767f5b2-Abstract.html},
 	month = {Dec},
-	year = {2021}}
+	year = {2021}
+}
 
 
 @inproceedings{Yin2021Aphynity,
   abbr={ICLR},
-    selected={true},
-	author = {Yuan Yin* and Vincent {Le Guen}* and J{\'{e}}r{\'{e}}mie Don{\`{a}}* and Emmanuel {de B{\'{e}}zenac}* and Ibrahim Ayed* and Nicolas Thome and Patrick Gallinari},
+  selected={true},
+	author = {Yin*, Yuan and Le Guen*, Vincent and Donà*, Jérémie and de Bézenac*, Emmanuel and Ayed*, Ibrahim and Thome, Nicolas and Gallinari, Patrick},
 	booktitle = {9th International Conference on Learning Representations, {ICLR} 2021, Virtual Event, Austria, May 3-7, 2021},
 	publisher = {OpenReview.net},
 	abstract = {Forecasting complex dynamical phenomena in settings where only partial knowledge of their dynamics is available is a prevalent problem across various scientific fields. While purely data-driven approaches are arguably insufficient in this context, standard physical modeling based approaches tend to be over-simplistic, inducing non-negligible errors. In this work, we introduce the APHYNITY framework, a principled approach for augmenting incomplete physical dynamics described by differential equations with deep data-driven models. It consists in decomposing the dynamics into two components: a physical component accounting for the dynamics for which we have some prior knowledge, and a data-driven component accounting for errors of the physical model. The learning problem is carefully formulated such that the physical model explains as much of the data as possible, while the data-driven component only describes information that cannot be captured by the physical model, no more, no less. This not only provides the existence and uniqueness for this decomposition, but also ensures interpretability and benefits generalization. Experiments made on three important use cases, each representative of a different family of phenomena, i.e. reaction-diffusion equations, wave equations and the non-linear damped pendulum, show that APHYNITY can efficiently leverage approximate physical models to accurately forecast the evolution of the system and correctly identify relevant physical parameters.},
@@ -31,7 +32,8 @@ References
 	code = {https://github.com/yuan-yin/APHYNITY},
 	arxiv = {2010.04456},
 	month = {May},
-	year = {2021}}
+	year = {2021}
+}
 
 @inproceedings{KirchmeyerYDBRG2022,
   abbr={ICML},
@@ -49,7 +51,8 @@ References
 	volume = {162},
 	arxiv = {2202.01889},
 	month = {Jul},
-	year = {2022}}
+	year = {2022}
+}
 
 @inproceedings{YinKFRG2022,
   abbr={ICLR},
@@ -63,7 +66,8 @@ References
 	arxiv = {2209.14855},
 	month = {May},
 	abstract = {Effective data-driven PDE forecasting methods often rely on fixed spatial and / or temporal discretizations. This raises limitations in real-world applications like weather prediction where flexible extrapolation at arbitrary spatiotemporal locations is required. We address this problem by introducing a new data-driven approach, DINo, that models a PDE's flow with continuous-time dynamics of spatially continuous functions. This is achieved by embedding spatial observations independently of their discretization via Implicit Neural Representations in a small latent space temporally driven by a learned ODE. This separate and flexible treatment of time and space makes DINo the first data-driven model to combine the following advantages. It extrapolates at arbitrary spatial and temporal locations; it can learn from sparse irregular grids or manifolds; at test time, it generalizes to new grids or resolutions. DINo outperforms alternative neural PDE forecasters in a variety of challenging generalization scenarios on representative PDE systems.},
-	year = {2023}}
+	year = {2023}
+}
 
 @misc{yin2020unsupervised,
 	author = {Yuan Yin and Arthur Pajot and Emmanuel {de B{\'e}zenac} and Patrick Gallinari},
@@ -71,7 +75,8 @@ References
 	html = {https://openreview.net/forum?id=rylqmxBKvH},
 	abstract = {We tackle the problem of inpainting occluded area in spatiotemporal sequences, such as cloud occluded satellite observations, in an unsupervised manner. We place ourselves in the setting where there is neither access to paired nor unpaired training data. We consider several cases in which the underlying information of the observed sequence in certain areas is lost through an observation operator. In this case, the only available information is provided by the observation of the sequence, the nature of the measurement process and its associated statistics. We propose an unsupervised-learning framework to retrieve the most probable sequence using a generative adversarial network. We demonstrate the capacity of our model to exhibit strong reconstruction capacity on several video datasets such as satellite sequences or natural videos.},
 	month = {Sep},
-	year = {2020}}
+	year = {2020}
+}
 
 @inproceedings{yin2019,
   abbr={CI},
@@ -118,8 +123,8 @@ abbr={ICLR WS},
   title        = {Time Series Continuous Modeling for Imputation and Forecasting with
                   Implicit Neural Representations},
   abstract = {We introduce a novel modeling approach for time series imputation and forecasting, tailored to address the challenges often encountered in real-world data, such as irregular samples, missing data, or unaligned measurements from multiple sensors. Our method relies on a continuous-time-dependent model of the series' evolution dynamics. It leverages adaptations of conditional, implicit neural representations for sequential data. A modulation mechanism, driven by a meta-learning algorithm, allows adaptation to unseen samples and extrapolation beyond observed time-windows for long-term predictions. The model provides a highly flexible and unified framework for imputation and forecasting tasks across a wide range of challenging scenarios. It achieves state-of-the-art performance on classical benchmarks and outperforms alternative time-continuous models.},
-booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
-year={2024},
+  booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
+  year={2024},
 }
 
 @inproceedings{serranoMYMG2023,
@@ -146,20 +151,21 @@ year={2024},
 	title = {Improving Trust and Confidence in Medical Skin Lesion Diagnosis Through Explainable Deep Learning},
 	html = {https://doi.org/10.1007/s41060-023-00401-z},
 	month = {Jun},
-	year = {2023}}
+	year = {2023}
+}
 	
 @inproceedings{
 serrano2023operator,
   abbr={NeurIPS},
-selected={true},
-title={Operator Learning with Neural Fields: Tackling {PDE}s on General Geometries},
-author={Louis Serrano and Le Boudec, Lise and Armand Kassaï Koupaï and Wang, Thomas X. and Yuan Yin and Jean-Noël Vittaut and Patrick Gallinari},
-booktitle={Advances in Neural Information Processing Systems 36: Annual Conference on Neural Information Processing Systems 2023, NeurIPS 2023, December 10-16, 2023, New Orleans, Louisiana, USA},
-month = {Dec},
-year={2023},
-arxiv={2306.07266},
-html={https://openreview.net/forum?id=4jEjq5nhg1},
-abstract = {Machine learning approaches for solving partial differential equations require learning mappings between function spaces. While convolutional or graph neural networks are constrained to discretized functions, neural operators present a promising milestone toward mapping functions directly. Despite impressive results they still face challenges with respect to the domain geometry and typically rely on some form of discretization. In order to alleviate such limitations, we present CORAL, a new method that leverages coordinate-based networks for solving PDEs on general geometries. CORAL is designed to remove constraints on the input mesh, making it applicable to any spatial sampling and geometry. Its ability extends to diverse problem domains, including PDE solving, spatio-temporal forecasting, and inverse problems like geometric design. CORAL demonstrates robust performance across multiple resolutions and performs well in both convex and non-convex domains, surpassing or performing on par with state-of-the-art models.}
+  selected={true},
+  title={Operator Learning with Neural Fields: Tackling {PDE}s on General Geometries},
+  author={Louis Serrano and Le Boudec, Lise and Armand Kassaï Koupaï and Wang, Thomas X. and Yuan Yin and Jean-Noël Vittaut and Patrick Gallinari},
+  booktitle={Advances in Neural Information Processing Systems 36: Annual Conference on Neural Information Processing Systems 2023, NeurIPS 2023, December 10-16, 2023, New Orleans, Louisiana, USA},
+  month = {Dec},
+  year={2023},
+  arxiv={2306.07266},
+  html={https://openreview.net/forum?id=4jEjq5nhg1},
+  abstract = {Machine learning approaches for solving partial differential equations require learning mappings between function spaces. While convolutional or graph neural networks are constrained to discretized functions, neural operators present a promising milestone toward mapping functions directly. Despite impressive results they still face challenges with respect to the domain geometry and typically rely on some form of discretization. In order to alleviate such limitations, we present CORAL, a new method that leverages coordinate-based networks for solving PDEs on general geometries. CORAL is designed to remove constraints on the input mesh, making it applicable to any spatial sampling and geometry. Its ability extends to diverse problem domains, including PDE solving, spatio-temporal forecasting, and inverse problems like geometric design. CORAL demonstrates robust performance across multiple resolutions and performs well in both convex and non-convex domains, surpassing or performing on par with state-of-the-art models.}
 }
 
 @phdthesis{DBLP:phd/hal/Yin23,
@@ -177,7 +183,7 @@ abbr = {PhD},
 }
 
 @article{DBLP:journals/ivc/HuangZYWW17,
-abbr = {IVC},
+  abbr = {IVC},
   author       = {Di Huang and
                   Renke Zhang and
                   Yuan Yin and
@@ -195,21 +201,21 @@ abbr = {IVC},
 }
 
 @inproceedings{boudec2024learning,
-abbr = {ICLR WS},
-title={Learning Iterative Algorithms to Solve {PDE}s},
-author={Lise {Le Boudec} and Emmanuel {de Bézenac} and Louis Serrano and Yuan Yin and Patrick Gallinari},
-booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
-year={2024},
-html={https://openreview.net/forum?id=hFf8MsGRLW},
-abstract={In this work, we propose a new method to solve partial differential equations (PDEs). Taking inspiration from traditional numerical methods, we view approximating solutions to PDEs as an iterative algorithm, and propose to learn the it- erations from data. With respect to directly predicting the solution with a neural network, our approach has access to the PDE, having the potential to enhance the model’s ability to generalize across a variety of scenarios, such as differing PDE parameters, initial or boundary conditions. We instantiate this framework and empirically validate its effectiveness across several PDE-solving benchmarks, evaluating efficiency and generalization capabilities, and demonstrating its potential for broader applicability.}
+  abbr = {ICLR WS},
+  title={Learning Iterative Algorithms to Solve {PDE}s},
+  author={Lise {Le Boudec} and Emmanuel {de Bézenac} and Louis Serrano and Yuan Yin and Patrick Gallinari},
+  booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
+  year={2024},
+  html={https://openreview.net/forum?id=hFf8MsGRLW},
+  abstract={In this work, we propose a new method to solve partial differential equations (PDEs). Taking inspiration from traditional numerical methods, we view approximating solutions to PDEs as an iterative algorithm, and propose to learn the it- erations from data. With respect to directly predicting the solution with a neural network, our approach has access to the PDE, having the potential to enhance the model’s ability to generalize across a variety of scenarios, such as differing PDE parameters, initial or boundary conditions. We instantiate this framework and empirically validate its effectiveness across several PDE-solving benchmarks, evaluating efficiency and generalization capabilities, and demonstrating its potential for broader applicability.}
 }
 
 @inproceedings{koupai2024learn,
-abbr = {ICLR WS},
-title={Learn to Adapt Parametric Solvers Under Incomplete Physics},
-author={Armand Kassa{\"\i} Koupa{\"\i} and Yuan Yin and Patrick Gallinari},
-booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
-year={2024},
-html={https://openreview.net/forum?id=jIpkrPTovs},
-abstract={Modelling physical systems when only partial knowledge of the physics is available is a recurrent problem in science. Within this context, we consider hybrid models that complement PDE solvers, providing incomplete physics information, with NN components for modelling dynamical systems. A critical challenge with this approach lies in generalising to unseen environments that share similar dynamics but have different physical contexts. To tackle this, we introduce a meta-learning strategy that captures context-specific variations inherent in each system, enhancing the model's adaptability to generalise to new PDE parameters and initial conditions. We emphasise the advantages of adaptation strategies compared to a pure empirical risk minimisation approach, the superiority of the solver-neural network combination over soft physics constraints, and the enhanced generalisation ability compared to alternative approaches.}
+  abbr = {ICLR WS},
+  title={Learn to Adapt Parametric Solvers Under Incomplete Physics},
+  author={Armand Kassa{\"\i} Koupa{\"\i} and Yuan Yin and Patrick Gallinari},
+  booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
+  year={2024},
+  html={https://openreview.net/forum?id=jIpkrPTovs},
+  abstract={Modelling physical systems when only partial knowledge of the physics is available is a recurrent problem in science. Within this context, we consider hybrid models that complement PDE solvers, providing incomplete physics information, with NN components for modelling dynamical systems. A critical challenge with this approach lies in generalising to unseen environments that share similar dynamics but have different physical contexts. To tackle this, we introduce a meta-learning strategy that captures context-specific variations inherent in each system, enhancing the model's adaptability to generalise to new PDE parameters and initial conditions. We emphasise the advantages of adaptation strategies compared to a pure empirical risk minimisation approach, the superiority of the solver-neural network combination over soft physics constraints, and the enhanced generalisation ability compared to alternative approaches.}
 }

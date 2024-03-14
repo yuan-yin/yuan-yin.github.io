@@ -4,7 +4,7 @@ permalink: /teaching/
 title: Teaching
 description: Teaching experience
 nav: true
-nav_order: 3
+nav_order: 4
 ---
 
 <div class="card mt-3 p-3">

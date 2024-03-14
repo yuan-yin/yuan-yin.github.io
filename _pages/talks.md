@@ -4,7 +4,7 @@ title: Talks
 permalink: /talks/
 description: Talks and Presentations
 nav: true
-nav_order: 4
+nav_order: 3
 ---
 
 <!-- pages/projects.md -->

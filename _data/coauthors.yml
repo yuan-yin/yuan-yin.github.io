@@ -1,15 +1,15 @@
-"Gallinari":
+"gallinari":
   - firstname: ["Patrick"]
     url: https://pages.isir.upmc.fr/gallinari/
 
-"Baskiotis":
+"baskiotis":
   - firstname: ["Nicolas"]
     url: https://www.isir.upmc.fr/personnel/baskiotis/
 
-"de Bézenac":
+"de bézenac":
   - firstname: ["Emmanuel"]
     url: https://math.ethz.ch/sam/the-institute/people.html?u=edebezenac
 
-"Franceschi":
+"franceschi":
   - firstname: ["Jean-Yves"]
     url: https://jyfranceschi.fr

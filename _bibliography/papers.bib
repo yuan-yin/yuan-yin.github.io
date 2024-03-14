@@ -173,6 +173,7 @@ abbr = {PhD},
   year         = {2023},
   month = {Jun},
   html          = {https://tel.archives-ouvertes.fr/tel-04164673},
+  abstract={Deep learning has made significant progress in various fields and has emerged as a promising tool for modeling physical dynamical phenomena that exhibit highly nonlinear relationships. However, existing approaches are limited in their ability to make physically sound predictions due to the lack of prior knowledge and to handle real-world scenarios where data comes from multiple dynamics or is irregularly distributed in time and space. This thesis aims to overcome these limitations in the following directions: improving neural network-based dynamics modeling by leveraging physical models through hybrid modeling; extending the generalization power of dynamics models by learning commonalities from data of different dynamics to extrapolate to unseen systems; and handling free-form data and continuously predicting phenomena in time and space through continuous modeling. We highlight the versatility of deep learning techniques, and the proposed directions show promise for improving their accuracy and generalization power, paving the way for future research in new applications.}
 }
 
 @article{DBLP:journals/ivc/HuangZYWW17,
@@ -199,7 +200,8 @@ title={Learning Iterative Algorithms to Solve {PDE}s},
 author={Lise {Le Boudec} and Emmanuel {de Bézenac} and Louis Serrano and Yuan Yin and Patrick Gallinari},
 booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
 year={2024},
-html={https://openreview.net/forum?id=hFf8MsGRLW}
+html={https://openreview.net/forum?id=hFf8MsGRLW},
+abstract={In this work, we propose a new method to solve partial differential equations (PDEs). Taking inspiration from traditional numerical methods, we view approximating solutions to PDEs as an iterative algorithm, and propose to learn the it- erations from data. With respect to directly predicting the solution with a neural network, our approach has access to the PDE, having the potential to enhance the model’s ability to generalize across a variety of scenarios, such as differing PDE parameters, initial or boundary conditions. We instantiate this framework and empirically validate its effectiveness across several PDE-solving benchmarks, evaluating efficiency and generalization capabilities, and demonstrating its potential for broader applicability.}
 }
 
 @inproceedings{koupai2024learn,
@@ -208,5 +210,6 @@ title={Learn to Adapt Parametric Solvers Under Incomplete Physics},
 author={Armand Kassa{\"\i} Koupa{\"\i} and Yuan Yin and Patrick Gallinari},
 booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
 year={2024},
-html={https://openreview.net/forum?id=jIpkrPTovs}
+html={https://openreview.net/forum?id=jIpkrPTovs},
+abstract={Modelling physical systems when only partial knowledge of the physics is available is a recurrent problem in science. Within this context, we consider hybrid models that complement PDE solvers, providing incomplete physics information, with NN components for modelling dynamical systems. A critical challenge with this approach lies in generalising to unseen environments that share similar dynamics but have different physical contexts. To tackle this, we introduce a meta-learning strategy that captures context-specific variations inherent in each system, enhancing the model's adaptability to generalise to new PDE parameters and initial conditions. We emphasise the advantages of adaptation strategies compared to a pure empirical risk minimisation approach, the superiority of the solver-neural network combination over soft physics constraints, and the enhanced generalisation ability compared to alternative approaches.}
 }

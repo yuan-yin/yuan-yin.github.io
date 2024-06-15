@@ -1,0 +1,31 @@
+"gallinari":
+  - firstname: ["Patrick"]
+    url: https://pages.isir.upmc.fr/gallinari/
+
+"baskiotis":
+  - firstname: ["Nicolas"]
+    url: https://www.isir.upmc.fr/personnel/baskiotis/
+
+"de bezenac":
+  - firstname: ["Emmanuel"]
+    url: https://math.ethz.ch/sam/the-institute/people.html?u=edebezenac
+
+"franceschi":
+  - firstname: ["Jean-Yves"]
+    url: https://jyfranceschi.fr
+
+"kirchmeyer":
+  - firstname: ["Matthieu"]
+    url: https://mkirchmeyer.github.io
+
+"vittaut":
+  - firstname: ["Jean-Noël"]
+    url: https://webia.lip6.fr/~vittaut/
+
+"thome":
+  - firstname: ["Nicolas"]
+    url: https://thome.isir.upmc.fr
+
+"guigue":
+  - firstname: ["Vincent"]
+    url: https://vguigue.github.io

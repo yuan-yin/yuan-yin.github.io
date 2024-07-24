@@ -2,13 +2,13 @@
 layout: about
 title: About
 permalink: /
-subtitle: Postdoctoral AI Researcher at <a href="https://www.valeo.com/en/valeo-ai/">Valeo.ai</a>. PhD from the <a href="https://www.isir.upmc.fr/equipes/mlia/">MLIA Team</a> at <a href="https://www.sorbonne-universite.fr">Sorbonne Université</a>, <a href="https://www.isir.upmc.fr">ISIR</a>.
+subtitle: Postdoctoral AI Researcher at <a href="https://valeoai.github.io/blog/">Valeo.ai</a>. PhD from the <a href="https://www.isir.upmc.fr/equipes/mlia/">MLIA Team</a> at <a href="https://www.sorbonne-universite.fr">Sorbonne Université</a>, <a href="https://www.isir.upmc.fr">ISIR</a>.
 
 profile:
   align: right
   image: yuan-yin.jpeg
   image_circular: false # crops the image to make it circular
-  more_info: "<p>That's me at Rotterdam Centraal in 2018.</p>"
+  more_info: "<p>That's me at Københavns Rådhus in 2022.</p>"
 
 news: true  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts

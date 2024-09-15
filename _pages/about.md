@@ -2,7 +2,7 @@
 layout: about
 title: About
 permalink: /
-subtitle: Postdoctoral AI Researcher at <a href="https://valeoai.github.io/blog/">Valeo.ai</a>. PhD from the <a href="https://www.isir.upmc.fr/equipes/mlia/">MLIA Team</a> at <a href="https://www.sorbonne-universite.fr">Sorbonne Université</a>, <a href="https://www.isir.upmc.fr">ISIR</a>.
+subtitle: Postdoctoral AI Researcher at <a href="https://valeoai.github.io/">Valeo.ai</a>. PhD from the <a href="https://www.isir.upmc.fr/equipes/mlia/">MLIA Team</a> at <a href="https://www.sorbonne-universite.fr">Sorbonne Université</a>, <a href="https://www.isir.upmc.fr">ISIR</a>.
 
 profile:
   align: right

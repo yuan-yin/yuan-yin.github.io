@@ -19,9 +19,9 @@ social: true  # includes social icons at the bottom of the page
 My research focuses on machine learning and deep learning for (spatio)temporal sequence modeling, prediction, and analysis of complex behaviors. 
 
 I have explored the following directions in the past few years, with a special emphasis on physical dynamical systems: 
-- improving neural network-based dynamics modeling by **leveraging physical models**,
-- extending the **adaptation and out-of-distribution generalization** power of neural networks for dynamics modeling, and
-- handling free-form data and **predicting phenomena continuously** in time and space. 
+- **physics dynamics modeling with neural networks**,
+- **adaptation and out-of-distribution generalization** of neural networks, and
+- handling free-form data and **predicting phenomena continuously in time and space**. 
 
 I successfully defended my [PhD thesis](https://www.theses.fr/2023SORUS161) in June 2023 at [Sorbonne Université](https://www.sorbonne-universite.fr "prev. UPMC (Paris 6)"), supervised by Prof. [Patrick Gallinari](https://pages.isir.upmc.fr/gallinari/) and Assoc. Prof. [Nicolas Baskiotis](https://www.isir.upmc.fr/personnel/baskiotis/). 
 

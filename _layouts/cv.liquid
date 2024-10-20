@@ -6,16 +6,17 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">
       {{ page.title }}
-      {% if page.cv_pdf %}
-        <a
-          href="{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="float-right"
-          ><i class="fa-solid fa-file-pdf"></i
-        ></a>
-      {% endif %}
     </h1>
+    <h2 class="float-right">
+        <a
+          href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+          ><i class="fa-solid fa-file-pdf"></i>EN
+        </a> | 
+        <a
+          href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+          ><i class="fa-solid fa-file-pdf"></i>FR
+        </a>
+    </h2>
     {% if page.description %}
       <p class="post-description">{{ page.description }}</p>
     {% endif %}
@@ -24,161 +25,242 @@ layout: default
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
 
   <script type="module">
-    // If absolute URL from the remote server is provided, configure the CORS
-    // header on that server.
-    var url = "{{ page.cv_pdf | prepend: 'assets/pdf/' | relative_url }}";
+    // Shortcut to access PDF.js exports
+    const { pdfjsLib } = globalThis;
 
-    // Loaded via <script> tag, create shortcut to access PDF.js exports.
-    var { pdfjsLib } = globalThis;
-
-    // The workerSrc property shall be specified.
+    // Set worker source for PDF.js
     pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs';
 
     const postElement = document.querySelector('.post');
-    const rect = postElement.getBoundingClientRect();
-    const width = rect.width;
-
-    var pdfDoc = null,
+    const canvas = document.getElementById('the-canvas');
+    const ctx = canvas.getContext('2d');
+    let pdfDoc = null,
         pageNum = 1,
         pageRendering = false,
-        pageNumPending = null,
-        desiredWidth = width,
-        canvas = document.getElementById('the-canvas'),
-        ctx = canvas.getContext('2d');
+        pageNumPending = null;
+
+    // Store the URLs for the PDFs in different languages
+    const urls = {
+        en: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
+        fr: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+    };
 
     /**
-     * Get page info from document, resize canvas accordingly, and render page.
-     * @param num Page number.
+     * Loads the selected PDF document and updates the active button style.
+     * @param {string} lang Language code ('en' or 'fr').
+     */
+    function loadPdf(lang) {
+        const url = urls[lang];
+        pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+            pdfDoc = pdfDoc_;
+            document.getElementById('page_count').textContent = pdfDoc.numPages;
+            pageNum = 1; // Reset to the first page
+            renderPage(pageNum);
+            updateActiveLangButton(lang);
+        });
+    }
+
+    /**
+     * Updates the active state of the language buttons.
+     * @param {string} activeLang The language code of the active button.
+     */
+    function updateActiveLangButton(activeLang) {
+        document.querySelectorAll('.lang-button').forEach(button => {
+            button.classList.toggle('active', button.id === `lang-${activeLang}`);
+        });
+    }
+
+    /**
+     * Renders the specified page.
+     * @param {number} num Page number.
      */
     function renderPage(num) {
-      pageRendering = true;
-      // Using promise to fetch the page
-      pdfDoc.getPage(num).then(function(page) {
-        var viewport = page.getViewport({ scale: 1, });
-        // Support HiDPI-screens.
-        var outputScale = window.devicePixelRatio * 2.0 || 1;
+        pageRendering = true;
+        pdfDoc.getPage(num).then(page => {
+            const viewport = page.getViewport({ scale: getScaleFactor(page) });
+            adjustCanvasSize(viewport);
 
-        var origViewport = page.getViewport({ scale: 1, });
-        var scale = desiredWidth / origViewport.width;
-        var viewport = page.getViewport({ scale: scale, });
+            const renderContext = {
+                canvasContext: ctx,
+                transform: getTransform(viewport),
+                viewport
+            };
 
-        var canvas = document.getElementById('the-canvas');
-        var context = canvas.getContext('2d');
+            page.render(renderContext).promise.then(() => {
+                pageRendering = false;
+                if (pageNumPending !== null) {
+                    renderPage(pageNumPending);
+                    pageNumPending = null;
+                }
+            });
 
+            addAnnotationsToPage(page, viewport);
+            updatePageCounter(num);
+        });
+    }
+
+    /**
+     * Returns the appropriate scale factor based on the page and container width.
+     * @param {object} page PDF page object.
+     * @returns {number} Scale factor.
+     */
+    function getScaleFactor(page) {
+        const desiredWidth = postElement.getBoundingClientRect().width;
+        const origViewport = page.getViewport({ scale: 1 });
+        return desiredWidth / origViewport.width;
+    }
+
+    /**
+     * Adjusts the canvas size to match the viewport.
+     * @param {object} viewport Viewport object.
+     */
+    function adjustCanvasSize(viewport) {
+        const outputScale = window.devicePixelRatio * 2.0 || 1;
         canvas.width = Math.floor(viewport.width * outputScale);
         canvas.height = Math.floor(viewport.height * outputScale);
-        canvas.style.width = Math.floor(viewport.width) + "px";
-        canvas.style.height =  Math.floor(viewport.height) + "px";
-
-        var transform = outputScale !== 1
-          ? [outputScale, 0, 0, outputScale, 0, 0]
-          : null;
-
-        // Render PDF page into canvas context
-        var renderContext = {
-          canvasContext: ctx,
-          transform: transform,
-          viewport: viewport
-        };
-        var renderTask = page.render(renderContext);
-
-        // Wait for rendering to finish
-        renderTask.promise.then(function() {
-          pageRendering = false;
-          if (pageNumPending !== null) {
-            // New page rendering is pending
-            renderPage(pageNumPending);
-            pageNumPending = null;
-          }
-        });
-
-        page.getAnnotations().then(annotations => {
-          // Clear previous links
-          document.querySelectorAll('.pdf-link').forEach(link => link.remove());
-
-          annotations.forEach(annotation => {
-            if (annotation.subtype === 'Link' && annotation.url) {
-              const linkElement = document.createElement('a');
-              linkElement.href = annotation.url;
-              linkElement.target = '_blank';
-              linkElement.className = 'pdf-link';
-
-              const [x1, y1, x2, y2] = annotation.rect;
-              const left = x1 * viewport.transform[0] + viewport.transform[4];
-              const top = canvas.height - y2 * viewport.transform[3] - viewport.transform[5];
-              const width = (x2 - x1) * viewport.transform[0];
-              const height = (y2 - y1) * viewport.transform[3];
-
-              linkElement.style.left = `${left}px`;
-              linkElement.style.top = `${top}px`;
-              linkElement.style.width = `${width}px`;
-              linkElement.style.height = `${height}px`;
-
-              postElement.appendChild(linkElement);
-            }
-          });
-        });
-      });
-
-      // Update page counters
-      document.getElementById('page_num').textContent = num;
+        canvas.style.width = `${Math.floor(viewport.width)}px`;
+        canvas.style.height = `${Math.floor(viewport.height)}px`;
     }
 
     /**
-     * If another page rendering in progress, waits until the rendering is
-     * finised. Otherwise, executes rendering immediately.
+     * Gets the transformation array for HiDPI screens.
+     * @param {object} viewport Viewport object.
+     * @returns {Array|null} Transformation array or null.
+     */
+    function getTransform(viewport) {
+        const outputScale = window.devicePixelRatio * 2.0 || 1;
+        return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+    }
+
+    /**
+     * Adds clickable annotations to the page, such as links.
+     * @param {object} page PDF page object.
+     * @param {object} viewport Viewport object.
+     */
+    function addAnnotationsToPage(page, viewport) {
+        page.getAnnotations().then(annotations => {
+            document.querySelectorAll('.pdf-link').forEach(link => link.remove());
+
+            annotations.forEach(annotation => {
+                if (annotation.subtype === 'Link' && annotation.url) {
+                    createLinkElement(annotation, viewport);
+                }
+            });
+        });
+    }
+
+    /**
+     * Creates a link element for a given annotation.
+     * @param {object} annotation Annotation object.
+     * @param {object} viewport Viewport object.
+     */
+    function createLinkElement(annotation, viewport) {
+        const [x1, y1, x2, y2] = annotation.rect;
+        const linkElement = document.createElement('a');
+        linkElement.href = annotation.url;
+        linkElement.target = '_blank';
+        linkElement.className = 'pdf-link';
+
+        const left = x1 * viewport.transform[0] + viewport.transform[4];
+        const top = canvas.height - y2 * viewport.transform[3] - viewport.transform[5];
+        const width = (x2 - x1) * viewport.transform[0];
+        const height = (y2 - y1) * viewport.transform[3];
+
+        Object.assign(linkElement.style, {
+            left: `${left}px`,
+            top: `${top}px`,
+            width: `${width}px`,
+            height: `${height}px`,
+            position: 'absolute',
+        });
+
+        postElement.appendChild(linkElement);
+    }
+
+    /**
+     * Updates the displayed page number.
+     * @param {number} num Page number.
+     */
+    function updatePageCounter(num) {
+        document.getElementById('page_num').textContent = num;
+    }
+
+    /**
+     * Queues a page for rendering.
+     * @param {number} num Page number.
      */
     function queueRenderPage(num) {
-      if (pageRendering) {
-        pageNumPending = num;
-      } else {
-        renderPage(num);
-      }
+        if (pageRendering) {
+            pageNumPending = num;
+        } else {
+            renderPage(num);
+        }
     }
 
     /**
-     * Displays previous page.
+     * Displays the previous page.
      */
     function onPrevPage() {
-      if (pageNum <= 1) {
-        return;
-      }
-      pageNum--;
-      queueRenderPage(pageNum);
+        if (pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum);
     }
-    document.getElementById('prev').addEventListener('click', onPrevPage);
 
     /**
-     * Displays next page.
+     * Displays the next page.
      */
     function onNextPage() {
-      if (pageNum >= pdfDoc.numPages) {
-        return;
-      }
+        if (pageNum >= pdfDoc.numPages) return;
         pageNum++;
         queueRenderPage(pageNum);
-      }
-      document.getElementById('next').addEventListener('click', onNextPage);
+    }
 
-      /**
-       * Asynchronously downloads PDF.
-       */
-      pdfjsLib.getDocument(url).promise.then(function(pdfDoc_) {
-        pdfDoc = pdfDoc_;
-        document.getElementById('page_count').textContent = pdfDoc.numPages;
+    // Set up event listeners for navigation buttons
+    document.getElementById('prev').addEventListener('click', onPrevPage);
+    document.getElementById('next').addEventListener('click', onNextPage);
 
-        // Initial/first page rendering
-        renderPage(pageNum);
-      });
-    </script>
+    // Set up event listeners for language selection
+    document.getElementById('lang-en').addEventListener('click', () => loadPdf('en'));
+    document.getElementById('lang-fr').addEventListener('click', () => loadPdf('fr'));
 
-    <div>
+    // Load the English PDF by default on page load
+    loadPdf('en');
+  </script>
+
+  <div>
+    <button id="lang-en" class="lang-button">English</button>
+    <button id="lang-fr" class="lang-button">French</button>
+  </div>
+
+  <div>
       <button id="prev">Previous</button>
       <button id="next">Next</button>
       &nbsp; &nbsp;
       <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
-    </div>
-
-    <canvas id="the-canvas"></canvas>
   </div>
+
+  <canvas id="the-canvas"></canvas>
+
+  <style>
+      .lang-button {
+          padding: 5px 10px;
+          margin: 1px;
+          border: 1px solid #ccc;
+          background-color: #f0f0f0;
+          cursor: pointer;
+          border-radius: 10px;
+      }
+
+      .lang-button.active {
+          background-color: #9678B6; /* Highlight color for active language */
+          color: white;
+      }
+
+      .pdf-link {
+          position: absolute;
+          border: 1px solid rgba(0, 0, 0, 0);
+          /* This is a transparent border to ensure accessibility */
+      }
+  </style>
+</div>
 

@@ -8,7 +8,7 @@ profile:
   align: right
   image: yuan-yin.jpeg
   image_circular: false # crops the image to make it circular
-  more_info: "<p>That's me at Københavns Rådhus in 2022.</p>"
+  more_info: "<p>That's me at the Aussichtsturm Uetliberg in Zurich, Summer 2024.</p>"
 
 news: true  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts

@@ -16,18 +16,18 @@
         {% for item in news limit: news_limit %}
           <tr>
             <td style="width: 18%">{{ item.date | date: '%b %e, %Y' }}</td>
-            <td>
+            <td style="text-align: center;">
               {% case item.type %}
                 {% when 'life' %}
-                  🌱
+                  <i class="fa-solid fa-seedling" style="color:green;"></i>
                 {% when 'talk' %}
-                  🗣️
+                  <i class="fa-solid fa-chalkboard-user" style="color:steelblue;"></i>
                 {% when 'publication' %}
-                  📜
+                  <i class="fa-solid fa-book" style="color:saddlebrown;"></i>
                 {% when 'award' %}
-                  🏆
+                  <i class="fa-solid fa-award" style="color:gold;"></i>
                 {% when 'alert' %}
-                  🔔
+                  <i class="fa-solid fa-bell" style="color: tomato;"></i>
                   {% else %}
               {% endcase %}
             </td>

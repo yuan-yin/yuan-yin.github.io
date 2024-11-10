@@ -2,13 +2,12 @@
 layout: about
 title: About
 permalink: /
-subtitle: Postdoctoral AI Researcher at <a href="https://valeoai.github.io/">Valeo.ai</a>. PhD from the <a href="https://www.isir.upmc.fr/equipes/mlia/">MLIA Team</a> at <a href="https://www.sorbonne-universite.fr">Sorbonne Université</a>, <a href="https://www.isir.upmc.fr">ISIR</a>.
-
+subtitle: AI Researcher at <a href="https://valeoai.github.io/">Valeo.ai</a>
 profile:
   align: right
   image: yuan-yin.jpeg
-  image_circular: false # crops the image to make it circular
-  more_info: "<p>That's me at the Aussichtsturm Uetliberg in Zurich, Summer 2024.</p>"
+  image_circular: true # crops the image to make it circular
+  more_info: "<div>That's me at the Aussichtsturm Uetliberg in Zurich, Summer 2024.</div>"
 
 news: true  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts
@@ -16,12 +15,12 @@ selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
 ---
 
-My research focuses on machine learning and deep learning for (spatio)temporal sequence modeling, prediction, and analysis of complex behaviors. 
+My research focuses on machine learning and deep learning for spatiotemporal sequence modeling, prediction, and analysis of complex behaviors. I also explore methods to extend the generalization of data-driven models, particularly through model adaptation.
 
 I have explored the following directions in the past few years, with a special emphasis on physical dynamical systems: 
-- **physics dynamics modeling with neural networks**,
+- **physics dynamics modeling** with neural networks,
 - **adaptation and out-of-distribution generalization** of neural networks, and
-- handling free-form data and **predicting phenomena continuously in time and space**. 
+- **handling free-form data** and predicting phenomena continuously in time and space. 
 
 I successfully defended my [PhD thesis](https://www.theses.fr/2023SORUS161) in June 2023 at [Sorbonne Université](https://www.sorbonne-universite.fr "prev. UPMC (Paris 6)"), supervised by Prof. [Patrick Gallinari](https://pages.isir.upmc.fr/gallinari/) and Assoc. Prof. [Nicolas Baskiotis](https://www.isir.upmc.fr/personnel/baskiotis/). 
 

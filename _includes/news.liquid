@@ -4,9 +4,8 @@
     <div
       class="table-responsive"
       {% if include.limit and site.announcements.scrollable and news_size > 3 %}
-        style="max-height: 30vh"
-      {% endif %}
-    >
+      style="max-height: 30vh"
+      {% endif %}>
       <table class="table table-sm table-borderless">
         {% assign news = site.news | reverse %}
         {% if include.limit and site.announcements.limit %}
@@ -16,7 +15,22 @@
         {% endif %}
         {% for item in news limit: news_limit %}
           <tr>
-            <th scope="row" style="width: 20%">{{ item.date | date: '%Y-%m-%d' }}</th>
+            <td style="width: 18%">{{ item.date | date: '%b %e, %Y' }}</td>
+            <td>
+              {% case item.type %}
+                {% when 'life' %}
+                  🌱
+                {% when 'talk' %}
+                  🗣️
+                {% when 'publication' %}
+                  📜
+                {% when 'award' %}
+                  🏆
+                {% when 'alert' %}
+                  🔔
+                  {% else %}
+              {% endcase %}
+            </td>
             <td>
               {% if item.inline %}
                 {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}

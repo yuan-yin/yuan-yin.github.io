@@ -6,19 +6,18 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">
       {{ page.title }}
-        <button id="lang-en" class="lang-button">English</button>
-        <button id="lang-fr" class="lang-button">Français</button>
+      <button id="lang-en" class="lang-button">English</button>
+      <button id="lang-fr" class="lang-button">Français</button>
     </h1>
 
     <h2 class="float-right">
-        <a
-          href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-          ><i class="fa-solid fa-file-pdf"></i>EN
-        </a> | 
-        <a
-          href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-          ><i class="fa-solid fa-file-pdf"></i>FR
-        </a>
+      <a href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}">
+        <i class="fa-solid fa-file-pdf"></i>EN
+      </a>
+      |
+      <a href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}">
+        <i class="fa-solid fa-file-pdf"></i>FR
+      </a>
     </h2>
     {% if page.description %}
       <p class="post-description">{{ page.description }}</p>
@@ -231,36 +230,40 @@ layout: default
   </script>
 
 
-
   <div>
-      <button id="prev">&lt; Previous</button>
-      <button id="next">Next &gt;</button>
-      &nbsp; &nbsp;
-      <span>Page: <span id="page_num"></span> / <span id="page_count"></span></span>
+    <button id="prev">&lt; Previous</button>
+    <button id="next">Next &gt;</button>
+    &nbsp; &nbsp;
+    <span style="font-weight: 400">Page:
+      <span id="page_num"></span>
+      /
+      <span id="page_count"></span>
+    </span>
   </div>
 
   <canvas id="the-canvas"></canvas>
 
   <style>
-      .lang-button {
-          padding: 5px 10px;
-          margin: 1px;
-          border: 1px solid #ccc;
-          background-color: #f0f0f0;
-          cursor: pointer;
-          border-radius: 10px;
-      }
+    .lang-button {
+      padding: 5px 10px;
+      margin: 1px;
+      border: 1px solid #ccc;
+      background-color: #f0f0f0;
+      cursor: pointer;
+      font-weight: 200;
+      border-radius: 10px;
+    }
 
-      .lang-button.active {
-          background-color: #9678B6; /* Highlight color for active language */
-          color: white;
-      }
+    .lang-button.active {
+      background-color: #9678B6;
+      /* Highlight color for active language */
+      color: white;
+    }
 
-      .pdf-link {
-          position: absolute;
-          border: 1px solid rgba(0, 0, 0, 0);
-          /* This is a transparent border to ensure accessibility */
-      }
+    .pdf-link {
+      position: absolute;
+      border: 1px solid rgba(0, 0, 0, 0);
+      /* This is a transparent border to ensure accessibility */
+    }
   </style>
 </div>
-

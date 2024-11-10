@@ -6,9 +6,17 @@
   - firstname: ["Nicolas"]
     url: https://www.isir.upmc.fr/personnel/baskiotis/
 
-"de bezenac":
-  - firstname: ["Emmanuel"]
-    url: https://math.ethz.ch/sam/the-institute/people.html?u=edebezenac
+# "de bezenac":
+#   - firstname: ["Emmanuel"]
+#     url: https://math.ethz.ch/sam/the-institute/people.html?u=edebezenac
+
+"di":
+  - firstname: ["Huang"]
+    url: https://irip.buaa.edu.cn/dihuang/index.html
+
+"yunhong":
+  - firstname: ["Wang"]
+    url: https://irip.buaa.edu.cn/yhwang/index.html
 
 "franceschi":
   - firstname: ["Jean-Yves"]
@@ -29,3 +37,11 @@
 "guigue":
   - firstname: ["Vincent"]
     url: https://vguigue.github.io
+
+"cord":
+  - firstname: ["Matthieu"]
+    url: https://cord.isir.upmc.fr
+
+"boulch":
+  - firstname: ["Alexandre"]
+    url: https://boulch.eu

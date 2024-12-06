@@ -1,6 +1,17 @@
 ---
 ---
 
+
+@inproceedings{koupai2024learn,
+abbr={NeurIPS},
+title={GEPS: Boosting Generalization in Parametric {PDE} Neural Solvers through Adaptive Conditioning},
+author={Armand {Kassa{\"\i} Koupa{\"\i}} and Jorge {Mifsut Benet} and Yuan Yin and Jean-No{\"e}l Vittaut and Patrick Gallinari},
+booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
+year={2024},
+month={Dec},
+url={https://openreview.net/forum?id=GuY0zB2xVU}
+}
+
 @inproceedings{yin2024regents,
   title={ReGentS: Real-World Safety-Critical Driving Scenario Generation Made Stable},
   author={Yuan Yin and Pegah Khayatan and Éloi Zablocki and Alexandre Boulch and Matthieu Cord},
@@ -24,16 +35,6 @@
   abstract={In this work, we propose a new method to solve partial differential equations (PDEs). Taking inspiration from traditional numerical methods, we view approximating solutions to PDEs as an iterative algorithm, and propose to learn the it- erations from data. With respect to directly predicting the solution with a neural network, our approach has access to the PDE, having the potential to enhance the model’s ability to generalize across a variety of scenarios, such as differing PDE parameters, initial or boundary conditions. We instantiate this framework and empirically validate its effectiveness across several PDE-solving benchmarks, evaluating efficiency and generalization capabilities, and demonstrating its potential for broader applicability.}
 }
 
-@inproceedings{koupai2024learn,
-  abbr = {ICLR WS},
-  title={Learn to Adapt Parametric Solvers Under Incomplete Physics},
-  author={{Kassa{\"\i} Koupa{\"\i}}, Armand and Yin, Yuan and Gallinari, Patrick},
-  booktitle={ICLR 2024 Workshop on AI4DifferentialEquations In Science},
-  year={2024},
-  month={May},
-  html={https://openreview.net/forum?id=jIpkrPTovs},
-  abstract={Modelling physical systems when only partial knowledge of the physics is available is a recurrent problem in science. Within this context, we consider hybrid models that complement PDE solvers, providing incomplete physics information, with NN components for modelling dynamical systems. A critical challenge with this approach lies in generalising to unseen environments that share similar dynamics but have different physical contexts. To tackle this, we introduce a meta-learning strategy that captures context-specific variations inherent in each system, enhancing the model's adaptability to generalise to new PDE parameters and initial conditions. We emphasise the advantages of adaptation strategies compared to a pure empirical risk minimisation approach, the superiority of the solver-neural network combination over soft physics constraints, and the enhanced generalisation ability compared to alternative approaches.}
-}
 
 @article{DBLP:journals/corr/abs-2306-05880,
   abbr={TMLR},

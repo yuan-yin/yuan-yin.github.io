@@ -6,9 +6,25 @@
   - firstname: ["Nicolas"]
     url: https://www.isir.upmc.fr/personnel/baskiotis/
 
-# "de bezenac":
-#   - firstname: ["Emmanuel"]
-#     url: https://math.ethz.ch/sam/the-institute/people.html?u=edebezenac
+"serrano":
+  - firstname: ["Louis"]
+    url: https://scholar.google.com/citations?user=fKlo-lUAAAAJ
+
+"de bezenac":
+  - firstname: ["Emmanuel"]
+    url: https://scholar.google.fr/citations?user=KvZw5gYAAAAJ
+
+"kassai koupai":
+  - firstname: ["Armand"]
+    url: https://scholar.google.com/citations?user=uG3VApUAAAAJ
+
+"le naour":
+  - firstname: ["Etienne"]
+    url: https://scholar.google.fr/citations?user=hkQJ3HAAAAAJ
+
+"zablocki":
+  - firstname: ["Éloi"]
+    url: https://scholar.google.fr/citations?user=dOkbUmEAAAAJ
 
 "di":
   - firstname: ["Huang"]
@@ -45,3 +61,7 @@
 "boulch":
   - firstname: ["Alexandre"]
     url: https://boulch.eu
+
+"vu":
+  - firstname: ["Tuan-Hung"]
+    url: https://tuanhungvu.github.io

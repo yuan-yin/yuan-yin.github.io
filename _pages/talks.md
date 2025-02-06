@@ -3,8 +3,7 @@ layout: page
 title: Talks
 permalink: /talks/
 description: Talks and Presentations
-nav: true
-nav_order: 3
+nav: false
 ---
 
 <!-- pages/projects.md -->

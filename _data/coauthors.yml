@@ -27,12 +27,14 @@
     url: https://scholar.google.fr/citations?user=dOkbUmEAAAAJ
 
 "huang":
-  - firstname: ["di"]
+  - firstname: ["Di"]
     url: https://irip.buaa.edu.cn/dihuang/index.html
 
 "wang":
   - firstname: ["Yunhong"]
     url: https://irip.buaa.edu.cn/yhwang/index.html
+  - firstname: ["Yiding"]
+    url: https://lwss.ncut.edu.cn/TutorServlet?action=queryDs&teacherid=bvFzehVqbP3yxs39@8QLWA==
 
 "franceschi":
   - firstname: ["Jean-Yves"]

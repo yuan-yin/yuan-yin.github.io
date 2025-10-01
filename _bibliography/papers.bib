@@ -41,9 +41,20 @@ abstract={Physics-informed deep learning often faces optimization challenges due
     title={PPT: Pre-Training with Pseudo-Labeled Trajectories for Motion Forecasting},
     author={Yihong Xu and Yuan Yin and Tuan-Hung Vu and Alexandre Boulch and Éloi Zablocki and Matthieu Cord},
     year={2024},
+    month={12},
     pdf={https://arxiv.org/pdf/2412.06491},
     html={https://arxiv.org/abs/2412.06491},
     abstract={Motion forecasting (MF) for autonomous driving aims at anticipating trajectories of surrounding agents in complex urban scenarios. In this work, we investigate a mixed strategy in MF training that first pre-train motion forecasters on pseudo-labeled data, then fine-tune them on annotated data. To obtain pseudo-labeled trajectories, we propose a simple pipeline that leverages off-the-shelf single-frame 3D object detectors and non-learning trackers. The whole pre-training strategy including pseudo-labeling is coined as PPT. Our extensive experiments demonstrate that: (1) combining PPT with supervised fine-tuning on annotated data achieves superior performance on diverse testbeds, especially under annotation-efficient regimes, (2) scaling up to multiple datasets improves the previous state-of-the-art and (3) PPT helps enhance cross-dataset generalization. Our findings showcase PPT as a promising pre-training solution for robust motion forecasting in diverse autonomous driving contexts.}
+}
+
+@misc{yin2025ipainformationpreservinginputprojection,
+      title={IPA: An Information-Preserving Input Projection Framework for Efficient Foundation Model Adaptation}, 
+      author={Yuan Yin and Shashanka Venkataramanan and Tuan-Hung Vu and Andrei Bursuc and Matthieu Cord},
+      year={2025},
+      month={9},
+      html={https://arxiv.org/abs/2509.04398}, 
+      pdf={https://arxiv.org/pdf/2509.04398},
+      abstract={Parameter-efficient fine-tuning (PEFT) methods, such as LoRA, reduce adaptation cost by injecting low-rank updates into pretrained weights. However, LoRA's down-projection is randomly initialized and data-agnostic, discarding potentially useful information. Prior analyses show that this projection changes little during training, while the up-projection carries most of the adaptation, making the random input compression a performance bottleneck. We propose IPA, a feature-aware projection framework that explicitly preserves information in the reduced hidden space. In the linear case, we instantiate IPA with algorithms approximating top principal components, enabling efficient projector pretraining with negligible inference overhead. Across language and vision benchmarks, IPA consistently improves over LoRA and DoRA, achieving on average 1.5 points higher accuracy on commonsense reasoning and 2.3 points on VTAB-1k, while matching full LoRA performance with roughly half the trainable parameters when the projection is frozen.}
 }
 
 @article{DBLP:journals/corr/abs-2306-05880,

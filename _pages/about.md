@@ -13,6 +13,16 @@ news: true  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts
 selected_papers: false # includes a list of papers marked as "selected={true}"
 social: true  # includes social icons at the bottom of the page
+
+announcements:
+  enabled: true # includes a list of news items
+  scrollable: true # adds a vertical scroll bar if there are more than 3 news items
+  limit: # leave blank to include all the news in the `_news` folder
+
+latest_posts:
+  enabled: false
+  scrollable: false # adds a vertical scroll bar if there are more than 3 new posts items
+  limit: # leave blank to include all the blog posts
 ---
 
 My research focuses on machine learning and deep learning for spatiotemporal sequence modeling, simulation, prediction, and analysis of complex behaviors. I also explore methods to extend the generalization of data-driven models, particularly through model adaptation.

@@ -3,7 +3,8 @@ layout: page
 permalink: /repositories/
 title: Repositories
 description: This is a list of repositories of open source implementation of my publications
-nav: false
+nav: true
+nav_order: 4
 ---
 
 <!-- 
@@ -31,9 +32,10 @@ nav: false
 {% endif %}
 {% endif %} -->
 
-## GitHub Repositories
 
 {% if site.data.repositories.github_repos %}
+
+## GitHub Repositories
 
 <div class="repositories d-flex flex-wrap flex-md-row flex-column justify-content-between align-items-center">
   {% for repo in site.data.repositories.github_repos %}

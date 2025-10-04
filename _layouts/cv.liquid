@@ -6,19 +6,81 @@ layout: default
   <header class="post-header">
     <h1 class="post-title">
       {{ page.title }}
-      <button id="lang-en" class="lang-button">English</button>
-      <button id="lang-fr" class="lang-button">Français</button>
     </h1>
 
-    <h2 class="float-right">
-      <a href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}">
-        <i class="fa-solid fa-file-pdf"></i>EN
-      </a>
-      |
-      <a href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}">
-        <i class="fa-solid fa-file-pdf"></i>FR
-      </a>
-    </h2>
+    <div class="header-toolbar">
+      <h3 class="float-left">
+        <div class="lang-toolbar">
+          <!-- English split button -->
+          <div class="lang-split" data-lang="en">
+            <a
+              id="lang-en"
+              class="lang-primary"
+              data-lang="en"
+              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+              rel="noopener"
+              aria-pressed="false">
+              English
+            </a>
+            <a
+              id="download-en"
+              class="lang-download"
+              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+              download
+              rel="noopener"
+              aria-label="Download English CV">
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+            </a>
+          </div>
+
+          <!-- French split button -->
+          <div class="lang-split" data-lang="fr">
+            <a
+              id="lang-fr"
+              class="lang-primary"
+              data-lang="fr"
+              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+              rel="noopener"
+              aria-pressed="false">
+              Français
+            </a>
+            <a
+              id="download-fr"
+              class="lang-download"
+              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+              download
+              rel="noopener"
+              aria-label="Download French CV">
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </h3>
+
+      <div class="pager">
+        <span style="font-weight:200">Page:
+          <span id="page_num"></span>
+          /
+          <span id="page_count"></span>
+        </span>
+        &nbsp; &nbsp;
+        <button
+          id="prev"
+          class="pager-button"
+          aria-label="Previous page">
+          <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
+          <span>Previous</span>
+        </button>
+        <button
+          id="next"
+          class="pager-button"
+          aria-label="Next page">
+          <span>Next</span>
+          <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+
     {% if page.description %}
       <p class="post-description">{{ page.description }}</p>
     {% endif %}
@@ -27,243 +89,357 @@ layout: default
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
 
   <script type="module">
-    // Shortcut to access PDF.js exports
-    const { pdfjsLib } = globalThis;
+      const { pdfjsLib } = globalThis;
+      pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs';
 
-    // Set worker source for PDF.js
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs';
-
+      document.addEventListener('DOMContentLoaded', () => {
     const postElement = document.querySelector('.post');
     const canvas = document.getElementById('the-canvas');
     const ctx = canvas.getContext('2d');
+
+    const prevBtn = document.getElementById('prev');
+    const nextBtn = document.getElementById('next');
+
     let pdfDoc = null,
         pageNum = 1,
         pageRendering = false,
-        pageNumPending = null;
+        pageNumPending = null,
+        currentLang = 'en';
 
-    // Store the URLs for the PDFs in different languages
     const urls = {
-        en: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
-        fr: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+      en: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
+      fr: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
     };
 
-    /**
-     * Loads the selected PDF document and updates the active button style.
-     * @param {string} lang Language code ('en' or 'fr').
-     */
     function loadPdf(lang) {
-        const url = urls[lang];
-        pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
-            pdfDoc = pdfDoc_;
-            document.getElementById('page_count').textContent = pdfDoc.numPages;
-            pageNum = 1; // Reset to the first page
-            renderPage(pageNum);
-            updateActiveLangButton(lang);
-        });
+      const url = urls[lang];
+      currentLang = lang;
+      pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
+        pdfDoc = pdfDoc_;
+        document.getElementById('page_count').textContent = pdfDoc.numPages;
+        pageNum = 1;
+        renderPage(pageNum);
+        updateSplitButtons(lang);
+        updatePagerState();
+      });
     }
 
-    /**
-     * Updates the active state of the language buttons.
-     * @param {string} activeLang The language code of the active button.
-     */
-    function updateActiveLangButton(activeLang) {
-        document.querySelectorAll('.lang-button').forEach(button => {
-            button.classList.toggle('active', button.id === `lang-${activeLang}`);
-        });
-    }
+    function updateSplitButtons(activeLang) {
+      document.querySelectorAll('.lang-split').forEach(group => {
+        const lang = group.dataset.lang;
+        const primary = group.querySelector('.lang-primary');
+        const download = group.querySelector('.lang-download');
 
-    /**
-     * Renders the specified page.
-     * @param {number} num Page number.
-     */
-    function renderPage(num) {
-        pageRendering = true;
-        pdfDoc.getPage(num).then(page => {
-            const viewport = page.getViewport({ scale: getScaleFactor(page) });
-            adjustCanvasSize(viewport);
+        const isActive = lang === activeLang;
+        group.classList.toggle('active', isActive);
+        primary.classList.toggle('active', isActive);
+        primary.setAttribute('aria-pressed', String(isActive));
 
-            const renderContext = {
-                canvasContext: ctx,
-                transform: getTransform(viewport),
-                viewport
-            };
-
-            page.render(renderContext).promise.then(() => {
-                pageRendering = false;
-                if (pageNumPending !== null) {
-                    renderPage(pageNumPending);
-                    pageNumPending = null;
-                }
-            });
-
-            addAnnotationsToPage(page, viewport);
-            updatePageCounter(num);
-        });
-    }
-
-    /**
-     * Returns the appropriate scale factor based on the page and container width.
-     * @param {object} page PDF page object.
-     * @returns {number} Scale factor.
-     */
-    function getScaleFactor(page) {
-        const desiredWidth = postElement.getBoundingClientRect().width;
-        const origViewport = page.getViewport({ scale: 1 });
-        return desiredWidth / origViewport.width;
-    }
-
-    /**
-     * Adjusts the canvas size to match the viewport.
-     * @param {object} viewport Viewport object.
-     */
-    function adjustCanvasSize(viewport) {
-        const outputScale = window.devicePixelRatio * 2.0 || 1;
-        canvas.width = Math.floor(viewport.width * outputScale);
-        canvas.height = Math.floor(viewport.height * outputScale);
-        canvas.style.width = `${Math.floor(viewport.width)}px`;
-        canvas.style.height = `${Math.floor(viewport.height)}px`;
-    }
-
-    /**
-     * Gets the transformation array for HiDPI screens.
-     * @param {object} viewport Viewport object.
-     * @returns {Array|null} Transformation array or null.
-     */
-    function getTransform(viewport) {
-        const outputScale = window.devicePixelRatio * 2.0 || 1;
-        return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-    }
-
-    /**
-     * Adds clickable annotations to the page, such as links.
-     * @param {object} page PDF page object.
-     * @param {object} viewport Viewport object.
-     */
-    function addAnnotationsToPage(page, viewport) {
-        page.getAnnotations().then(annotations => {
-            document.querySelectorAll('.pdf-link').forEach(link => link.remove());
-
-            annotations.forEach(annotation => {
-                if (annotation.subtype === 'Link' && annotation.url) {
-                    createLinkElement(annotation, viewport);
-                }
-            });
-        });
-    }
-
-    /**
-     * Creates a link element for a given annotation.
-     * @param {object} annotation Annotation object.
-     * @param {object} viewport Viewport object.
-     */
-    function createLinkElement(annotation, viewport) {
-        const [x1, y1, x2, y2] = annotation.rect;
-        const linkElement = document.createElement('a');
-        linkElement.href = annotation.url;
-        linkElement.target = '_blank';
-        linkElement.className = 'pdf-link';
-
-        const left = x1 * viewport.transform[0] + viewport.transform[4];
-        const top = canvas.height - y2 * viewport.transform[3] - viewport.transform[5];
-        const width = (x2 - x1) * viewport.transform[0];
-        const height = (y2 - y1) * viewport.transform[3];
-
-        Object.assign(linkElement.style, {
-            left: `${left}px`,
-            top: `${top}px`,
-            width: `${width}px`,
-            height: `${height}px`,
-            position: 'absolute',
-        });
-
-        postElement.appendChild(linkElement);
-    }
-
-    /**
-     * Updates the displayed page number.
-     * @param {number} num Page number.
-     */
-    function updatePageCounter(num) {
-        document.getElementById('page_num').textContent = num;
-    }
-
-    /**
-     * Queues a page for rendering.
-     * @param {number} num Page number.
-     */
-    function queueRenderPage(num) {
-        if (pageRendering) {
-            pageNumPending = num;
-        } else {
-            renderPage(num);
+        const href = urls[lang];
+        if (href) {
+          primary.setAttribute('href', href);   // keep for right-click/open in new tab
+          download.setAttribute('href', href);
+          try {
+            const filename = href.split('/').pop() || `cv-${lang}.pdf`;
+            download.setAttribute('download', filename);
+          } catch (_) {
+            download.setAttribute('download', '');
+          }
         }
+
+        download.setAttribute('aria-hidden', String(!isActive));
+        if (!isActive) download.setAttribute('tabindex', '-1');
+        else download.removeAttribute('tabindex');
+      });
     }
 
-    /**
-     * Displays the previous page.
-     */
+    function renderPage(num) {
+      pageRendering = true;
+      pdfDoc.getPage(num).then(page => {
+        const viewport = page.getViewport({ scale: getScaleFactor(page) });
+        adjustCanvasSize(viewport);
+
+        const renderContext = {
+          canvasContext: ctx,
+          transform: getTransform(viewport),
+          viewport
+        };
+
+        page.render(renderContext).promise.then(() => {
+          pageRendering = false;
+          if (pageNumPending !== null) {
+            renderPage(pageNumPending);
+            pageNumPending = null;
+          }
+          updatePagerState();
+        });
+
+        addAnnotationsToPage(page, viewport);
+        updatePageCounter(num);
+      });
+    }
+
+    function getScaleFactor(page) {
+      const desiredWidth = postElement.getBoundingClientRect().width;
+      const origViewport = page.getViewport({ scale: 1 });
+      return desiredWidth / origViewport.width;
+    }
+
+    function adjustCanvasSize(viewport) {
+      const outputScale = window.devicePixelRatio * 2.0 || 1;
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = `${Math.floor(viewport.width)}px`;
+      canvas.style.height = `${Math.floor(viewport.height)}px`;
+    }
+
+    function getTransform(viewport) {
+      const outputScale = window.devicePixelRatio * 2.0 || 1;
+      return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+    }
+
+    function addAnnotationsToPage(page, viewport) {
+      page.getAnnotations().then(annotations => {
+        document.querySelectorAll('a.pdf-link.overlay').forEach(link => link.remove());
+        annotations.forEach(annotation => {
+          if (annotation.subtype === 'Link' && annotation.url) {
+            createLinkElement(annotation, viewport);
+          }
+        });
+      });
+    }
+
+    function createLinkElement(annotation, viewport) {
+      const [x1, y1, x2, y2] = annotation.rect;
+      const devX1 = x1 * viewport.transform[0] + viewport.transform[4];
+      const devY2 = y2 * viewport.transform[3] + viewport.transform[5];
+      const devW  = (x2 - x1) * viewport.transform[0];
+      const devH  = (y2 - y1) * viewport.transform[3];
+
+      const cssScaleX = canvas.clientWidth  / canvas.width;
+      const cssScaleY = canvas.clientHeight / canvas.height;
+
+      const left   = devX1 * cssScaleX;
+      const top    = (canvas.height - devY2) * cssScaleY;
+      const width  = devW * cssScaleX;
+      const height = devH * cssScaleY;
+
+      const linkElement = document.createElement('a');
+      linkElement.href = annotation.url;
+      linkElement.target = '_blank';
+      linkElement.rel = 'noopener';
+      linkElement.className = 'pdf-link overlay';
+
+      Object.assign(linkElement.style, {
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        width: `${width}px`,
+        height: `${height}px`,
+      });
+
+      document.querySelector('.pdf-stage').appendChild(linkElement);
+    }
+
+    function updatePageCounter(num) {
+      document.getElementById('page_num').textContent = num;
+    }
+
+    function queueRenderPage(num) {
+      if (pageRendering) pageNumPending = num;
+      else renderPage(num);
+    }
+
     function onPrevPage() {
-        if (pageNum <= 1) return;
-        pageNum--;
-        queueRenderPage(pageNum);
+      if (pageNum <= 1) return;
+      pageNum--;
+      queueRenderPage(pageNum);
     }
 
-    /**
-     * Displays the next page.
-     */
     function onNextPage() {
-        if (pageNum >= pdfDoc.numPages) return;
-        pageNum++;
-        queueRenderPage(pageNum);
+      if (pageNum >= pdfDoc.numPages) return;
+      pageNum++;
+      queueRenderPage(pageNum);
     }
 
-    // Set up event listeners for navigation buttons
-    document.getElementById('prev').addEventListener('click', onPrevPage);
-    document.getElementById('next').addEventListener('click', onNextPage);
+    function updatePagerState() {
+      if (!pdfDoc) return;
+      prevBtn.disabled = pageNum <= 1;
+      nextBtn.disabled = pageNum >= pdfDoc.numPages;
+    }
 
-    // Set up event listeners for language selection
-    document.getElementById('lang-en').addEventListener('click', () => loadPdf('en'));
-    document.getElementById('lang-fr').addEventListener('click', () => loadPdf('fr'));
+    // Hook up pager
+    prevBtn.addEventListener('click', onPrevPage);
+    nextBtn.addEventListener('click', onNextPage);
 
-    // Load the English PDF by default on page load
+    // Intercept language button clicks to switch the viewer instead of navigating
+    document.querySelectorAll('.lang-primary').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();                    // stop opening the PDF
+        const lang = e.currentTarget.dataset.lang;
+        if (lang && lang !== currentLang) loadPdf(lang);
+        else updateSplitButtons(lang);         // still refresh UI
+      });
+    });
+
+    // Clean any leftover PDF links in the overlay region
+    document.querySelectorAll('.pdf-stage a.pdf-link.overlay').forEach(link => link.remove());
+
+    // Initial load
     loadPdf('en');
+      });
   </script>
 
 
-  <div>
-    <button id="prev">&lt; Previous</button>
-    <button id="next">Next &gt;</button>
-    &nbsp; &nbsp;
-    <span style="font-weight: 400">Page:
-      <span id="page_num"></span>
-      /
-      <span id="page_count"></span>
-    </span>
+  <div class="pdf-stage">
+    <canvas id="the-canvas"></canvas>
   </div>
 
-  <canvas id="the-canvas"></canvas>
-
   <style>
-    .lang-button {
-      padding: 5px 10px;
-      margin: 1px;
+    .header-toolbar {
+      display: flex;
+      justify-content: space-between;
+      /* push left/right */
+      align-items: center;
+      flex-wrap: wrap;
+      /* optional for small screens */
+      margin-top: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+
+    .pdf-stage {
+      position: relative;
+      width: fit-content;
+      /* or 100% if you prefer */
+      line-height: 0;
+      /* remove baseline gap of inline canvas */
+    }
+    #the-canvas {
+      display: block;
+    } /* avoid inline baseline gap */
+
+    .lang-toolbar {
+      display: inline-flex;
+      gap: 10px;
+      align-items: center;
+      order: 1;
+    }
+
+    /* Split button container */
+    .lang-split {
+      display: inline-flex;
       border: 1px solid #ccc;
-      background-color: #f0f0f0;
-      cursor: pointer;
-      font-weight: 200;
       border-radius: 10px;
+      overflow: hidden;
+      /* unify rounded corners */
     }
 
-    .lang-button.active {
+    /* Primary (switch language) */
+    .lang-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+      padding: 6px 12px;
+      font-weight: 300;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      user-select: none;
+    }
+    .lang-primary:hover {
+      background: #eee;
+    }
+    .lang-primary.active {
       background-color: #9678B6;
-      /* Highlight color for active language */
-      color: white;
+      color: #fff;
     }
 
-    .pdf-link {
+    /* Show a divider only when the download button is expanded */
+    .lang-split.active .lang-primary {
+      border-right: 0.5px solid #ccc;
+    }
+
+    /* Secondary (download) — collapses to zero when inactive */
+    .lang-download {
+      display: inline-flex;
+      /* stays in DOM, but collapses */
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      width: 0;
+      /* collapsed */
+      padding: 0;
+      /* collapsed */
+      border-left: 0 solid #ccc;
+      /* collapsed */
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+      user-select: none;
+      opacity: 0;
+      /* hidden */
+      transform: translateX(4px);
+      /* slight slide-in when opening */
+      overflow: hidden;
+      /* hide icon while collapsed */
+      transition: width 200ms ease
+      , padding 200ms ease
+      , border-left-width 200ms ease
+      , opacity 180ms ease
+      , transform 180ms ease
+      , background-color 150ms ease;
+    }
+    .lang-download:hover {
+      background: #eee;
+    }
+
+    /* Expanded state (when group is .active) */
+    .lang-split.active .lang-download {
+      width: 40px;
+      /* visible width */
+      padding: 6px 8px;
+      /* vertical padding restored */
+      border-left-width: 1px;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .pdf-link.overlay {
       position: absolute;
-      border: 1px solid rgba(0, 0, 0, 0);
-      /* This is a transparent border to ensure accessibility */
+      border: 1px solid transparent;
+    }
+
+    /* Pager: match language button style */
+    .pager {
+      display: inline-flex;
+      gap: 6px;
+      align-items: center;
+      margin-top: 8px;
+      order: 2;
+    }
+
+    .pager-button {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35em;
+      padding: 6px 12px;
+      font-weight: 300;
+      border: 1px solid #ccc;
+      border-radius: 10px;
+      cursor: pointer;
+      user-select: none;
+    }
+    .pager-button:hover {
+      background: #eee;
+    }
+    .pager-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    .post {
+      position: relative;
     }
   </style>
 </div>

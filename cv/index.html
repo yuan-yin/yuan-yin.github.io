@@ -7,34 +7,192 @@
 
       document.addEventListener('DOMContentLoaded', () => {
     const postElement = document.querySelector('.post');
+    const stage = document.querySelector('.pdf-stage');
     const canvas = document.getElementById('the-canvas');
     const ctx = canvas.getContext('2d');
 
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
 
-    let pdfDoc = null,
-        pageNum = 1,
-        pageRendering = false,
-        pageNumPending = null,
-        currentLang = 'en';
+    let pdfDoc = null;           // PDFDocumentProxy
+    let loadingTask = null;      // PDFLoadingTask
+    let renderTask = null;       // RenderTask
+    let pageNum = 1;
+    let pageRendering = false;
+    let pageNumPending = null;
+    let currentLang = 'en';
 
     const urls = {
       en: "/assets/pdf/cv_public_en.pdf",
       fr: "/assets/pdf/cv_public_fr.pdf"
     };
 
-    function loadPdf(lang) {
+    async function disposePdf() {
+      // 1) Stop rendering
+      if (renderTask && typeof renderTask.cancel === 'function') {
+        try { renderTask.cancel(); } catch {}
+      }
+      renderTask = null;
+      pageRendering = false;
+      pageNumPending = null;
+
+      // 2) Kill any in-flight document load
+      if (loadingTask && typeof loadingTask.destroy === 'function') {
+        try { await loadingTask.destroy(); } catch {}
+      }
+      loadingTask = null;
+
+      // 3) Destroy current document (frees XRef, fonts, images, etc.)
+      if (pdfDoc) {
+        try {
+          // cleanup() is optional; destroy() is enough, but both is fine.
+          if (typeof pdfDoc.cleanup === 'function') await pdfDoc.cleanup();
+          await pdfDoc.destroy();
+        } catch {}
+      }
+      pdfDoc = null;
+
+      // 4) Clear overlay links
+      stage.querySelectorAll('a.pdf-link.overlay').forEach(a => a.remove());
+
+      // 5) Clear and shrink canvas to release bitmap memory
+      try { ctx && ctx.clearRect(0, 0, canvas.width, canvas.height); } catch {}
+      canvas.width = 0;
+      canvas.height = 0;
+      canvas.style.width = '0px';
+      canvas.style.height = '0px';
+
+      // 6) Reset pager UI
+      document.getElementById('page_num').textContent = '';
+      document.getElementById('page_count').textContent = '';
+      prevBtn.disabled = true;
+      nextBtn.disabled = true;
+    }
+
+    async function loadPdf(lang) {
       const url = urls[lang];
       currentLang = lang;
-      pdfjsLib.getDocument(url).promise.then(pdfDoc_ => {
-        pdfDoc = pdfDoc_;
-        document.getElementById('page_count').textContent = pdfDoc.numPages;
-        pageNum = 1;
-        renderPage(pageNum);
-        updateSplitButtons(lang);
+
+      // Fully tear down previous resources before starting a new load
+      await disposePdf();
+
+      // Start a new loading task
+      loadingTask = pdfjsLib.getDocument(url);
+      try {
+        pdfDoc = await loadingTask.promise;
+      } catch (err) {
+        console.error('PDF load failed:', err);
+        return;
+      } finally {
+        // The loadingTask becomes less useful after we have pdfDoc
+        loadingTask = null;
+      }
+
+      document.getElementById('page_count').textContent = pdfDoc.numPages;
+      pageNum = 1;
+      updateSplitButtons(lang);
+      updatePagerState();
+      await renderPage(pageNum);
+    }
+
+    async function renderPage(num) {
+      if (!pdfDoc) return;
+      pageRendering = true;
+      const page = await pdfDoc.getPage(num);
+
+      const viewport = page.getViewport({ scale: getScaleFactor(page) });
+      adjustCanvasSize(viewport);
+      const renderContext = {
+        canvasContext: ctx,
+        transform: getTransform(viewport),
+        viewport
+      };
+
+      // Cancel any previous RenderTask just in case
+      if (renderTask && typeof renderTask.cancel === 'function') {
+        try { renderTask.cancel(); } catch {}
+      }
+      renderTask = page.render(renderContext);
+
+      try {
+        await renderTask.promise;
+      } catch (e) {
+        // Rendering was likely canceled; ignore
+      } finally {
+        renderTask = null;
+        // Let PDF.js drop page-level caches
+        try { page.cleanup(); } catch {}
+        pageRendering = false;
+        if (pageNumPending !== null) {
+          const pending = pageNumPending;
+          pageNumPending = null;
+          return renderPage(pending);
+        }
         updatePagerState();
+      }
+
+      addAnnotationsToPage(page, viewport).catch(() => {});
+      updatePageCounter(num);
+    }
+
+    function getScaleFactor(page) {
+      const desiredWidth = postElement.getBoundingClientRect().width;
+      const origViewport = page.getViewport({ scale: 1 });
+      return desiredWidth / origViewport.width;
+    }
+
+    function adjustCanvasSize(viewport) {
+      const outputScale = (window.devicePixelRatio || 1) * 2.0;
+      canvas.width = Math.floor(viewport.width * outputScale);
+      canvas.height = Math.floor(viewport.height * outputScale);
+      canvas.style.width = `${Math.floor(viewport.width)}px`;
+      canvas.style.height = `${Math.floor(viewport.height)}px`;
+    }
+
+    function getTransform(viewport) {
+      const outputScale = (window.devicePixelRatio || 1) * 2.0;
+      return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+    }
+
+    async function addAnnotationsToPage(page, viewport) {
+      stage.querySelectorAll('a.pdf-link.overlay').forEach(a => a.remove());
+      const annotations = await page.getAnnotations();
+      annotations.forEach(annotation => {
+        if (annotation.subtype === 'Link' && annotation.url) {
+          createLinkElement(annotation, viewport);
+        }
       });
+    }
+
+    function createLinkElement(annotation, viewport) {
+      const [x1, y1, x2, y2] = annotation.rect;
+      const t = viewport.transform;
+      const devX1 = x1 * t[0] + t[4];
+      const devY2 = y2 * t[3] + t[5];
+      const devW  = (x2 - x1) * t[0];
+      const devH  = (y2 - y1) * t[3];
+
+      const cssScaleX = canvas.clientWidth  / canvas.width;
+      const cssScaleY = canvas.clientHeight / canvas.height;
+
+      const left   = devX1 * cssScaleX;
+      const top    = (canvas.height - devY2) * cssScaleY;
+      const width  = devW * cssScaleX;
+      const height = devH * cssScaleY;
+
+      const linkElement = document.createElement('a');
+      linkElement.href = annotation.url;
+      linkElement.target = '_blank';
+      linkElement.rel = 'noopener';
+      linkElement.className = 'pdf-link overlay';
+      Object.assign(linkElement.style, {
+        position: 'absolute',
+        left: `${left}px`,
+        top: `${top}px`,
+        width: `${width}px`,
+        height: `${height}px`,
+      });
+      stage.appendChild(linkElement);
     }
 
     function updateSplitButtons(activeLang) {
@@ -50,108 +208,17 @@
 
         const href = urls[lang];
         if (href) {
-          primary.setAttribute('href', href);   // keep for right-click/open in new tab
+          primary.setAttribute('href', href);
           download.setAttribute('href', href);
           try {
             const filename = href.split('/').pop() || `cv-${lang}.pdf`;
             download.setAttribute('download', filename);
-          } catch (_) {
-            download.setAttribute('download', '');
-          }
+          } catch { download.setAttribute('download', ''); }
         }
-
         download.setAttribute('aria-hidden', String(!isActive));
         if (!isActive) download.setAttribute('tabindex', '-1');
         else download.removeAttribute('tabindex');
       });
-    }
-
-    function renderPage(num) {
-      pageRendering = true;
-      pdfDoc.getPage(num).then(page => {
-        const viewport = page.getViewport({ scale: getScaleFactor(page) });
-        adjustCanvasSize(viewport);
-
-        const renderContext = {
-          canvasContext: ctx,
-          transform: getTransform(viewport),
-          viewport
-        };
-
-        page.render(renderContext).promise.then(() => {
-          pageRendering = false;
-          if (pageNumPending !== null) {
-            renderPage(pageNumPending);
-            pageNumPending = null;
-          }
-          updatePagerState();
-        });
-
-        addAnnotationsToPage(page, viewport);
-        updatePageCounter(num);
-      });
-    }
-
-    function getScaleFactor(page) {
-      const desiredWidth = postElement.getBoundingClientRect().width;
-      const origViewport = page.getViewport({ scale: 1 });
-      return desiredWidth / origViewport.width;
-    }
-
-    function adjustCanvasSize(viewport) {
-      const outputScale = window.devicePixelRatio * 2.0 || 1;
-      canvas.width = Math.floor(viewport.width * outputScale);
-      canvas.height = Math.floor(viewport.height * outputScale);
-      canvas.style.width = `${Math.floor(viewport.width)}px`;
-      canvas.style.height = `${Math.floor(viewport.height)}px`;
-    }
-
-    function getTransform(viewport) {
-      const outputScale = window.devicePixelRatio * 2.0 || 1;
-      return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-    }
-
-    function addAnnotationsToPage(page, viewport) {
-      page.getAnnotations().then(annotations => {
-        document.querySelectorAll('a.pdf-link.overlay').forEach(link => link.remove());
-        annotations.forEach(annotation => {
-          if (annotation.subtype === 'Link' && annotation.url) {
-            createLinkElement(annotation, viewport);
-          }
-        });
-      });
-    }
-
-    function createLinkElement(annotation, viewport) {
-      const [x1, y1, x2, y2] = annotation.rect;
-      const devX1 = x1 * viewport.transform[0] + viewport.transform[4];
-      const devY2 = y2 * viewport.transform[3] + viewport.transform[5];
-      const devW  = (x2 - x1) * viewport.transform[0];
-      const devH  = (y2 - y1) * viewport.transform[3];
-
-      const cssScaleX = canvas.clientWidth  / canvas.width;
-      const cssScaleY = canvas.clientHeight / canvas.height;
-
-      const left   = devX1 * cssScaleX;
-      const top    = (canvas.height - devY2) * cssScaleY;
-      const width  = devW * cssScaleX;
-      const height = devH * cssScaleY;
-
-      const linkElement = document.createElement('a');
-      linkElement.href = annotation.url;
-      linkElement.target = '_blank';
-      linkElement.rel = 'noopener';
-      linkElement.className = 'pdf-link overlay';
-
-      Object.assign(linkElement.style, {
-        position: 'absolute',
-        left: `${left}px`,
-        top: `${top}px`,
-        width: `${width}px`,
-        height: `${height}px`,
-      });
-
-      document.querySelector('.pdf-stage').appendChild(linkElement);
     }
 
     function updatePageCounter(num) {
@@ -164,19 +231,19 @@
     }
 
     function onPrevPage() {
-      if (pageNum <= 1) return;
+      if (!pdfDoc || pageNum <= 1) return;
       pageNum--;
       queueRenderPage(pageNum);
     }
 
     function onNextPage() {
-      if (pageNum >= pdfDoc.numPages) return;
+      if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
       pageNum++;
       queueRenderPage(pageNum);
     }
 
     function updatePagerState() {
-      if (!pdfDoc) return;
+      if (!pdfDoc) { prevBtn.disabled = true; nextBtn.disabled = true; return; }
       prevBtn.disabled = pageNum <= 1;
       nextBtn.disabled = pageNum >= pdfDoc.numPages;
     }
@@ -187,16 +254,22 @@
 
     // Intercept language button clicks to switch the viewer instead of navigating
     document.querySelectorAll('.lang-primary').forEach(btn => {
-      btn.addEventListener('click', (e) => {
-        e.preventDefault();                    // stop opening the PDF
+      btn.addEventListener('click', async (e) => {
+        e.preventDefault();
         const lang = e.currentTarget.dataset.lang;
-        if (lang && lang !== currentLang) loadPdf(lang);
-        else updateSplitButtons(lang);         // still refresh UI
+        if (lang && lang !== currentLang) {
+          await loadPdf(lang);
+        } else {
+          updateSplitButtons(lang);
+        }
       });
     });
 
-    // Clean any leftover PDF links in the overlay region
-    document.querySelectorAll('.pdf-stage a.pdf-link.overlay').forEach(link => link.remove());
+    // Clean leftover overlay links
+    stage.querySelectorAll('a.pdf-link.overlay').forEach(link => link.remove());
+
+    // Dispose on page unload to be extra safe
+    window.addEventListener('beforeunload', () => { disposePdf(); });
 
     // Initial load
     loadPdf('en');

@@ -4,9 +4,8 @@
 
 <figure
   {% if include.slot %}
-    slot="{{ include.slot }}"
-  {% endif %}
->
+  slot="{{ include.slot }}"
+  {% endif %}>
   <picture>
     <!-- Auto scaling with imagemagick -->
     <!--
@@ -18,36 +17,35 @@
         <source
           class="responsive-img-srcset"
           {% if ext == 'gif' or ext == 'jpeg' or ext == 'jpg' or ext == 'png' or ext == 'tiff' %}
-            srcset="{% for i in site.imagemagick.widths %}{{ img_path | relative_url }}-{{ i }}.webp {{ i }}w,{% endfor %}"
-            type="image/webp"
+          srcset="{% for i in site.imagemagick.widths %}{{ img_path | relative_url }}-{{ i }}.webp {{ i }}w,{% endfor %}"
+          type="image/webp"
           {% else %}
-            srcset="{{ include.path | relative_url }}"
+          srcset="{{ include.path | relative_url }}"
           {% endif %}
           {% if include.sizes %}
-            sizes="{{ include.sizes }}"
+          sizes="{{ include.sizes }}"
           {% else %}
-            sizes="95vw"
-          {% endif %}
-        >
+          sizes="95vw"
+          {% endif %}>
       {% endunless %}
     {% endif %}
     <img
       src="{% if include.url %}{{ include.url }}{% elsif include.cache_bust %}{{ include.path | relative_url | bust_file_cache }}{% else %}{{ include.path | relative_url }}{% endif %}"
       {% if include.class %}
-        class="{{ include.class }}"
+      class="{{ include.class }}"
       {% endif %}
       {% if include.width %}
-        width="{{ include.width }}"
+      width="{{ include.width }}"
       {% else %}
-        width="100%"
+      width="100%"
       {% endif %}
       {% if include.height %}
-        height="{{ include.height }}"
+      height="{{ include.height }}"
       {% else %}
-        height="auto"
+      height="auto"
       {% endif %}
       {% if include['min-width'] or include['min-height'] or include['max-width'] or include['max-height'] %}
-        style="
+      style="
           {% if include['min-width'] %}
             min-width: {{ include.min-width }};
           {% endif %}
@@ -63,21 +61,20 @@
         "
       {% endif %}
       {% if include.alt %}
-        alt="{{ include.alt }}"
+      alt="{{ include.alt }}"
       {% endif %}
       {% if include.title %}
-        title="{{ include.title }}"
+      title="{{ include.title }}"
       {% endif %}
       {% if include.zoomable %}
-        data-zoomable
+      data-zoomable
       {% endif %}
       {% if include.loading %}
-        loading="{{ include.loading }}"
+      loading="{{ include.loading }}"
       {% elsif site.lazy_loading_images %}
-        loading="lazy"
+      loading="lazy"
       {% endif %}
-      onerror="this.onerror=null; $('.responsive-img-srcset').remove();"
-    >
+      onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
   </picture>
 
   {% if include.caption %}

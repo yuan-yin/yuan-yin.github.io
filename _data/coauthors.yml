@@ -19,7 +19,7 @@
     url: https://scholar.google.com/citations?user=uG3VApUAAAAJ
 
 "le naour":
-  - firstname: ["Etienne"]
+  - firstname: ["Étienne"]
     url: https://scholar.google.fr/citations?user=hkQJ3HAAAAAJ
 
 "zablocki":
@@ -74,4 +74,56 @@
 
 "xu":
   - firstname: ["Yihong"]
-    url: https://www.linkedin.com/in/yihong-xu-326285109/
+    url: https://scholar.google.com/citations?user=vMLRRVkAAAAJ
+
+"bursuc":
+  - firstname: ["Andrei"]
+    url: https://abursuc.github.io
+
+"venkataramanan":
+  - firstname: ["Shashanka"]
+    url: https://shashankvkt.github.io/
+
+"regueiro espino":
+  - firstname: ["Ramón Daniel"]
+    url: https://rd-regueiroespino.github.io
+
+"mifsut benet":
+  - firstname: ["Jorge"]
+    url: https://jorge-mifsut.github.io
+
+"khayatan":
+  - firstname: ["Pegah"]
+    url: https://pegah-kh.github.io
+
+"migus":
+  - firstname: ["Léon"]
+    url: https://scholar.google.com/citations?user=Xc2x4fMAAAAJ
+
+"agoua":
+  - firstname: ["Ghislain", "Xwégnon"]
+    url: https://scholar.google.com/citations?user=KMxprj0AAAAJ
+
+"mazari":
+  - firstname: ["Jocelyn Ahmed"]
+    url: https://scholar.google.com/citations?user=KkPlX-EAAAAJ
+
+"rakotomamonjy":
+  - firstname: ["Alain"]
+    url: https://scholar.google.com/citations?user=INHspc0AAAAJx
+    
+"dona":
+  - firstname: ["Jérémie"]
+    url: https://scholar.google.com/citations?user=1jVw9UoAAAAJ
+
+"ayed":
+  - firstname: ["Ibrahim"]
+    url: https://scholar.google.com/citations?user=CkACLzQAAAAJ
+
+"pajot":
+  - firstname: ["Arthur"]
+    url: https://scholar.google.com/citations?user=9ff0JKYAAAAJ
+  
+"le guen":
+  - firstname: ["Vincent"]
+    url: https://scholar.google.com/citations?user=sFkWZ_EAAAAJ

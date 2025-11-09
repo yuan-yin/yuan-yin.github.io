@@ -5,7 +5,7 @@
       author={Yuan Yin and Shashanka Venkataramanan and Tuan-Hung Vu and Andrei Bursuc and Matthieu Cord},
       year={2025},
       month={9},
-      html={https://arxiv.org/abs/2509.04398}, 
+      arxiv={2509.04398},
       pdf={https://arxiv.org/pdf/2509.04398},
       preview={2025-ipa.png},
       abstract={Parameter-efficient fine-tuning (PEFT) methods, such as LoRA, reduce adaptation cost by injecting low-rank updates into pretrained weights. However, LoRA's down-projection is randomly initialized and data-agnostic, discarding potentially useful information. Prior analyses show that this projection changes little during training, while the up-projection carries most of the adaptation, making the random input compression a performance bottleneck. We propose IPA, a feature-aware projection framework that explicitly preserves information in the reduced hidden space. In the linear case, we instantiate IPA with algorithms approximating top principal components, enabling efficient projector pretraining with negligible inference overhead. Across language and vision benchmarks, IPA consistently improves over LoRA and DoRA, achieving on average 1.5 points higher accuracy on commonsense reasoning and 2.3 points on VTAB-1k, while matching full LoRA performance with roughly half the trainable parameters when the projection is frozen.}
@@ -19,8 +19,10 @@ author={Armand {Kassaï Koupaï} and Jorge {Mifsut Benet} and Yuan Yin and Jean-
 booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
 year={2024},
 month={Dec},
-pdf={https://arxiv.org/pdf/2410.23889},
-html={https://arxiv.org/abs/2410.23889},
+arxiv={2410.23889},
+pdf={https://proceedings.neurips.cc/paper_files/paper/2024/file/82844e428d9163a9f94830dc03af4f9c-Paper-Conference.pdf},
+html={https://proceedings.neurips.cc/paper_files/paper/2024/hash/82844e428d9163a9f94830dc03af4f9c-Abstract-Conference.html},
+code={https://github.com/itsakk/geps},
 preview={2024-geps.png},
 abstract={Solving parametric partial differential equations (PDEs) presents significant challenges for data-driven methods due to the sensitivity of spatio-temporal dynamics to variations in PDE parameters. Machine learning approaches often struggle to capture this variability. To address this, data-driven approaches learn parametric PDEs by sampling a very large variety of trajectories with varying PDE parameters. We first show that incorporating conditioning mechanisms for learning parametric PDEs is essential and that among them, adaptive conditioning, allows stronger generalization. As existing adaptive conditioning methods do not scale well with respect to the number of parameters to adapt in the neural solver, we propose GEPS, a simple adaptation mechanism to boost GEneralization in Pde Solvers via a first-order optimization and low-rank rapid adaptation of a small set of context parameters. We demonstrate the versatility of our approach for both fully data-driven and for physics-aware neural solvers. Validation performed on a whole range of spatio-temporal forecasting problems demonstrates excellent performance for generalizing to unseen conditions including initial conditions, PDE coefficients, forcing terms and solution domain. }
 }
@@ -33,8 +35,10 @@ abstract={Solving parametric partial differential equations (PDEs) presents sign
   month={Sep},
   abbr = {ECCV WS},
   preview={2024-regents.png},
+  arxiv={2409.07830},
   pdf={https://arxiv.org/pdf/2409.07830},
-  html={https://arxiv.org/abs/2409.07830},
+  code={https://github.com/valeoai/ReGentS},
+  html={https://link.springer.com/chapter/10.1007/978-3-031-91767-7_18},
   abstract={Machine learning based autonomous driving systems often face challenges with safety-critical scenarios that are rare in real-world data, hindering their large-scale deployment. While increasing real-world training data coverage could address this issue, it is costly and dangerous. This work explores generating safety-critical driving scenarios by modifying complex real-world regular scenarios through trajectory optimization. We propose ReGentS, which stabilizes generated trajectories and introduces heuristics to avoid obvious collisions and optimization problems. Our approach addresses unrealistic diverging trajectories and unavoidable collision scenarios that are not useful for training robust planner. We also extend the scenario generation framework to handle real-world data with up to 32 agents. Additionally, by using a differentiable simulator, our approach simplifies gradient descent-based optimization involving a simulator, paving the way for future advancements.}
 }
 
@@ -46,9 +50,11 @@ year={2025},
 month={5},
 abbr = {ICLR},
 preview={2025-neural-solver.png},
-pdf={https://arxiv.org/pdf/2410.06820},
-html={https://arxiv.org/abs/2410.06820},
-abstract={Physics-informed deep learning often faces optimization challenges due to the complexity of solving partial differential equations (PDEs), which involve exploring large solution spaces, require numerous iterations, and can lead to unstable training. These challenges arise particularly from the ill-conditioning of the optimization problem, caused by the differential terms in the loss function. To address these issues, we propose learning a solver, i.e., solving PDEs using a physics-informed iterative algorithm trained on data. Our method learns to condition a gradient descent algorithm that automatically adapts to each PDE instance, significantly accelerating and stabilizing the optimization process and enabling faster convergence of physics-aware models. Furthermore, while traditional physics-informed methods solve for a single PDE instance, our approach addresses parametric PDEs. Specifically, our method integrates the physical loss gradient with the PDE parameters to solve over a distribution of PDE parameters, including coefficients, initial conditions, or boundary conditions. We demonstrate the effectiveness of our method through empirical experiments on multiple datasets, comparing training and test-time optimization performance.}
+arxiv={2410.06820},
+html={https://openreview.net/forum?id=jqVj8vCQsT},
+pdf={https://openreview.net/pdf?id=jqVj8vCQsT},
+abstract={Physics-informed deep learning often faces optimization challenges due to the complexity of solving partial differential equations (PDEs), which involve exploring large solution spaces, require numerous iterations, and can lead to unstable training. These challenges arise particularly from the ill-conditioning of the optimization problem, caused by the differential terms in the loss function. To address these issues, we propose learning a solver, i.e., solving PDEs using a physics-informed iterative algorithm trained on data. Our method learns to condition a gradient descent algorithm that automatically adapts to each PDE instance, significantly accelerating and stabilizing the optimization process and enabling faster convergence of physics-aware models. Furthermore, while traditional physics-informed methods solve for a single PDE instance, our approach addresses parametric PDEs. Specifically, our method integrates the physical loss gradient with the PDE parameters to solve over a distribution of PDE parameters, including coefficients, initial conditions, or boundary conditions. We demonstrate the effectiveness of our method through empirical experiments on multiple datasets, comparing training and test-time optimization performance.},
+code={https://github.com/2ailesB/neural-parametric-solver},
 }
 
 @misc{xu2024ppt,
@@ -56,8 +62,8 @@ abstract={Physics-informed deep learning often faces optimization challenges due
     author={Yihong Xu and Yuan Yin and Tuan-Hung Vu and Alexandre Boulch and Éloi Zablocki and Matthieu Cord},
     year={2024},
     month={12},
+    arxiv={2412.06491},
     pdf={https://arxiv.org/pdf/2412.06491},
-    html={https://arxiv.org/abs/2412.06491},
     preview={2024-ppt.png},
     abstract={Motion forecasting (MF) for autonomous driving aims at anticipating trajectories of surrounding agents in complex urban scenarios. In this work, we investigate a mixed strategy in MF training that first pre-train motion forecasters on pseudo-labeled data, then fine-tune them on annotated data. To obtain pseudo-labeled trajectories, we propose a simple pipeline that leverages off-the-shelf single-frame 3D object detectors and non-learning trackers. The whole pre-training strategy including pseudo-labeling is coined as PPT. Our extensive experiments demonstrate that: (1) combining PPT with supervised fine-tuning on annotated data achieves superior performance on diverse testbeds, especially under annotation-efficient regimes, (2) scaling up to multiple datasets improves the previous state-of-the-art and (3) PPT helps enhance cross-dataset generalization. Our findings showcase PPT as a promising pre-training solution for robust motion forecasting in diverse autonomous driving contexts.}
 }
@@ -79,11 +85,13 @@ abstract={Physics-informed deep learning often faces optimization challenges due
   journal={Transactions on Machine Learning Research},
   issn={2835-8856},
   year={2024},
+  arxiv={2306.05880},
   pdf={https://openreview.net/pdf?id=P1vzXDklar},
   html={https://openreview.net/forum?id=P1vzXDklar},
   code={https://github.com/EtienneLnr/TimeFlow},
   preview={2023-timeflow.png},
   month={April},
+  google_scholar_id = {UebtZRa9Y70C},
 }
 
 @phdthesis{DBLP:phd/hal/Yin23,
@@ -97,7 +105,9 @@ abstract={Physics-informed deep learning often faces optimization challenges due
   year         = {2023},
   month = {Jun},
   html          = {https://tel.archives-ouvertes.fr/tel-04164673},
+  pdf           = {https://tel.archives-ouvertes.fr/tel-04164673/document},
   award_name = {Accessit to the AFIA IA 2024 Thesis Prize},
+  google_scholar_id = {5nxA0vEk-isC},
   abstract = {Deep learning has made significant progress in various fields and has emerged as a promising tool for modeling physical dynamical phenomena that exhibit highly nonlinear relationships. However, existing approaches are limited in their ability to make physically sound predictions due to the lack of prior knowledge and to handle real-world scenarios where data comes from multiple dynamics or is irregularly distributed in time and space. This thesis aims to overcome these limitations in the following directions: improving neural network-based dynamics modeling by leveraging physical models through hybrid modeling; extending the generalization power of dynamics models by learning commonalities from data of different dynamics to extrapolate to unseen systems; and handling free-form data and continuously predicting phenomena in time and space through continuous modeling. We highlight the versatility of deep learning techniques, and the proposed directions show promise for improving their accuracy and generalization power, paving the way for future research in new applications.}
 }
 
@@ -112,6 +122,8 @@ abstract={Physics-informed deep learning often faces optimization challenges due
 	code = {https://github.com/mkirchmeyer/DINo},
 	arxiv = {2209.14855},
 	month = {May},
+  google_scholar_id = {roLk4NBRz8UC},
+  pdf = {https://openreview.net/pdf?id=B73niNjbPs},
   preview = {2023-dino.png},
 	abstract = {Effective data-driven PDE forecasting methods often rely on fixed spatial and / or temporal discretizations. This raises limitations in real-world applications like weather prediction where flexible extrapolation at arbitrary spatiotemporal locations is required. We address this problem by introducing a new data-driven approach, DINo, that models a PDE's flow with continuous-time dynamics of spatially continuous functions. This is achieved by embedding spatial observations independently of their discretization via Implicit Neural Representations in a small latent space temporally driven by a learned ODE. This separate and flexible treatment of time and space makes DINo the first data-driven model to combine the following advantages. It extrapolates at arbitrary spatial and temporal locations; it can learn from sparse irregular grids or manifolds; at test time, it generalizes to new grids or resolutions. DINo outperforms alternative neural PDE forecasters in a variety of challenging generalization scenarios on representative PDE systems.},
 	year = {2023}
@@ -127,7 +139,10 @@ abstract={Physics-informed deep learning often faces optimization challenges due
   month = {Dec},
   arxiv={2306.07266},
   preview={2023-coral.png},
-  html={https://openreview.net/forum?id=4jEjq5nhg1},
+  google_scholar_id = {hqOjcs7Dif8C},
+  html={https://proceedings.neurips.cc/paper_files/paper/2023/hash/df54302388bbc145aacaa1a54a4a5933-Abstract-Conference.html},
+  code={https://github.com/LouisSerrano/coral},
+  pdf={https://proceedings.neurips.cc/paper_files/paper/2023/file/df54302388bbc145aacaa1a54a4a5933-Paper-Conference.pdf},
   abstract = {Machine learning approaches for solving partial differential equations require learning mappings between function spaces. While convolutional or graph neural networks are constrained to discretized functions, neural operators present a promising milestone toward mapping functions directly. Despite impressive results they still face challenges with respect to the domain geometry and typically rely on some form of discretization. In order to alleviate such limitations, we present CORAL, a new method that leverages coordinate-based networks for solving PDEs on general geometries. CORAL is designed to remove constraints on the input mesh, making it applicable to any spatial sampling and geometry. Its ability extends to diverse problem domains, including PDE solving, spatio-temporal forecasting, and inverse problems like geometric design. CORAL demonstrates robust performance across multiple resolutions and performs well in both convex and non-convex domains, surpassing or performing on par with state-of-the-art models.}
 }
 
@@ -136,7 +151,7 @@ abstract={Physics-informed deep learning often faces optimization challenges due
   title = {INFINITY: Neural Field Modeling for Reynolds-Averaged Navier-Stokes Equations},
   author = {Serrano, Louis and Migus, Léon and Yin, Yuan and Mazari, Jocelyn Ahmed and Gallinari, Patrick},
   url = {https://hal.science/hal-04171439},
-  booktitle = {{Workshop on Synergy of Scientific and Machine Learning Modeling (ICML 2023)}},
+  booktitle = {{ICML 2023 Workshop on Synergy of Scientific and Machine Learning Modeling}},
   address = {Honolulu, HI, United States},
   year = {2023},
   month = {Jul},
@@ -171,10 +186,12 @@ abstract={Physics-informed deep learning often faces optimization challenges due
 	series = {Proceedings of Machine Learning Research},
 	title = {Generalizing to New Physical Systems via Context-Informed Dynamics Model},
 	html = {https://proceedings.mlr.press/v162/kirchmeyer22a.html},
+	pdf = {https://proceedings.mlr.press/v162/kirchmeyer22a/kirchmeyer22a.pdf},
 	code = {https://github.com/yuan-yin/CoDA},
   preview = {2022-coda.jpg},
 	abstract = {Data-driven approaches to modeling physical systems fail to generalize to unseen systems that share the same general dynamics with the learning domain, but correspond to different physical contexts. We propose a new framework for this key problem, context-informed dynamics adaptation (CoDA), which takes into account the distributional shift across systems for fast and efficient adaptation to new dynamics. CoDA leverages multiple environments, each associated to a different dynamic, and learns to condition the dynamics model on contextual parameters, specific to each environment. The conditioning is performed via a hypernetwork, learned jointly with a context vector from observed data. The proposed formulation constrains the search hypothesis space to foster fast adaptation and better generalization across environments. We theoretically motivate our approach and show state-of-the-art generalization results on a set of nonlinear dynamics, representative of a variety of application domains. We also show, on these systems, that new system parameters can be inferred from context vectors with minimal supervision.},
 	volume = {162},
+  google_scholar_id = {WF5omc3nYNoC},
 	arxiv = {2202.01889},
 	year = {2022},
 	month = {Jul}	
@@ -213,7 +230,9 @@ abstract={Physics-informed deep learning often faces optimization challenges due
 	code = {https://github.com/yuan-yin/LEADS},
 	html = {https://proceedings.neurips.cc/paper/2021/hash/3df1d4b96d8976ff5986393e8767f5b2-Abstract.html},
 	year = {2021},
+  pdf = {https://proceedings.neurips.cc/paper_files/paper/2021/file/3df1d4b96d8976ff5986393e8767f5b2-Paper.pdf},
   preview = {2021-leads.png},
+  google_scholar_id = {Y0pCki6q_DkC},
   month = {Dec},
 }
 
@@ -228,16 +247,19 @@ abstract={Physics-informed deep learning often faces optimization challenges due
 	title = {Augmenting Physical Models with Deep Networks for Complex Dynamics Forecasting},
 	html = {https://openreview.net/forum?id=kmG8vRXTFv},
 	code = {https://github.com/yuan-yin/APHYNITY},
+  pdf = {https://iopscience.iop.org/article/10.1088/1742-5468/ac3ae5/pdf},
 	arxiv = {2010.04456},
 	year = {2021},
   preview = {2021-aphynity.png},
-  month = {May}
+  month = {May},
+  google_scholar_id = {ufrVoPGSRksC}
 }
 
 @misc{yin2020unsupervised,
 	author = {Yin, Yuan and Pajot, Arthur and {de Bézenac}, Emmanuel and Gallinari, Patrick},
 	title = {Unsupervised Spatiotemporal Data Inpainting},
 	html = {https://openreview.net/forum?id=rylqmxBKvH},
+  pdf = {https://openreview.net/pdf?id=rylqmxBKvH},
 	abstract = {We tackle the problem of inpainting occluded area in spatiotemporal sequences, such as cloud occluded satellite observations, in an unsupervised manner. We place ourselves in the setting where there is neither access to paired nor unpaired training data. We consider several cases in which the underlying information of the observed sequence in certain areas is lost through an observation operator. In this case, the only available information is provided by the observation of the sequence, the nature of the measurement process and its associated statistics. We propose an unsupervised-learning framework to retrieve the most probable sequence using a generative adversarial network. We demonstrate the capacity of our model to exhibit strong reconstruction capacity on several video datasets such as satellite sequences or natural videos.},
 	year = {2020},
   month = {Sep},
@@ -252,7 +274,7 @@ abstract={Physics-informed deep learning often faces optimization challenges due
 	title = {Unsupervised Inpainting for Occluded Sea Surface Temperature Sequences},
 	year = {2019},
   month = {Dec},
-	html = {https://doi.org/10.5065/y82j-f154},
+	html = {https://n2t.org/ark:/85065/d7gf0xp3},
 	code = {https://github.com/yuan-yin/UNISST},
 	abstract = {Sea Surface Temperature (SST) data remotely detected from satellites are inevitably occluded by clouds or rains. To learn the prior of SST data and complete the missing part, inpainting approaches in machine learning often require ground truth in the occluded area, which is not applicable for remote SST. In this paper, we propose an inpainting approach based on generative adversarial networks (GANs) for occluded SST. It is capable to complete the occluded area without any supervision on ground truth data of the occluded area. Our framework is evaluated on real SST data with simulated cloud masks.}
 }
@@ -272,5 +294,7 @@ abstract={Physics-informed deep learning often faces optimization challenges due
   pages        = {266--277},
   year         = {2017},
   month = {Feb},
-  html          = {https://doi.org/10.1016/j.imavis.2016.07.001},
+  doi          = {10.1016/j.imavis.2016.07.001},
+  html          = {https://www.sciencedirect.com/science/article/abs/pii/S026288561630110X},
+  google_scholar_id = {UeHWp8X0CEIC},
 }

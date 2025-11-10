@@ -4,10 +4,11 @@ layout: default
 <div class="post">
   <header class="post-header">
     <h1 class="post-title">
-      <span class="font-weight-lighter">Hi! I'm</span>
+      <span class="font-weight-light">Hi! I'm</span>
       {% if site.title == 'blank' %}
-        <span class="font-weight-bold">{{ site.first_name }}</span><span class="font-weight-lighter">{{ site.middle_name }} {{ site.last_name }}</span>
-        <span class="font-weight-lighter" style="font-size:18px;">{{ site.last_name_alt }}</span><span class="font-weight-bold" style="font-size:18px;">{{ site.first_name_alt }}</span>
+        <span class="font-weight-bold">{{ site.first_name }}</span>
+        <span class="font-weight-light" style="font-variant: small-caps;">{{ site.middle_name }} {{ site.last_name }}</span>
+        <span class="font-weight-light" style="font-size:18px;">{{ site.last_name_alt }}</span><span class="font-weight-bold" style="font-size:18px;">{{ site.first_name_alt }}</span>
       {% else %}
         {{ site.title }}
       {% endif %}
@@ -24,7 +25,7 @@ layout: default
             {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
           {% else %}
             {% assign profile_image_class = 'img-fluid z-depth-1
-                                                              rounded' %}
+                                                                                                        rounded' %}
           {% endif %}
           {% capture sizes %}(min-width: {{site.max_width}}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px)
       30vw, 95vw"{% endcapture %}

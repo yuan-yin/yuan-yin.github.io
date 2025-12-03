@@ -4,8 +4,6 @@
 
 // Typography
 
-@import url('https://fonts.googleapis.com/css2?family=DM Sans:wght@100;300;500;700&display=swap');
-
 p,
 h1,
 h2,
@@ -795,7 +793,6 @@ footer.sticky-bottom {
     border-top: 1px solid var(--global-divider-color);
     padding-top: 1rem;
     margin-top: 2rem;
-    margin-bottom: -2rem;
     text-align: right;
   }
 
@@ -814,14 +811,13 @@ footer.sticky-bottom {
       }
 
       .abbr {
-        height: 2rem;
         margin-bottom: 0.5rem;
 
         abbr {
           display: inline-block;
           background-color: var(--global-theme-color);
-          padding-left: 1rem;
-          padding-right: 1rem;
+          margin-bottom: 0.5rem;
+          color: var(--global-card-bg-color) !important;
 
           a {
             color: white;

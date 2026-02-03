@@ -63,12 +63,13 @@ abstract={Physics-informed deep learning often faces optimization challenges due
 code={https://github.com/2ailesB/neural-parametric-solver},
 }
 
-@misc{xu2024ppt,
+@inproceedings{xu2026ppt,
     title={PPT: Pre-Training with Pseudo-Labeled Trajectories for Motion Forecasting},
     author={Yihong Xu and Yuan Yin and Tuan-Hung Vu and Alexandre Boulch and Éloi Zablocki and Matthieu Cord},
-    year={2024},
-    month={12},
-    arxiv={2412.06491},
+    year={2026},
+    month={1},
+    abbr = {ICRA},
+    booktitle={The 2026 IEEE International Conference on Robotics and Automation},
     pdf={https://arxiv.org/pdf/2412.06491},
     preview={2024-ppt.png},
     abstract={Motion forecasting (MF) for autonomous driving aims at anticipating trajectories of surrounding agents in complex urban scenarios. In this work, we investigate a mixed strategy in MF training that first pre-train motion forecasters on pseudo-labeled data, then fine-tune them on annotated data. To obtain pseudo-labeled trajectories, we propose a simple pipeline that leverages off-the-shelf single-frame 3D object detectors and non-learning trackers. The whole pre-training strategy including pseudo-labeling is coined as PPT. Our extensive experiments demonstrate that: (1) combining PPT with supervised fine-tuning on annotated data achieves superior performance on diverse testbeds, especially under annotation-efficient regimes, (2) scaling up to multiple datasets improves the previous state-of-the-art and (3) PPT helps enhance cross-dataset generalization. Our findings showcase PPT as a promising pre-training solution for robust motion forecasting in diverse autonomous driving contexts.}

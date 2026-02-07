@@ -1,36 +1,47 @@
 ---
 ---
+@misc{kirby2026drivingregisters,
+      title={Driving on Registers}, 
+      author={Ellington Kirby and Alexandre Boulch and Yihong Xu and Yuan Yin and Gilles Puy and Éloi Zablocki and Andrei Bursuc and Spyros Gidaris and Renaud Marlet and Florent Bartoccioni and Anh-Quan Cao and Nermin Samet and Tuan-Hung VU and Matthieu Cord},
+      year={2026},
+      month={Jan},
+      pdf={https://arxiv.org/pdf/2601.05083},
+      code={https://github.com/valeoai/DrivoR},
+      html={https://valeoai.github.io/driving-on-registers},
+      preview={2026-drivor.png},
+      abstract={We present DrivoR, a simple and efficient transformer-based architecture for end-to-end autonomous driving. Our approach builds on pretrained Vision Transformers (ViTs) and introduces camera-aware register tokens that compress multi-camera features into a compact scene representation, significantly reducing downstream computation without sacrificing accuracy. These tokens drive two lightweight transformer decoders that generate and then score candidate trajectories. The scoring decoder learns to mimic an oracle and predicts interpretable sub-scores representing aspects such as safety, comfort, and efficiency, enabling behavior-conditioned driving at inference. Despite its minimal design, DrivoR outperforms or matches strong contemporary baselines across NAVSIM-v1, NAVSIM-v2, and the photorealistic closed-loop HUGSIM benchmark. Our results show that a pure-transformer architecture, combined with targeted token compression, is sufficient for accurate, efficient, and adaptive end-to-end driving. Code and checkpoints will be made available.},
+}
+
 @article{yin2025ipainformationpreservinginputprojection,
       abbr={TMLR},
       title={IPA: An Information-Reconstructive Input Projection Framework for Efficient Foundation Model Adaptation}, 
       author={Yuan Yin and Shashanka Venkataramanan and Tuan-Hung Vu and Andrei Bursuc and Matthieu Cord},
       year={2025},
       month={9},
-      arxiv={2509.04398},
       journal={Transactions on Machine Learning Research},
       issn={2835-8856},
       code={https://github.com/valeoai/peft-ipa},
       pdf={https://arxiv.org/pdf/2509.04398},
-      award = {IPA received the Best Paper Award at NeurIPS 2025 CCFM Workshop.},
-      award_name = {Best Paper at NeurIPS 2025 CCFM Workshop},
+      award={IPA received the Best Paper Award at NeurIPS 2025 CCFM Workshop.},
+      award_name={Best Paper at NeurIPS 2025 CCFM Workshop},
       preview={2025-ipa.png},
       abstract={Parameter-efficient fine-tuning (PEFT) methods, such as LoRA, reduce adaptation cost by injecting low-rank updates into pretrained weights. However, LoRA's down-projection is randomly initialized and data-agnostic, discarding potentially useful information. Prior analyses show that this projection changes little during training, while the up-projection carries most of the adaptation, making the random input compression a performance bottleneck. We propose IPA, a feature-aware projection framework that explicitly preserves information in the reduced hidden space. In the linear case, we instantiate IPA with algorithms approximating top principal components, enabling efficient projector pretraining with negligible inference overhead. Across language and vision benchmarks, IPA consistently improves over LoRA and DoRA, achieving on average 1.5 points higher accuracy on commonsense reasoning and 2.3 points on VTAB-1k, while matching full LoRA performance with roughly half the trainable parameters when the projection is frozen.}
 }
 
 
 @inproceedings{koupai2024learn,
-abbr={NeurIPS},
-title={GEPS: Boosting Generalization in Parametric {PDE} Neural Solvers through Adaptive Conditioning},
-author={Armand {Kassaï Koupaï} and Jorge {Mifsut Benet} and Yuan Yin and Jean-Noël Vittaut and Patrick Gallinari},
-booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
-year={2024},
-month={Dec},
-arxiv={2410.23889},
-pdf={https://proceedings.neurips.cc/paper_files/paper/2024/file/82844e428d9163a9f94830dc03af4f9c-Paper-Conference.pdf},
-html={https://proceedings.neurips.cc/paper_files/paper/2024/hash/82844e428d9163a9f94830dc03af4f9c-Abstract-Conference.html},
-code={https://github.com/itsakk/geps},
-preview={2024-geps.png},
-abstract={Solving parametric partial differential equations (PDEs) presents significant challenges for data-driven methods due to the sensitivity of spatio-temporal dynamics to variations in PDE parameters. Machine learning approaches often struggle to capture this variability. To address this, data-driven approaches learn parametric PDEs by sampling a very large variety of trajectories with varying PDE parameters. We first show that incorporating conditioning mechanisms for learning parametric PDEs is essential and that among them, adaptive conditioning, allows stronger generalization. As existing adaptive conditioning methods do not scale well with respect to the number of parameters to adapt in the neural solver, we propose GEPS, a simple adaptation mechanism to boost GEneralization in Pde Solvers via a first-order optimization and low-rank rapid adaptation of a small set of context parameters. We demonstrate the versatility of our approach for both fully data-driven and for physics-aware neural solvers. Validation performed on a whole range of spatio-temporal forecasting problems demonstrates excellent performance for generalizing to unseen conditions including initial conditions, PDE coefficients, forcing terms and solution domain. }
+      abbr={NeurIPS},
+      title={GEPS: Boosting Generalization in Parametric {PDE} Neural Solvers through Adaptive Conditioning},
+      author={Armand {Kassaï Koupaï} and Jorge {Mifsut Benet} and Yuan Yin and Jean-Noël Vittaut and Patrick Gallinari},
+      booktitle={The Thirty-eighth Annual Conference on Neural Information Processing Systems},
+      year={2024},
+      month={Dec},
+      arxiv={2410.23889},
+      pdf={https://proceedings.neurips.cc/paper_files/paper/2024/file/82844e428d9163a9f94830dc03af4f9c-Paper-Conference.pdf},
+      html={https://proceedings.neurips.cc/paper_files/paper/2024/hash/82844e428d9163a9f94830dc03af4f9c-Abstract-Conference.html},
+      code={https://github.com/itsakk/geps},
+      preview={2024-geps.png},
+      abstract={Solving parametric partial differential equations (PDEs) presents significant challenges for data-driven methods due to the sensitivity of spatio-temporal dynamics to variations in PDE parameters. Machine learning approaches often struggle to capture this variability. To address this, data-driven approaches learn parametric PDEs by sampling a very large variety of trajectories with varying PDE parameters. We first show that incorporating conditioning mechanisms for learning parametric PDEs is essential and that among them, adaptive conditioning, allows stronger generalization. As existing adaptive conditioning methods do not scale well with respect to the number of parameters to adapt in the neural solver, we propose GEPS, a simple adaptation mechanism to boost GEneralization in Pde Solvers via a first-order optimization and low-rank rapid adaptation of a small set of context parameters. We demonstrate the versatility of our approach for both fully data-driven and for physics-aware neural solvers. Validation performed on a whole range of spatio-temporal forecasting problems demonstrates excellent performance for generalizing to unseen conditions including initial conditions, PDE coefficients, forcing terms and solution domain. }
 }
 
 @inproceedings{yin2024regents,
@@ -65,7 +76,7 @@ code={https://github.com/2ailesB/neural-parametric-solver},
 
 @inproceedings{xu2026ppt,
     title={PPT: Pre-Training with Pseudo-Labeled Trajectories for Motion Forecasting},
-    author={Yihong Xu and Yuan Yin and Tuan-Hung Vu and Alexandre Boulch and Éloi Zablocki and Matthieu Cord},
+    author={Yihong Xu* and Yuan Yin* and Tuan-Hung Vu and Alexandre Boulch and Éloi Zablocki and Matthieu Cord},
     year={2026},
     month={1},
     abbr = {ICRA},

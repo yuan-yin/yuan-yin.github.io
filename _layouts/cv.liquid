@@ -120,8 +120,14 @@ layout: default
     let hasLoadedOnce = false;
 
     const urls = {
-      en: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
-      fr: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+      en: {
+        light: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
+        dark: "{{ page.cv_pdf_en_dark | default: page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+      },
+      fr: {
+        light: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
+        dark: "{{ page.cv_pdf_fr_dark | default: page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+      }
     };
 
     async function disposePdf({ clearCanvas = true } = {}) {
@@ -167,17 +173,22 @@ layout: default
       nextBtn.disabled = true;
     }
 
-    async function loadPdf(lang) {
-      const url = urls[lang];
+    async function loadPdf(lang, { initialPage = 1 } = {}) {
+      const url = getPdfUrl(lang);
       currentLang = lang;
       const isInitialLoad = !hasLoadedOnce;
 
       // Fully tear down previous resources before starting a new load
       firstPageRendered = false;
       postElement.classList.add('cv-loading');
-      postElement.classList.remove('cv-ready', 'cv-controls-ready', 'cv-error');
+      postElement.classList.remove('cv-error');
       postElement.classList.toggle('cv-initial-loading', isInitialLoad);
       stage.setAttribute('aria-busy', 'true');
+      if (isInitialLoad) {
+        postElement.classList.remove('cv-ready', 'cv-controls-ready');
+      } else {
+        postElement.classList.add('cv-ready', 'cv-controls-ready');
+      }
       await disposePdf({ clearCanvas: isInitialLoad });
       if (isInitialLoad) {
         pageNumElement.textContent = '...';
@@ -204,7 +215,7 @@ layout: default
       }
 
       pageCountElement.textContent = pdfDoc.numPages;
-      pageNum = 1;
+      pageNum = Math.min(initialPage, pdfDoc.numPages);
       updateSplitButtons(lang);
       updatePagerState();
       await renderPage(pageNum);
@@ -295,6 +306,17 @@ layout: default
       ctx.drawImage(renderCanvas, 0, 0);
     }
 
+    function getComputedSiteTheme() {
+      const theme = document.documentElement.getAttribute('data-theme');
+      if (theme) return theme;
+      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    }
+
+    function getPdfUrl(lang = currentLang) {
+      const theme = getComputedSiteTheme();
+      return urls[lang]?.[theme] || urls[lang]?.light;
+    }
+
     function getTransform(viewport) {
       const outputScale = (window.devicePixelRatio || 1) * 2.0;
       return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
@@ -352,12 +374,15 @@ layout: default
         primary.classList.toggle('active', isActive);
         primary.setAttribute('aria-pressed', String(isActive));
 
-        const href = urls[lang];
+        const href = getPdfUrl(lang);
+        const downloadHref = urls[lang]?.light;
         if (href) {
           primary.setAttribute('href', href);
-          download.setAttribute('href', href);
+        }
+        if (downloadHref) {
+          download.setAttribute('href', downloadHref);
           try {
-            const filename = href.split('/').pop() || `cv-${lang}.pdf`;
+            const filename = downloadHref.split('/').pop() || `cv-${lang}.pdf`;
             download.setAttribute('download', filename);
           } catch { download.setAttribute('download', ''); }
         }
@@ -373,7 +398,10 @@ layout: default
 
     function queueRenderPage(num) {
       if (pageRendering) pageNumPending = num;
-      else renderPage(num);
+      else {
+        canvas.classList.add('is-updating');
+        renderPage(num).finally(() => canvas.classList.remove('is-updating'));
+      }
     }
 
     function onPrevPage() {
@@ -414,8 +442,18 @@ layout: default
     // Clean leftover overlay links
     stage.querySelectorAll('a.pdf-link.overlay').forEach(link => link.remove());
 
+    const themeObserver = new MutationObserver((records) => {
+      if (pdfDoc && firstPageRendered && records.some(record => record.attributeName === 'data-theme')) {
+        loadPdf(currentLang, { initialPage: pageNum });
+      }
+    });
+    themeObserver.observe(document.documentElement, { attributes: true });
+
     // Dispose on page unload to be extra safe
-    window.addEventListener('beforeunload', () => { disposePdf(); });
+    window.addEventListener('beforeunload', () => {
+      themeObserver.disconnect();
+      disposePdf();
+    });
 
     // Initial load
     loadPdf('en');
@@ -512,6 +550,13 @@ layout: default
       transform: translateY(0);
     }
 
+    #the-canvas.is-updating {
+      opacity: 0.92;
+      transition:
+        opacity 120ms ease,
+        transform 120ms ease;
+    }
+
     .pdf-loading,
     .pdf-error {
       position: absolute;
@@ -529,8 +574,11 @@ layout: default
     }
 
     .pdf-error,
-    .cv-ready .pdf-loading,
     .cv-ready .pdf-error {
+      display: none;
+    }
+
+    .cv-ready:not(.cv-loading) .pdf-loading {
       display: none;
     }
 

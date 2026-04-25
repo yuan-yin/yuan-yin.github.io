@@ -1,0 +1,103 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+# Generate dark-mode CV PDFs from the light PDF exports.
+#
+# Requirements:
+#   brew install qpdf
+#
+# Default usage:
+#   bin/generate_dark_cv_pdfs
+#
+# Custom source/output pairs:
+#   bin/generate_dark_cv_pdfs source.pdf output-dark.pdf [source2.pdf output2-dark.pdf ...]
+
+require "fileutils"
+require "tmpdir"
+
+DEFAULT_PAIRS = [
+  ["assets/pdf/cv_public_en.pdf", "assets/pdf/cv_public_en_dark.pdf"],
+  ["assets/pdf/cv_public_fr.pdf", "assets/pdf/cv_public_fr_dark.pdf"]
+].freeze
+
+PAGE_FILL = "q 0.122 0.122 0.137 rg 0 0 612 792 re f Q\n".b.freeze
+TEXT_COLOR = "0.945 0.933 0.969"
+MUTED_COLOR = "0.66 0.64 0.70"
+LIGHT_RULE_COLOR = "0.52 0.50 0.56"
+
+def usage
+  warn "Usage: bin/generate_dark_cv_pdfs [source.pdf output-dark.pdf ...]"
+end
+
+def require_tool!(name)
+  return if system("which", name, out: File::NULL, err: File::NULL)
+
+  abort "Missing required tool: #{name}. Install qpdf first, which provides qpdf and fix-qdf."
+end
+
+def source_output_pairs(args)
+  return DEFAULT_PAIRS if args.empty?
+
+  unless args.length.even?
+    usage
+    exit 1
+  end
+
+  args.each_slice(2).to_a
+end
+
+def replace_color_operators(content)
+  content
+    .gsub(/(?<![\d.])0 G 0 g(?![\d.])/, "#{TEXT_COLOR} RG #{TEXT_COLOR} rg")
+    .gsub(/(?<![\d.])0 G(?![\d.])/, "#{TEXT_COLOR} RG")
+    .gsub(/(?<![\d.])0 g(?![\d.])/, "#{TEXT_COLOR} rg")
+    .gsub(/(?<![\d.])0\.5 G 0\.5 g(?![\d.])/, "#{MUTED_COLOR} RG #{MUTED_COLOR} rg")
+    .gsub(/(?<![\d.])0\.5 G(?![\d.])/, "#{MUTED_COLOR} RG")
+    .gsub(/(?<![\d.])0\.5 g(?![\d.])/, "#{MUTED_COLOR} rg")
+    .gsub(/(?<![\d.])0\.75 G 0\.75 g(?![\d.])/, "#{LIGHT_RULE_COLOR} RG #{LIGHT_RULE_COLOR} rg")
+    .gsub(/(?<![\d.])0\.75 G(?![\d.])/, "#{LIGHT_RULE_COLOR} RG")
+    .gsub(/(?<![\d.])0\.75 g(?![\d.])/, "#{LIGHT_RULE_COLOR} rg")
+end
+
+def darken_qdf(pdf_bytes)
+  pdf_bytes.gsub(/(%% Contents for page \d+.*?stream\n)(.*?)(\nendstream)/m) do
+    header = Regexp.last_match(1)
+    body = Regexp.last_match(2)
+    footer = Regexp.last_match(3)
+
+    header + PAGE_FILL + replace_color_operators(body) + footer
+  end
+end
+
+def run!(*cmd)
+  return if system(*cmd)
+
+  abort "Command failed: #{cmd.join(" ")}"
+end
+
+def generate_dark_pdf(source, output)
+  abort "Missing source PDF: #{source}" unless File.file?(source)
+
+  FileUtils.mkdir_p(File.dirname(output))
+
+  Dir.mktmpdir("dark-cv-pdf") do |dir|
+    qdf = File.join(dir, "source.qdf.pdf")
+    dark_qdf = File.join(dir, "dark.qdf.pdf")
+    fixed_qdf = File.join(dir, "dark.fixed.qdf.pdf")
+
+    run!("qpdf", "--qdf", "--object-streams=disable", source, qdf)
+    File.binwrite(dark_qdf, darken_qdf(File.binread(qdf)))
+    run!("fix-qdf", dark_qdf, fixed_qdf)
+    run!("qpdf", fixed_qdf, output)
+  end
+
+  run!("qpdf", "--check", output)
+  puts "Generated #{output}"
+end
+
+require_tool!("qpdf")
+require_tool!("fix-qdf")
+
+source_output_pairs(ARGV).each do |source, output|
+  generate_dark_pdf(source, output)
+end

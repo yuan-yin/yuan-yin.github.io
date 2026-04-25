@@ -168,41 +168,37 @@ html[data-theme-setting="light"] {
 
   width: 1em;
   height: 1em;
+  overflow: hidden;
+  --system-icon-gap: 1px;
 }
 
 .fa-half-sun-moon::before,
 .fa-half-sun-moon::after {
-  content: "";
   position: absolute;
-  inset: 0;
-  top: -0.5px;
-  bottom: -0.5px;
-  text-align: center;
-  line-height: 1em;
-  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+  top: 0;
+  bottom: 0;
+  width: calc(0.5em - (var(--system-icon-gap) / 2));
+  overflow: hidden;
+  color: var(--global-text-color);
+  white-space: nowrap;
   font: var(--fa-font);
+  line-height: 1em;
 }
 
-/* Left half: MOON */
+/* Left half: moon */
 .fa-half-sun-moon::before {
   content: "\f111";
-  color: var(--global-text-color);
-  clip-path: polygon(0 0, calc(50% - 0.5px) 0, calc(50% - 0.5px) 100%, 0 100%);
+  left: 0;
 }
 
-/* Right half: SUN */
+/* Right half: sun */
 .fa-half-sun-moon::after {
   content: "\f185";
-  color: var(--global-text-color);
-  clip-path: polygon(calc(50% + 0.5px) 0, 100% 0, 100% 100%, calc(50% + 0.5px) 100%);
-  right: -1.5px; /* slight overflow to avoid right-edge clipping */
-  transform: translateX(-1px); /* visually re-center the sun half */
+  left: calc(0.5em + (var(--system-icon-gap) / 2));
+  text-indent: -0.5em;
 }
 
-#light-toggle:hover .fa-half-sun-moon::before {
-  color: var(--global-theme-color);
-}
-
+#light-toggle:hover .fa-half-sun-moon::before,
 #light-toggle:hover .fa-half-sun-moon::after {
   color: var(--global-theme-color);
 }

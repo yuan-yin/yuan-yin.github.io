@@ -2,7 +2,7 @@
 layout: default
 ---
 
-<div class="post">
+<div class="post cv-viewer cv-loading cv-initial-loading">
   <header class="post-header">
     <h1 class="post-title">
       {{ page.title }}
@@ -59,14 +59,15 @@ layout: default
 
       <div class="pager">
         <span style="font-weight:200">Page:
-          <span id="page_num"></span>
+          <span id="page_num">...</span>
           /
-          <span id="page_count"></span>
+          <span id="page_count">...</span>
         </span>
         &nbsp; &nbsp;
         <button
           id="prev"
           class="pager-button"
+          disabled
           aria-label="Previous page">
           <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
           <span>Previous</span>
@@ -74,6 +75,7 @@ layout: default
         <button
           id="next"
           class="pager-button"
+          disabled
           aria-label="Next page">
           <span>Next</span>
           <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
@@ -86,6 +88,9 @@ layout: default
     {% endif %}
   </header>
 
+  <link rel="modulepreload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" crossorigin="anonymous">
+  <link rel="modulepreload" href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs" crossorigin="anonymous">
+  <link rel="preload" href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}" as="fetch" type="application/pdf">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
 
   <script type="module">
@@ -101,6 +106,8 @@ layout: default
 
     const prevBtn = document.getElementById('prev');
     const nextBtn = document.getElementById('next');
+    const pageNumElement = document.getElementById('page_num');
+    const pageCountElement = document.getElementById('page_count');
 
     let pdfDoc = null;           // PDFDocumentProxy
     let loadingTask = null;      // PDFLoadingTask
@@ -109,13 +116,15 @@ layout: default
     let pageRendering = false;
     let pageNumPending = null;
     let currentLang = 'en';
+    let firstPageRendered = false;
+    let hasLoadedOnce = false;
 
     const urls = {
       en: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
       fr: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
     };
 
-    async function disposePdf() {
+    async function disposePdf({ clearCanvas = true } = {}) {
       // 1) Stop rendering
       if (renderTask && typeof renderTask.cancel === 'function') {
         try { renderTask.cancel(); } catch {}
@@ -143,16 +152,17 @@ layout: default
       // 4) Clear overlay links
       stage.querySelectorAll('a.pdf-link.overlay').forEach(a => a.remove());
 
-      // 5) Clear and shrink canvas to release bitmap memory
-      try { ctx && ctx.clearRect(0, 0, canvas.width, canvas.height); } catch {}
-      canvas.width = 0;
-      canvas.height = 0;
-      canvas.style.width = '0px';
-      canvas.style.height = '0px';
+      if (clearCanvas) {
+        // 5) Clear and shrink canvas to release bitmap memory
+        try { ctx && ctx.clearRect(0, 0, canvas.width, canvas.height); } catch {}
+        canvas.classList.remove('is-rendered');
+        canvas.width = 0;
+        canvas.height = 0;
+        canvas.style.width = '0px';
+        canvas.style.height = '0px';
+      }
 
-      // 6) Reset pager UI
-      document.getElementById('page_num').textContent = '';
-      document.getElementById('page_count').textContent = '';
+      // 6) Disable pager while there is no active PDF document
       prevBtn.disabled = true;
       nextBtn.disabled = true;
     }
@@ -160,9 +170,21 @@ layout: default
     async function loadPdf(lang) {
       const url = urls[lang];
       currentLang = lang;
+      const isInitialLoad = !hasLoadedOnce;
 
       // Fully tear down previous resources before starting a new load
-      await disposePdf();
+      firstPageRendered = false;
+      postElement.classList.add('cv-loading');
+      postElement.classList.remove('cv-ready', 'cv-controls-ready', 'cv-error');
+      postElement.classList.toggle('cv-initial-loading', isInitialLoad);
+      stage.setAttribute('aria-busy', 'true');
+      await disposePdf({ clearCanvas: isInitialLoad });
+      if (isInitialLoad) {
+        pageNumElement.textContent = '...';
+        pageCountElement.textContent = '...';
+      }
+      prevBtn.disabled = true;
+      nextBtn.disabled = true;
 
       // Start a new loading task
       loadingTask = pdfjsLib.getDocument(url);
@@ -170,13 +192,18 @@ layout: default
         pdfDoc = await loadingTask.promise;
       } catch (err) {
         console.error('PDF load failed:', err);
+        postElement.classList.remove('cv-loading', 'cv-ready', 'cv-controls-ready', 'cv-initial-loading');
+        postElement.classList.add('cv-error');
+        stage.setAttribute('aria-busy', 'false');
+        pageNumElement.textContent = '';
+        pageCountElement.textContent = '';
         return;
       } finally {
         // The loadingTask becomes less useful after we have pdfDoc
         loadingTask = null;
       }
 
-      document.getElementById('page_count').textContent = pdfDoc.numPages;
+      pageCountElement.textContent = pdfDoc.numPages;
       pageNum = 1;
       updateSplitButtons(lang);
       updatePagerState();
@@ -186,12 +213,15 @@ layout: default
     async function renderPage(num) {
       if (!pdfDoc) return;
       pageRendering = true;
+      stage.classList.add('is-rendering');
       const page = await pdfDoc.getPage(num);
 
       const viewport = page.getViewport({ scale: getScaleFactor(page) });
-      adjustCanvasSize(viewport);
+      const renderCanvas = document.createElement('canvas');
+      const renderCtx = renderCanvas.getContext('2d');
+      adjustCanvasSize(renderCanvas, viewport);
       const renderContext = {
-        canvasContext: ctx,
+        canvasContext: renderCtx,
         transform: getTransform(viewport),
         viewport
       };
@@ -201,26 +231,44 @@ layout: default
         try { renderTask.cancel(); } catch {}
       }
       renderTask = page.render(renderContext);
+      let rendered = false;
 
       try {
         await renderTask.promise;
+        rendered = true;
       } catch (e) {
         // Rendering was likely canceled; ignore
       } finally {
         renderTask = null;
         // Let PDF.js drop page-level caches
-        try { page.cleanup(); } catch {}
         pageRendering = false;
+        if (rendered) {
+          commitRenderedPage(renderCanvas);
+          await addAnnotationsToPage(page, viewport).catch(() => {});
+          updatePageCounter(num);
+        }
+        try { page.cleanup(); } catch {}
         if (pageNumPending !== null) {
           const pending = pageNumPending;
           pageNumPending = null;
           return renderPage(pending);
         }
         updatePagerState();
+        if (!firstPageRendered) {
+          firstPageRendered = true;
+          hasLoadedOnce = true;
+          postElement.classList.remove('cv-loading', 'cv-error', 'cv-initial-loading');
+          postElement.classList.add('cv-ready');
+          stage.setAttribute('aria-busy', 'false');
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => postElement.classList.add('cv-controls-ready'));
+          });
+        }
+        if (rendered) {
+          requestAnimationFrame(() => canvas.classList.add('is-rendered'));
+        }
+        stage.classList.remove('is-rendering');
       }
-
-      addAnnotationsToPage(page, viewport).catch(() => {});
-      updatePageCounter(num);
     }
 
     function getScaleFactor(page) {
@@ -229,12 +277,22 @@ layout: default
       return desiredWidth / origViewport.width;
     }
 
-    function adjustCanvasSize(viewport) {
+    function adjustCanvasSize(targetCanvas, viewport) {
       const outputScale = (window.devicePixelRatio || 1) * 2.0;
-      canvas.width = Math.floor(viewport.width * outputScale);
-      canvas.height = Math.floor(viewport.height * outputScale);
-      canvas.style.width = `${Math.floor(viewport.width)}px`;
-      canvas.style.height = `${Math.floor(viewport.height)}px`;
+      targetCanvas.width = Math.floor(viewport.width * outputScale);
+      targetCanvas.height = Math.floor(viewport.height * outputScale);
+      targetCanvas.style.width = `${Math.floor(viewport.width)}px`;
+      targetCanvas.style.height = `${Math.floor(viewport.height)}px`;
+    }
+
+    function commitRenderedPage(renderCanvas) {
+      canvas.classList.remove('is-rendered');
+      canvas.width = renderCanvas.width;
+      canvas.height = renderCanvas.height;
+      canvas.style.width = renderCanvas.style.width;
+      canvas.style.height = renderCanvas.style.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(renderCanvas, 0, 0);
     }
 
     function getTransform(viewport) {
@@ -310,7 +368,7 @@ layout: default
     }
 
     function updatePageCounter(num) {
-      document.getElementById('page_num').textContent = num;
+      pageNumElement.textContent = num;
     }
 
     function queueRenderPage(num) {
@@ -365,7 +423,9 @@ layout: default
   </script>
 
 
-  <div class="pdf-stage">
+  <div class="pdf-stage" aria-live="polite" aria-busy="true">
+    <div class="pdf-loading" role="status">Loading CV...</div>
+    <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
     <canvas id="the-canvas"></canvas>
   </div>
 
@@ -379,19 +439,108 @@ layout: default
       /* optional for small screens */
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
+      min-height: 44px;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(-4px);
+      transition:
+        opacity 160ms ease,
+        transform 160ms ease,
+        visibility 0s linear 160ms;
     }
 
+    .cv-controls-ready .header-toolbar,
+    .cv-error .header-toolbar {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+      transition:
+        opacity 240ms ease,
+        transform 240ms ease;
+    }
 
     .pdf-stage {
       position: relative;
-      width: fit-content;
-      /* or 100% if you prefer */
+      width: 100%;
+      max-width: 100%;
+      min-height: min(720px, calc((100vw - 2rem) * 1.294));
+      aspect-ratio: 8.5 / 11;
+      background:
+        linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%),
+        linear-gradient(var(--global-bg-color), var(--global-bg-color)),
+        var(--global-card-bg-color);
+      background-size: 240% 100%, calc(100% - 4rem) calc(100% - 4rem), auto;
+      background-position: 120% 0, 2rem 2rem, 0 0;
+      background-repeat: no-repeat;
+      border: 1px solid var(--global-divider-color);
+      border-radius: 2px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+      overflow: hidden;
       line-height: 0;
-      /* remove baseline gap of inline canvas */
+      transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
     }
+
+    .cv-loading .pdf-stage {
+      animation: pdf-loading-sheen 1.4s ease-in-out infinite;
+    }
+
+    @keyframes pdf-loading-sheen {
+      0% {
+        background-position: 120% 0, 2rem 2rem, 0 0;
+      }
+      100% {
+        background-position: -120% 0, 2rem 2rem, 0 0;
+      }
+    }
+
     #the-canvas {
       display: block;
+      width: 100%;
+      height: auto;
+      opacity: 0;
+      transform: translateY(6px);
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
     } /* avoid inline baseline gap */
+
+    #the-canvas.is-rendered {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .pdf-loading,
+    .pdf-error {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--global-text-color-light);
+      font-size: 0.95rem;
+      line-height: 1.4;
+      opacity: 0.78;
+      pointer-events: none;
+      z-index: 1;
+      transition: opacity 160ms ease;
+    }
+
+    .pdf-error,
+    .cv-ready .pdf-loading,
+    .cv-ready .pdf-error {
+      display: none;
+    }
+
+    .cv-error .pdf-loading {
+      display: none;
+    }
+
+    .cv-error .pdf-error {
+      display: flex;
+    }
 
     .lang-toolbar {
       display: inline-flex;

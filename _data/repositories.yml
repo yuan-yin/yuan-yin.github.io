@@ -4,9 +4,15 @@ github_users:
 repo_description_lines_max: 2
 
 github_repos:
+  - valeoai/DrivoR
+  - valeoai/peft-ipa
+  - itsakk/geps
+  - valeoai/ReGentS
+  - 2ailesB/neural-parametric-solver
+  - EtienneLnr/TimeFlow
   - mkirchmeyer/DINo
+  - LouisSerrano/coral
   - yuan-yin/CoDA
   - yuan-yin/LEADS
   - yuan-yin/APHYNITY
   - yuan-yin/UNISST
-  - valeoai/ReGentS

@@ -203,6 +203,9 @@ ninja.data = [{
           section: "News",},{id: "news-drivor-a-paper-i-co-authored-has-been-accepted-at-cvpr-2026",
           title: 'DrivoR, a paper I co-authored, has been accepted at CVPR 2026.',
           description: "",
+          section: "News",},{id: "news-lounès-meddahi-started-as-my-phd-student-with-sorbonne-université-isir-mlia-team",
+          title: 'Lounès Meddahi started as my PhD student with Sorbonne Université, ISIR, MLIA Team....',
+          description: "",
           section: "News",},{id: "talks-aaai-2021-spring-symposium-on-combining-artificial-intelligence-and-machine-learning-with-physics-sciences-mlps",
           title: 'AAAI 2021 Spring Symposium on Combining Artificial Intelligence and Machine Learning with Physics...',
           description: "Learning Dynamical Systems that Generalize Across Environments",
@@ -288,6 +291,31 @@ ninja.data = [{
           description: "DL for Physical Dynamics: Physics-DL Hybrid Modeling and Continuous Modeling",
           section: "Talks",handler: () => {
               window.location.href = "/talks/2024-01-31/";
+            },},{id: "teachings-introduction-to-algorithmics-algorithmique-i",
+          title: 'Introduction to Algorithmics (Algorithmique I)',
+          description: "Tutorial instruction for 2nd-year / L2 undergraduate students introducing algorithmic foundations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-algorithmics-2021/";
+            },},{id: "teachings-introduction-to-algorithmics-algorithmique-i",
+          title: 'Introduction to Algorithmics (Algorithmique I)',
+          description: "Tutorial instruction for 2nd-year / L2 undergraduate students introducing algorithmic foundations.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-algorithmics-2022/";
+            },},{id: "teachings-introduction-to-c-programming-éléments-de-programmation-2",
+          title: 'Introduction to C Programming (Éléments de programmation 2)',
+          description: "Practical work sessions for 1st-year / L1 undergraduate students introducing C programming.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-c-programming-2021/";
+            },},{id: "teachings-introduction-to-c-programming-éléments-de-programmation-2",
+          title: 'Introduction to C Programming (Éléments de programmation 2)',
+          description: "Practical work sessions for 1st-year / L1 undergraduate students introducing C programming.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/introduction-c-programming-2022/";
+            },},{id: "teachings-research-in-data-science-and-methodology",
+          title: 'Research in Data Science and Methodology',
+          description: "Tutorial instruction for 2nd-year / M2 DAC graduate students, centered on research methodology and a final research proposal project.",
+          section: "Teachings",handler: () => {
+              window.location.href = "/teachings/research-data-science-methodology-2021/";
             },},{
         id: 'social-bluesky',
         title: 'Bluesky',

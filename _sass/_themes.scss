@@ -168,38 +168,35 @@ html[data-theme-setting="light"] {
 
   width: 1em;
   height: 1em;
-  overflow: visible;
-  --system-icon-gap: 1px;
-  --system-icon-bleed: 0.08em;
-  --system-icon-sun-offset: -0.03em;
 }
 
 .fa-half-sun-moon::before,
 .fa-half-sun-moon::after {
+  content: "";
   position: absolute;
-  top: calc(-1 * var(--system-icon-bleed));
-  bottom: calc(-1 * var(--system-icon-bleed));
-  left: 0;
-  width: 1em;
-  height: calc(1em + (2 * var(--system-icon-bleed)));
-  overflow: hidden;
-  color: var(--global-text-color);
+  inset: 0;
+  top: -0.5px;
+  bottom: -0.5px;
   text-align: center;
+  line-height: 1em;
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
   font: var(--fa-font);
-  line-height: calc(1em + (2 * var(--system-icon-bleed)));
 }
 
-/* Left half: moon */
+/* Left half: MOON */
 .fa-half-sun-moon::before {
   content: "\f111";
-  clip-path: inset(0 calc(50% + (var(--system-icon-gap) / 2)) 0 0);
+  color: var(--global-text-color);
+  clip-path: polygon(0 0, calc(50% - 0.5px) 0, calc(50% - 0.5px) 100%, 0 100%);
 }
 
-/* Right half: sun */
+/* Right half: SUN */
 .fa-half-sun-moon::after {
   content: "\f185";
-  left: var(--system-icon-sun-offset);
-  clip-path: inset(0 0 0 calc(50% + (var(--system-icon-gap) / 2) - var(--system-icon-sun-offset)));
+  color: var(--global-text-color);
+  clip-path: polygon(calc(50% + 0.5px) 0, 100% 0, 100% 100%, calc(50% + 0.5px) 100%);
+  right: -1.5px;
+  transform: translateX(-1px);
 }
 
 #light-toggle:hover .fa-half-sun-moon::before,

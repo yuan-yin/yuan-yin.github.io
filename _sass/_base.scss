@@ -359,7 +359,7 @@ ul.task-list input[type="checkbox"] {
 
       i::before {
         color: var(--global-text-color);
-        transition-property: all 0.2s ease-in-out;
+        transition: color 200ms ease;
       }
 
       &:hover {
@@ -379,7 +379,10 @@ ul.task-list input[type="checkbox"] {
     background-color: var(--global-text-color);
     border-radius: 1px;
     margin-bottom: 4px;
-    transition: all 0.2s;
+    transition:
+      background-color 200ms ease,
+      opacity 200ms ease,
+      transform 200ms ease;
   }
 
   .top-bar {
@@ -451,7 +454,7 @@ ul.task-list input[type="checkbox"] {
 
       i::before {
         color: var(--global-text-color);
-        transition-property: all 0.2s ease-in-out;
+        transition: color 200ms ease;
       }
 
       &:hover {
@@ -979,8 +982,28 @@ html.transition,
 html.transition *,
 html.transition *:before,
 html.transition *:after {
-  transition: all 750ms !important;
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease,
+    color 200ms ease,
+    fill 200ms ease,
+    stroke 200ms ease !important;
   transition-delay: 0 !important;
+}
+
+html.transition #search-toggle,
+html.transition #search-toggle *,
+html.transition #search-toggle *::before,
+html.transition .navbar .dropdown-toggle::after,
+html.transition .cv-viewer .lang-primary,
+html.transition .cv-viewer .lang-primary *,
+html.transition .cv-viewer .lang-download,
+html.transition .cv-viewer .lang-download *,
+html.transition .cv-viewer .lang-download *::before,
+html.transition .cv-viewer .pager-button,
+html.transition .cv-viewer .pager-button *,
+html.transition .cv-viewer .pager-button *::before {
+  transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
 }
 
 // Extra Markdown style (post Customization)
@@ -1299,7 +1322,18 @@ ninja-keys::part(ninja-input-wrapper) {
   padding: 8px 12px;
 }
 
-.newsletter-form-input:focus {
+.bibsearch-form-input {
+  color: var(--global-text-color);
+  background: var(--global-bg-color);
+  border-color: var(--global-divider-color);
+
+  &::placeholder {
+    color: var(--global-text-color-light);
+  }
+}
+
+.newsletter-form-input:focus,
+.bibsearch-form-input:focus {
   border-color: var(--global-theme-color) !important;
 }
 

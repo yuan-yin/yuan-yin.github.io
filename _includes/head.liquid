@@ -74,6 +74,18 @@
 {% elsif site.icon != blank %}
   <link rel="shortcut icon" href="{{ site.icon | prepend: '/assets/img/' | relative_url | bust_file_cache}}">
 {% endif %}
+{% if site.search_enabled %}
+  <script>
+    (function () {
+      var platform = navigator.userAgentData && navigator.userAgentData.platform
+        ? navigator.userAgentData.platform
+        : navigator.platform || "";
+      if (/mac/i.test(platform)) {
+        document.documentElement.classList.add("shortcut-is-mac");
+      }
+    })();
+  </script>
+{% endif %}
 <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url | bust_css_cache }}">
 <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
 

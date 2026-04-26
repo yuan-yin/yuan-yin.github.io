@@ -127,6 +127,21 @@ html.transition *:after {
   transition-delay: 0 !important;
 }
 
+html.transition #search-toggle,
+html.transition #search-toggle *,
+html.transition #search-toggle *::before,
+html.transition .navbar .dropdown-toggle::after,
+html.transition .cv-viewer .lang-primary,
+html.transition .cv-viewer .lang-primary *,
+html.transition .cv-viewer .lang-download,
+html.transition .cv-viewer .lang-download *,
+html.transition .cv-viewer .lang-download *::before,
+html.transition .cv-viewer .pager-button,
+html.transition .cv-viewer .pager-button *,
+html.transition .cv-viewer .pager-button *::before {
+  transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
+}
+
 // Copy button
 
 .code-display-wrapper {
@@ -306,7 +321,18 @@ nav[data-toggle="toc"] {
   padding: 8px 12px;
 }
 
-.newsletter-form-input:focus {
+.bibsearch-form-input {
+  color: var(--global-text-color);
+  background: var(--global-bg-color);
+  border-color: var(--global-divider-color);
+
+  &::placeholder {
+    color: var(--global-text-color-light);
+  }
+}
+
+.newsletter-form-input:focus,
+.bibsearch-form-input:focus {
   border-color: var(--global-theme-color) !important;
 }
 

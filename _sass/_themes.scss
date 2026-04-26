@@ -168,34 +168,38 @@ html[data-theme-setting="light"] {
 
   width: 1em;
   height: 1em;
-  overflow: hidden;
+  overflow: visible;
   --system-icon-gap: 1px;
+  --system-icon-bleed: 0.08em;
+  --system-icon-sun-offset: -0.03em;
 }
 
 .fa-half-sun-moon::before,
 .fa-half-sun-moon::after {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  width: calc(0.5em - (var(--system-icon-gap) / 2));
+  top: calc(-1 * var(--system-icon-bleed));
+  bottom: calc(-1 * var(--system-icon-bleed));
+  left: 0;
+  width: 1em;
+  height: calc(1em + (2 * var(--system-icon-bleed)));
   overflow: hidden;
   color: var(--global-text-color);
-  white-space: nowrap;
+  text-align: center;
   font: var(--fa-font);
-  line-height: 1em;
+  line-height: calc(1em + (2 * var(--system-icon-bleed)));
 }
 
 /* Left half: moon */
 .fa-half-sun-moon::before {
   content: "\f111";
-  left: 0;
+  clip-path: inset(0 calc(50% + (var(--system-icon-gap) / 2)) 0 0);
 }
 
 /* Right half: sun */
 .fa-half-sun-moon::after {
   content: "\f185";
-  left: calc(0.5em + (var(--system-icon-gap) / 2));
-  text-indent: -0.5em;
+  left: var(--system-icon-sun-offset);
+  clip-path: inset(0 0 0 calc(50% + (var(--system-icon-gap) / 2) - var(--system-icon-sun-offset)));
 }
 
 #light-toggle:hover .fa-half-sun-moon::before,

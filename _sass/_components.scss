@@ -224,7 +224,7 @@ ul.task-list input[type="checkbox"] {
 
       i::before {
         color: var(--global-text-color);
-        transition-property: all 0.2s ease-in-out;
+        transition: color 200ms ease;
       }
 
       &:hover {

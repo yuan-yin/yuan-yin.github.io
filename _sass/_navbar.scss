@@ -62,6 +62,11 @@
   .navbar-nav .nav-item .nav-link {
     color: var(--global-text-color);
 
+    &.dropdown-toggle::after {
+      color: inherit;
+      transition: none;
+    }
+
     &:hover {
       color: var(--global-hover-color);
     }
@@ -103,7 +108,7 @@
 
       i::before {
         color: var(--global-text-color);
-        transition-property: all 0.2s ease-in-out;
+        transition: color 200ms ease;
       }
 
       &:hover {
@@ -123,7 +128,10 @@
     background-color: var(--global-text-color);
     border-radius: 1px;
     margin-bottom: 4px;
-    transition: all 0.2s;
+    transition:
+      background-color 200ms ease,
+      opacity 200ms ease,
+      transform 200ms ease;
   }
 
   .top-bar {
@@ -184,7 +192,32 @@
   background-color: inherit;
   color: var(--global-text-color);
 
+  .nav-link,
+  .fa-magnifying-glass,
+  .fa-magnifying-glass::before {
+    color: inherit;
+    transition: none;
+  }
+
+  .shortcut-key-mac {
+    display: none;
+  }
+
+  .shortcut-key-default {
+    display: inline;
+  }
+
   &:hover {
     color: var(--global-hover-color);
+  }
+}
+
+html.shortcut-is-mac #search-toggle {
+  .shortcut-key-mac {
+    display: inline;
+  }
+
+  .shortcut-key-default {
+    display: none;
   }
 }

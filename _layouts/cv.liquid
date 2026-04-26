@@ -600,7 +600,7 @@ layout: default
     /* Split button container */
     .lang-split {
       display: inline-flex;
-      border: 1px solid #ccc;
+      border: 1px solid var(--global-divider-color);
       border-radius: 10px;
       overflow: hidden;
       /* unify rounded corners */
@@ -614,12 +614,15 @@ layout: default
       padding: 6px 12px;
       font-weight: 300;
       text-decoration: none;
-      color: inherit;
+      color: var(--global-text-color);
       cursor: pointer;
       user-select: none;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
     }
     .lang-primary:hover {
-      background: #eee;
+      background: var(--global-code-bg-color);
     }
     .lang-primary.active {
       background-color: #9678B6;
@@ -628,7 +631,7 @@ layout: default
 
     /* Show a divider only when the download button is expanded */
     .lang-split.active .lang-primary {
-      border-right: 0.5px solid #ccc;
+      border-right: 0.5px solid var(--global-divider-color);
     }
 
     /* Secondary (download) — collapses to zero when inactive */
@@ -642,10 +645,10 @@ layout: default
       /* collapsed */
       padding: 0;
       /* collapsed */
-      border-left: 0 solid #ccc;
+      border-left: 0 solid var(--global-divider-color);
       /* collapsed */
       text-decoration: none;
-      color: inherit;
+      color: var(--global-text-color);
       cursor: pointer;
       user-select: none;
       opacity: 0;
@@ -661,8 +664,13 @@ layout: default
       , transform 180ms ease
       , background-color 150ms ease;
     }
+    .lang-primary *,
+    .lang-download,
+    .lang-download * {
+      transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
+    }
     .lang-download:hover {
-      background: #eee;
+      background: var(--global-code-bg-color);
     }
 
     /* Expanded state (when group is .active) */
@@ -696,13 +704,23 @@ layout: default
       gap: 0.35em;
       padding: 6px 12px;
       font-weight: 300;
-      border: 1px solid #ccc;
+      color: var(--global-text-color);
+      background: transparent;
+      border: 1px solid var(--global-divider-color);
       border-radius: 10px;
       cursor: pointer;
       user-select: none;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        opacity 150ms ease;
+    }
+    .pager-button,
+    .pager-button * {
+      transition-property: background-color, border-color, opacity, transform !important;
     }
     .pager-button:hover {
-      background: #eee;
+      background: var(--global-code-bg-color);
     }
     .pager-button:disabled {
       opacity: 0.5;

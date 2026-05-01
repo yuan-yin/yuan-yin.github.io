@@ -15,15 +15,14 @@ description: > # the ">" symbol means to ignore newlines until "footer_text:"
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
   Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
-keywords:  # add your own keywords or leave empty
-
+keywords: # add your own keywords or leave empty
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
-icon: image.webp  # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
+icon: image.webp # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
 
 url: https://yuan-yin.github.io # the base hostname & protocol for your site
 baseurl: # the subpath of your site, e.g. /blog/
 last_updated: false # set to true if you want to display last updated in the footer
-impressum_path:  # set to path to include impressum link in the footer, use the same path as permalink in a page, helps to conform with EU GDPR
+impressum_path: # set to path to include impressum link in the footer, use the same path as permalink in a page, helps to conform with EU GDPR
 back_to_top: true # set to false to disable the back to top button
 
 # -----------------------------------------------------------------------------
@@ -31,12 +30,12 @@ back_to_top: true # set to false to disable the back to top button
 # -----------------------------------------------------------------------------
 
 # repo color theme
-repo_theme_light: default       # https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md
-repo_theme_dark: dark           # https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md
+repo_theme_light: default # https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md
+repo_theme_dark: dark # https://github.com/anuraghazra/github-readme-stats/blob/master/themes/README.md
 repo_trophies:
   enabled: true
-  theme_light: flat    # https://github.com/ryo-ma/github-profile-trophy
-  theme_dark: gitdimmed  # https://github.com/ryo-ma/github-profile-trophy
+  theme_light: flat # https://github.com/ryo-ma/github-profile-trophy
+  theme_dark: gitdimmed # https://github.com/ryo-ma/github-profile-trophy
 
 # External service URLs for repository page
 # To use a different instance or service for displaying GitHub stats and trophies,
@@ -258,7 +257,7 @@ jekyll-archives:
       year: "/blog/:year/"
       tags: "/blog/:type/:name/"
       categories: "/blog/:type/:name/"
-      
+
 display_tags: [] # these tags will be displayed on the front page of your blog
 display_categories: ["research-posts"] # these categories will be displayed on the front page of your blog
 
@@ -326,6 +325,7 @@ filtered_bibtex_keywords:
     slides,
     supp,
     video,
+    venues,
     website,
   ]
 

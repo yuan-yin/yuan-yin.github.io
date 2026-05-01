@@ -242,6 +242,66 @@ ul.task-list input[type="checkbox"] {
   }
 }
 
+// About page social buttons must be defined after the generic social rules.
+.social.about-hero__social {
+  > .contact-icons {
+    font-size: 1rem;
+
+    a {
+      background: rgba(255, 255, 255, 0.72);
+      color: #111111;
+
+      i,
+      i::before {
+        color: currentColor;
+      }
+
+      &:hover,
+      &:focus-visible {
+        background: var(--social-brand-color);
+        background-color: var(--social-brand-color);
+        color: #ffffff;
+
+        i,
+        i::before {
+          color: #ffffff;
+        }
+      }
+    }
+  }
+}
+
+html[data-theme="dark"],
+html[data-theme-setting="dark"] {
+  .social.about-hero__social {
+    > .contact-icons {
+      a {
+        background: #f3f5f8;
+        background-color: #f3f5f8;
+        color: #111111;
+
+        i,
+        i::before {
+          color: #111111;
+        }
+
+        &:hover,
+        &:focus-visible {
+          background: var(--social-brand-color);
+          background-color: var(--social-brand-color);
+          border-color: var(--social-brand-color);
+          color: #ffffff;
+
+          i,
+          i::before {
+            color: #ffffff;
+          }
+        }
+      }
+    }
+  }
+}
+
 .talks {
   ol {
     list-style: none;

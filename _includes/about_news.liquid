@@ -1,0 +1,52 @@
+<div class="about-news-card">
+  {% if site.news != blank %}
+    {% assign news = site.news | reverse %}
+    {% assign news_limit = include.limit | default: page.announcements.limit | default: 6 %}
+    {% assign visible_count = include.visible | default: page.announcements.visible | default: 2 %}
+    {% assign roll_step = include.roll_step | default: page.announcements.roll_step | default: 1 %}
+    {% assign roll_interval = include.roll_interval | default: page.announcements.roll_interval | default: 4200 %}
+    <div
+      class="about-news-card__viewport"
+      aria-label="Latest news"
+      data-about-news-roller
+      data-visible-count="{{ visible_count }}"
+      data-roll-step="{{ roll_step }}"
+      data-roll-interval="{{ roll_interval }}"
+      style="--about-news-visible-count: {{ visible_count }}"
+    >
+      <ol class="about-news-card__list">
+        {% for item in news limit: news_limit %}
+          <li class="about-news-card__item">
+            <time class="about-news-card__date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: '%b %e, %Y' }}</time>
+            <span class="about-news-card__icon" aria-hidden="true">
+              {% case item.type %}
+                {% when 'life' %}
+                  <i class="fa-solid fa-seedling" style="color:green;"></i>
+                {% when 'talk' %}
+                  <i class="fa-solid fa-chalkboard-user" style="color:steelblue;"></i>
+                {% when 'publication' %}
+                  <i class="fa-solid fa-book" style="color:saddlebrown;"></i>
+                {% when 'award' %}
+                  <i class="fa-solid fa-award" style="color:gold;"></i>
+                {% when 'people' %}
+                  <i class="fa-solid fa-user-plus" style="color:teal;"></i>
+                {% when 'alert' %}
+                  <i class="fa-solid fa-bell" style="color: tomato;"></i>
+              {% endcase %}
+            </span>
+            <span class="about-news-card__text">
+              {% if item.inline %}
+                {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
+              {% else %}
+                <a class="news-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+              {% endif %}
+            </span>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+    <script defer src="{{ '/assets/js/about-news-roller.js' | relative_url | bust_file_cache }}"></script>
+  {% else %}
+    <p class="about-news-card__empty">No news so far...</p>
+  {% endif %}
+</div>

@@ -17,7 +17,10 @@ social: true  # includes social icons at the bottom of the page
 announcements:
   enabled: true # includes a list of news items
   scrollable: true # adds a vertical scroll bar if there are more than 3 news items
-  limit: # leave blank to include all the news in the `_news` folder
+  limit: 6 # first items shown on the about page
+  visible: 1 # number of news items visible in the about-page rolling card
+  roll_step: 1 # number of news items advanced per automatic roll
+  roll_interval: 4800 # milliseconds between automatic rolls
 
 latest_posts:
   enabled: false
@@ -27,7 +30,7 @@ latest_posts:
 
 My research focuses on machine learning and deep learning for spatiotemporal sequence modeling, simulation, prediction, and analysis of complex behaviors. I also explore methods to extend the generalization of data-driven models, particularly through model adaptation.
 
-<!-- I have explored the following directions in the past few years, with a special emphasis on physical dynamical systems: 
+<!-- I have explored the following directions in the past few years, with a special emphasis on physical dynamical systems:
 - **physics dynamics modeling** with neural networks,
 - **adaptation and out-of-distribution generalization** of neural networks, and
 - **handling free-form data** and predicting phenomena continuously in time and space.  -->

@@ -187,14 +187,14 @@ html[data-theme-setting="light"] {
 .fa-half-sun-moon::before {
   content: "\f111";
   color: var(--global-text-color);
-  clip-path: polygon(0 0, calc(50% - 0.5px) 0, calc(50% - 0.5px) 100%, 0 100%);
+  clip-path: polygon(0 0, 50% 0, 50% 100%, 0 100%);
 }
 
 /* Right half: SUN */
 .fa-half-sun-moon::after {
   content: "\f185";
   color: var(--global-text-color);
-  clip-path: polygon(calc(50% + 0.5px) 0, 100% 0, 100% 100%, calc(50% + 0.5px) 100%);
+  clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
   right: -1.5px;
   transform: translateX(-1px);
 }

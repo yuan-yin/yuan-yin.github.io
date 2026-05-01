@@ -4,15 +4,39 @@ github_users:
 repo_description_lines_max: 2
 
 github_repos:
-  - valeoai/DrivoR
-  - valeoai/peft-ipa
-  - itsakk/geps
-  - valeoai/ReGentS
-  - 2ailesB/neural-parametric-solver
-  - EtienneLnr/TimeFlow
-  - mkirchmeyer/DINo
-  - LouisSerrano/coral
-  - yuan-yin/CoDA
-  - yuan-yin/LEADS
-  - yuan-yin/APHYNITY
-  - yuan-yin/UNISST
+  - name: valeoai/DrivoR
+    description: "Driving on Registers"
+    language: Python
+  - name: valeoai/peft-ipa
+    description: "Efficient foundation model adaptation with information-reconstructive input projection"
+    language: Python
+  - name: itsakk/geps
+    description: "Boosting generalization in parametric PDE neural solvers through adaptive conditioning"
+    language: Python
+  - name: valeoai/ReGentS
+    description: "Real-world safety-critical driving scenario generation made stable"
+    language: Python
+  - name: 2ailesB/neural-parametric-solver
+    description: "Learning a neural solver for parametric PDEs to enhance physics-informed methods"
+    language: Python
+  - name: EtienneLnr/TimeFlow
+    description: "Time-series continuous modeling for imputation and forecasting"
+    language: Python
+  - name: mkirchmeyer/DINo
+    description: "Continuous PDE dynamics forecasting with implicit neural representations"
+    language: Python
+  - name: LouisSerrano/coral
+    description: "Operator learning with neural fields for PDEs on general geometries"
+    language: Python
+  - name: yuan-yin/CoDA
+    description: "Context-informed dynamics adaptation for generalizing to new physical systems"
+    language: Python
+  - name: yuan-yin/LEADS
+    description: "Learning dynamical systems that generalize across environments"
+    language: Python
+  - name: yuan-yin/APHYNITY
+    description: "Augmenting physical models with deep networks for complex dynamics forecasting"
+    language: Python
+  - name: yuan-yin/UNISST
+    description: "Unsupervised inpainting for occluded sea surface temperature sequences"
+    language: Python

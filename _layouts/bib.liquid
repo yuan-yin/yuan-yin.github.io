@@ -1,33 +1,11 @@
 ---
 ---
-{% assign proceedings = 'inproceedings,incollection' | split: ',' %}
-{% assign thesis = 'thesis,mastersthesis,phdthesis' | split: ',' %}
-{% assign fallback_venue_label = entry.abbr | default: entry.journal | default: entry.booktitle | default: entry.type | default: 'Publication' %}
-{% assign venue_source = entry.venues | default: fallback_venue_label | replace: ';', '|' %}
+{% assign venue_source = entry.venues | default: '' | replace: ';', '|' %}
 {% assign venue_labels = venue_source | split: '|' %}
 {% assign venue_label = venue_labels | first | strip %}
-{% assign venue_kind = 'other' %}
-{% if entry.type == 'article' %}
-  {% assign venue_kind = 'journal' %}
-{% elsif thesis contains entry.type %}
-  {% assign venue_kind = 'thesis' %}
-{% elsif proceedings contains entry.type %}
-  {% assign venue_kind = 'conference' %}
-  {% if venue_label contains 'WS'
-    or venue_label contains 'Workshop'
-    or venue_label contains 'workshop'
-    or entry.booktitle contains 'Workshop'
-    or entry.booktitle contains 'workshop'
-  %}
-    {% assign venue_kind = 'workshop' %}
-  {% endif %}
-{% elsif entry.type == 'misc' %}
-  {% assign venue_kind = 'preprint' %}
-{% endif %}
-{% if venue_kind == 'preprint' and venue_label == entry.type %}
-  {% assign venue_label = 'Preprint' %}
-  {% assign venue_source = 'Preprint' %}
-  {% assign venue_labels = venue_source | split: '|' %}
+{% assign primary_kind = site.data.venues[venue_label].kind | default: 'other' | downcase | strip %}
+{% if primary_kind == blank %}
+  {% assign primary_kind = 'other' %}
 {% endif %}
 {% assign venue_key = venue_label %}
 
@@ -36,33 +14,7 @@
   {% assign venue_color = site.data.venues[venue_key].color %}
 {% endif %}
 {% if venue_color == blank %}
-  {% case venue_key %}
-    {% when 'CVPR' %}
-      {% assign venue_color = '#2563eb' %}
-    {% when 'TMLR' %}
-      {% assign venue_color = '#0f766e' %}
-    {% when 'JSTAT' %}
-      {% assign venue_color = '#0f766e' %}
-    {% when 'NeurIPS' %}
-      {% assign venue_color = '#b45309' %}
-    {% when 'ECCV WS' %}
-      {% assign venue_color = '#7c3aed' %}
-    {% when 'ICLR' %}
-      {% assign venue_color = '#dc2626' %}
-    {% when 'ICRA' %}
-      {% assign venue_color = '#0891b2' %}
-    {% when 'ICML' %}
-      {% assign venue_color = '#9333ea' %}
-    {% when 'ICML WS' %}
-      {% assign venue_color = '#9333ea' %}
-    {% when 'ICLR WS' %}
-      {% assign venue_color = '#dc2626' %}
-    {% when 'PhD' %}
-      {% assign venue_color = '#475569' %}
-  {% endcase %}
-{% endif %}
-{% if venue_color == blank %}
-  {% case venue_kind %}
+  {% case primary_kind %}
     {% when 'journal' %}
       {% assign venue_color = '#0f766e' %}
     {% when 'conference' %}
@@ -77,60 +29,69 @@
       {% assign venue_color = '#9678b6' %}
   {% endcase %}
 {% endif %}
+{% capture venue_gradient -%}
+  linear-gradient(135deg
+  {%- for venue_name_raw in venue_labels -%}
+    {%- assign venue_name = venue_name_raw | strip -%}
+    {%- assign venue_chip_color = '' -%}
+    {%- if site.data.venues[venue_name].color != blank -%}
+      {%- assign venue_chip_color = site.data.venues[venue_name].color -%}
+    {%- endif -%}
+    {%- if venue_chip_color == blank -%}
+      {%- assign chip_kind = site.data.venues[venue_name].kind | downcase | strip -%}
+      {%- if chip_kind == blank -%}
+        {%- assign chip_kind = primary_kind -%}
+      {%- endif -%}
+      {%- case chip_kind -%}
+        {%- when 'journal' -%}
+          {%- assign venue_chip_color = '#0f766e' -%}
+        {%- when 'conference' -%}
+          {%- assign venue_chip_color = '#7c3aed' -%}
+        {%- when 'workshop' -%}
+          {%- assign venue_chip_color = '#ea580c' -%}
+        {%- when 'thesis' -%}
+          {%- assign venue_chip_color = '#475569' -%}
+        {%- when 'preprint' -%}
+          {%- assign venue_chip_color = '#64748b' -%}
+        {%- else -%}
+          {%- assign venue_chip_color = venue_color -%}
+      {%- endcase -%}
+    {%- endif -%}
+    , {{ venue_chip_color }}
+  {%- endfor -%}
+  )
+{%- endcapture %}
 
 <div
-  class="publication-card publication-card--{{ venue_kind }}{% unless site.enable_publication_thumbnails %} publication-card--no-media{% endunless %}"
+  class="publication-card publication-card--{{ primary_kind }}{% unless site.enable_publication_thumbnails %} publication-card--no-media{% endunless %}"
   style="--pub-accent: {{ venue_color }};"
 >
   {% if site.enable_publication_thumbnails %}
-    <div class="publication-card__media abbr">
-      {%- if entry.abbr or entry.venues -%}
+    <div class="publication-card__media">
+      {%- if entry.venues -%}
         <div class="publication-card__venues">
-          {%- for venue_name_raw in venue_labels -%}
-            {% assign venue_name = venue_name_raw | strip %}
-            {% assign venue_chip_color = '' %}
-            {% if site.data.venues[venue_name].color != blank %}
-              {% assign venue_chip_color = site.data.venues[venue_name].color %}
-            {% endif %}
-            {% if venue_chip_color == blank %}
-              {% case venue_name %}
-                {% when 'CVPR' %}
-                  {% assign venue_chip_color = '#2563eb' %}
-                {% when 'TMLR' %}
-                  {% assign venue_chip_color = '#0f766e' %}
-                {% when 'JSTAT' %}
-                  {% assign venue_chip_color = '#0f766e' %}
-                {% when 'NeurIPS' %}
-                  {% assign venue_chip_color = '#b45309' %}
-                {% when 'ECCV WS' %}
-                  {% assign venue_chip_color = '#7c3aed' %}
-                {% when 'ICLR' %}
-                  {% assign venue_chip_color = '#dc2626' %}
-                {% when 'ICRA' %}
-                  {% assign venue_chip_color = '#0891b2' %}
-                {% when 'ICML' %}
-                  {% assign venue_chip_color = '#9333ea' %}
-                {% when 'ICML WS' %}
-                  {% assign venue_chip_color = '#9333ea' %}
-                {% when 'ICLR WS' %}
-                  {% assign venue_chip_color = '#dc2626' %}
-                {% when 'PhD' %}
-                  {% assign venue_chip_color = '#475569' %}
-              {% endcase %}
-            {% endif %}
-            {% if venue_chip_color == blank %}
-              {% assign venue_chip_color = venue_color %}
-            {% endif %}
-            {%- if venue_name != blank -%}
-              <abbr class="badge rounded-pill w-100 publication-card__venue" style="--venue-accent: {{ venue_chip_color }};">
+          <div
+            class="badge rounded-pill w-100 publication-card__venue publication-card__venue--merged"
+            style="--venue-accent: {{ venue_color }}; --venue-gradient: {{ venue_gradient | strip }};"
+          >
+            {%- for venue_name_raw in venue_labels -%}
+              {% assign venue_name = venue_name_raw | strip %}
+              {% assign chip_kind = site.data.venues[venue_name].kind | downcase | strip %}
+              {% if chip_kind == blank %}
+                {% assign chip_kind = primary_kind %}
+              {% endif %}
+              {%- if venue_name != blank -%}
                 {% if site.data.venues[venue_name].url %}
-                  <a href="{{ site.data.venues[venue_name].url }}">{{ venue_name }}</a>
+                  <a href="{{ site.data.venues[venue_name].url }}" title="{{ chip_kind | capitalize }}">{{ venue_name }}</a>
                 {% else %}
-                  <div>{{- venue_name -}}</div>
+                  <span title="{{ chip_kind | capitalize }}">{{- venue_name -}}</span>
                 {% endif %}
-              </abbr>
-            {%- endif -%}
-          {%- endfor -%}
+                {% unless forloop.last -%}
+                  <span class="publication-card__venue-chip-separator" aria-hidden="true">+</span>
+                {%- endunless %}
+              {%- endif -%}
+            {%- endfor -%}
+          </div>
         </div>
       {% endif %}
       {% if entry.preview %}
@@ -155,20 +116,42 @@
   <!-- Entry bib key -->
   <div id="{{ entry.key }}" class="publication-card__body">
     <div class="publication-card__meta">
-      <span class="publication-card__type">{{ venue_kind | capitalize }}</span>
-      {% unless venue_kind == 'preprint' and venue_label == 'Preprint' %}
-        <span class="publication-card__dot" aria-hidden="true"></span>
+      {% unless primary_kind == 'preprint' and venue_label == 'Preprint' %}
         <span class="publication-card__venue-list">
           {%- for venue_name_raw in venue_labels -%}
             {% assign venue_name = venue_name_raw | strip %}
             {% if venue_name != blank %}
-              <span class="publication-card__venue-name">{{ venue_name }}</span>
+              {% assign item_kind = site.data.venues[venue_name].kind | default: primary_kind | downcase | strip %}
+              {% assign item_color = site.data.venues[venue_name].color %}
+              {% if item_color == blank %}
+                {% case item_kind %}
+                  {% when 'journal' %}
+                    {% assign item_color = '#0f766e' %}
+                  {% when 'conference' %}
+                    {% assign item_color = '#7c3aed' %}
+                  {% when 'workshop' %}
+                    {% assign item_color = '#ea580c' %}
+                  {% when 'thesis' %}
+                    {% assign item_color = '#475569' %}
+                  {% when 'preprint' %}
+                    {% assign item_color = '#64748b' %}
+                  {% else %}
+                    {% assign item_color = venue_color %}
+                {% endcase %}
+              {% endif %}
+              <span class="publication-card__venue-item" style="--venue-item-accent: {{ item_color }};">
+                <span class="publication-card__type">{{ item_kind | capitalize }}</span>
+                <span class="publication-card__dot" aria-hidden="true"></span>
+                <span class="publication-card__venue-name">{{ venue_name }}</span>
+              </span>
               {% unless forloop.last -%}
                 <span class="publication-card__venue-separator">+</span>
               {%- endunless %}
             {% endif %}
           {%- endfor -%}
         </span>
+      {% else %}
+        <span class="publication-card__type">{{ primary_kind | capitalize }}</span>
       {% endunless %}
     </div>
     <!-- Title -->

@@ -192,9 +192,160 @@ ul.task-list input[type="checkbox"] {
 
 // Repositories
 
-@media (min-width: 768px) {
-  .repo {
-    max-width: 50%;
+.repo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 20rem), 1fr));
+  gap: 1.15rem;
+  align-items: stretch;
+  margin-top: 1.25rem;
+}
+
+.repo-card {
+  --repo-accent: #2563eb;
+  --repo-stripe-end: color-mix(in srgb, var(--repo-accent) 34%, #ffffff);
+
+  position: relative;
+  overflow: hidden;
+  min-height: 100%;
+  border: 1px solid color-mix(in srgb, var(--repo-accent) 20%, var(--global-divider-color));
+  border-radius: 18px;
+  background:
+    linear-gradient(110deg, color-mix(in srgb, var(--repo-accent) 9%, transparent), transparent 46%),
+    linear-gradient(180deg, color-mix(in srgb, var(--global-card-bg-color) 96%, #ffffff), var(--global-card-bg-color));
+  box-shadow: 0 16px 42px rgba(39, 48, 74, 0.08);
+  transition:
+    border-color 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+
+  &::before {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0.32rem;
+    content: "";
+    background: linear-gradient(180deg, var(--repo-accent), var(--repo-stripe-end));
+  }
+
+  &:hover,
+  &:focus-within {
+    border-color: color-mix(in srgb, var(--repo-accent) 44%, var(--global-divider-color));
+    transform: translateY(-2px);
+    box-shadow: 0 20px 48px rgba(39, 48, 74, 0.13);
+  }
+}
+
+.repo-card__link {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+  padding: 1.1rem;
+  color: var(--global-text-color);
+
+  &:hover,
+  &:focus-visible {
+    color: var(--global-text-color);
+    text-decoration: none;
+  }
+}
+
+.repo-card__title {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  margin: 0;
+  color: var(--global-text-color);
+  font-size: 1.08rem;
+  font-weight: 800;
+  line-height: 1.32;
+
+  i,
+  i::before {
+    color: var(--repo-accent);
+    font-size: 1rem;
+  }
+}
+
+.repo-card__owner,
+.repo-card__slash {
+  color: var(--global-text-color-light);
+}
+
+.repo-card__description {
+  display: -webkit-box;
+  flex: 1 1 auto;
+  overflow: hidden;
+  margin: 0.5rem 0 0;
+  color: var(--global-text-color);
+  font-size: 0.94rem;
+  line-height: 1.55;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: var(--repo-description-lines, 2);
+}
+
+.repo-card__footer {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-top: 1rem;
+}
+
+.repo-card__stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem 0.75rem;
+  min-width: 0;
+}
+
+.repo-card__stat {
+  display: inline-flex;
+  gap: 0.32rem;
+  align-items: center;
+  color: var(--global-text-color-light);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.3;
+
+  i,
+  i::before {
+    color: var(--repo-accent);
+    font-size: 0.78rem;
+  }
+}
+
+.repo-card__language-dot {
+  width: 0.54rem;
+  height: 0.54rem;
+  border-radius: 50%;
+  background: var(--repo-accent);
+}
+
+.repo-card__visit {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  color: #ffffff;
+  border-radius: 999px;
+  background: var(--repo-accent);
+
+  i,
+  i::before {
+    color: #ffffff;
+    font-size: 0.72rem;
+  }
+}
+
+html[data-theme="dark"] {
+  .repo-card {
+    --repo-stripe-end: color-mix(in srgb, var(--repo-accent) 42%, #05070b);
+
+    background:
+      linear-gradient(110deg, color-mix(in srgb, var(--repo-accent) 15%, transparent), transparent 48%),
+      linear-gradient(180deg, rgba(35, 39, 47, 0.98), var(--global-card-bg-color));
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
   }
 }
 
@@ -305,33 +456,183 @@ html[data-theme-setting="dark"] {
 }
 
 .talks {
+  margin-top: 2rem;
+
   ol {
     list-style: none;
     padding: 0;
     margin-top: 0;
 
-    li {
-      margin-bottom: 1rem;
+    &.list-group {
+      display: block;
+    }
+  }
 
-      .links {
-        a.btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--global-text-color);
-          border: 1px solid var(--global-text-color);
-          border-radius: v.$button-pill-radius;
-          padding-left: 1rem;
-          padding-right: 1rem;
-          padding-top: 0.25rem;
-          padding-bottom: 0.25rem;
-          margin-left: 0;
+  .talk-card {
+    --talk-accent: #0891b2;
+    --talk-stripe-end: color-mix(in srgb, var(--talk-accent) 34%, #ffffff);
 
-          &:hover {
-            color: var(--global-theme-color);
-            border-color: var(--global-theme-color);
-          }
-        }
+    position: relative;
+    display: block;
+    overflow: hidden;
+    padding: 1.1rem;
+    margin-bottom: 1.15rem;
+    border: 1px solid color-mix(in srgb, var(--talk-accent) 24%, var(--global-divider-color));
+    border-radius: 18px;
+    background:
+      linear-gradient(110deg, color-mix(in srgb, var(--talk-accent) 10%, transparent), transparent 46%),
+      linear-gradient(180deg, color-mix(in srgb, var(--global-card-bg-color) 96%, #ffffff), var(--global-card-bg-color));
+    box-shadow: 0 16px 42px rgba(39, 48, 74, 0.08);
+    transition:
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      transform 180ms ease;
+
+    &::before {
+      position: absolute;
+      inset: 0 auto 0 0;
+      width: 0.32rem;
+      content: "";
+      background: linear-gradient(180deg, var(--talk-accent), var(--talk-stripe-end));
+    }
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--talk-accent) 46%, var(--global-divider-color));
+      transform: translateY(-2px);
+      box-shadow: 0 20px 48px rgba(39, 48, 74, 0.13);
+    }
+  }
+
+  .talk-card--conference-presentation {
+    --talk-accent: #c2410c;
+  }
+
+  .talk-card--seminar {
+    --talk-accent: #6d28d9;
+  }
+
+  .talk-card--talk {
+    --talk-accent: #0891b2;
+  }
+
+  .talk-card__body {
+    min-width: 0;
+  }
+
+  .talk-card__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.38rem;
+    align-items: center;
+    margin-bottom: 0.42rem;
+    color: var(--global-text-color-light);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-transform: uppercase;
+  }
+
+  .talk-card__type {
+    color: var(--talk-accent);
+  }
+
+  .talk-card__dot {
+    width: 0.34rem;
+    height: 0.34rem;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--talk-accent) 74%, transparent);
+  }
+
+  .talk-card__date {
+    color: var(--global-text-color-light);
+  }
+
+  .talk-card__title {
+    margin: 0;
+    color: var(--global-text-color);
+    font-size: 1.08rem;
+    font-weight: 800;
+    line-height: 1.32;
+  }
+
+  .talk-card__description {
+    margin: 0.4rem 0 0;
+    color: var(--global-text-color);
+    font-size: 0.94rem;
+    font-style: normal;
+    line-height: 1.55;
+  }
+
+  .links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+    margin-top: 0.85rem;
+
+    a.btn {
+      display: inline-flex;
+      gap: 0.35rem;
+      align-items: center;
+      justify-content: center;
+      min-height: 2rem;
+      padding: 0.36rem 0.72rem;
+      margin-left: 0;
+      color: var(--global-text-color);
+      border: 1px solid color-mix(in srgb, var(--talk-accent) 42%, var(--global-divider-color));
+      border-radius: v.$button-pill-radius;
+      background: color-mix(in srgb, var(--talk-accent) 7%, transparent);
+      font-size: 0.8rem;
+      font-weight: 700;
+      line-height: 1;
+      text-transform: none;
+      box-shadow: none;
+      transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
+
+      span,
+      i,
+      i::before {
+        color: inherit !important;
+        font-size: 0.78rem;
+        transition: none !important;
+      }
+
+      span {
+        font-size: inherit;
+      }
+
+      &:hover,
+      &:focus-visible {
+        color: #ffffff;
+        background: var(--talk-accent);
+        border-color: var(--talk-accent);
+        text-decoration: none;
+        transform: translateY(-1px);
+      }
+    }
+  }
+}
+
+html[data-theme="dark"] {
+  .talks {
+    .talk-card {
+      --talk-stripe-end: color-mix(in srgb, var(--talk-accent) 42%, #05070b);
+
+      background:
+        linear-gradient(110deg, color-mix(in srgb, var(--talk-accent) 16%, transparent), transparent 48%),
+        linear-gradient(180deg, rgba(35, 39, 47, 0.98), var(--global-card-bg-color));
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
+    }
+
+    .links a.btn {
+      background: color-mix(in srgb, var(--talk-accent) 12%, transparent);
+
+      &:hover,
+      &:focus-visible {
+        color: #ffffff;
       }
     }
   }

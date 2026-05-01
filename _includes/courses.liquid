@@ -7,27 +7,43 @@
       <div class="course-list">
         {% assign year_courses = year_group.items | sort: 'term' %}
         {% for course in year_courses %}
-          <div class="course-item">
-            <h3 class="course-title">
-              <a href="{{ course.url | relative_url }}">{{ course.title }}</a>
-            </h3>
-
-            <div class="course-meta">
+          {% assign course_type_slug = course.type | downcase | replace: '/', '-' | replace: ' ', '-' %}
+          <article class="course-card course-card--{{ course_type_slug }}">
+            <div class="course-card__meta">
+              <span class="course-card__type">{{ course.type }}</span>
               {% if course.term %}
-                <span class="course-term">{{ course.term }}</span>
-              {% endif %}
-
-              {% if course.instructor %}
-                <span class="course-instructor">{{ course.instructor }}</span>
+                <span class="course-card__dot" aria-hidden="true"></span>
+                <span class="course-card__term">{{ course.term }}</span>
               {% endif %}
             </div>
 
+            <h3 class="course-card__title">
+              <a href="{{ course.url | relative_url }}">{{ course.title }}</a>
+            </h3>
+
+            {% if course.instructor or course.time %}
+              <div class="course-card__details">
+                {% if course.instructor %}
+                  <span class="course-card__detail">
+                    <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
+                    <span>{{ course.instructor }}</span>
+                  </span>
+                {% endif %}
+                {% if course.time %}
+                  <span class="course-card__detail">
+                    <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                    <span>{{ course.time }}</span>
+                  </span>
+                {% endif %}
+              </div>
+            {% endif %}
+
             {% if course.description %}
-              <div class="course-description">
+              <div class="course-card__description">
                 {{ course.description | markdownify }}
               </div>
             {% endif %}
-          </div>
+          </article>
         {% endfor %}
       </div>
     {% endfor %}

@@ -1,47 +1,70 @@
-{% assign repo_url = include.repository | split: '/' %}
-{% if site.data.repositories.github_users contains repo_url.first %}
-  {% assign show_owner = false %}
+{% if include.repository.name %}
+  {% assign repo_full_name = include.repository.name %}
+  {% assign repo_description = include.repository.description %}
+  {% assign repo_language = include.repository.language %}
+  {% assign repo_stars = include.repository.stars %}
+  {% assign repo_forks = include.repository.forks %}
+  {% assign repo_updated = include.repository.updated %}
+  {% assign repo_url = include.repository.url %}
 {% else %}
-  {% assign show_owner = true %}
+  {% assign repo_full_name = include.repository %}
 {% endif %}
 
-{% assign lang = site.lang | split: '-' | first %}
+{% assign repo_parts = repo_full_name | split: '/' %}
+{% assign repo_owner = repo_parts[0] %}
+{% assign repo_name = repo_parts[1] %}
+{% unless repo_url %}
+  {% assign repo_url = repo_full_name | prepend: 'https://github.com/' %}
+{% endunless %}
+{% unless repo_description %}
+  {% assign repo_description = 'Open-source repository on GitHub.' %}
+{% endunless %}
+{% assign max_lines = site.data.repositories.repo_description_lines_max | default: 2 %}
 
-{% case lang %}
-  {% when 'pt' %}
-    {% assign lang = site.lang %}
+<article class="repo-card" style="--repo-description-lines: {{ max_lines }}">
+  <a class="repo-card__link" href="{{ repo_url }}" aria-label="Open {{ repo_full_name }} on GitHub">
+    <h3 class="repo-card__title">
+      <i class="fa-brands fa-github" aria-hidden="true"></i>
+      <span>
+        <span class="repo-card__owner">{{ repo_owner }}</span>
+        <span class="repo-card__slash">/</span>
+        <span>{{ repo_name }}</span>
+      </span>
+    </h3>
 
-  {% when 'zh' %}
-    {% assign lang_last = site.lang | split: '-' | last %}
-    {% case lang_last %}
-      {% when 'cn', 'sg', 'my', 'hans' %}
-        {% assign lang = 'cn' %}
-      {% when 'tw', 'hk', 'mo', 'hant' %}
-        {% assign lang = 'zh-tw' %}
-    {% endcase %}
+    <p class="repo-card__description">{{ repo_description }}</p>
 
-    {% comment %} Add a new language using when... if needed {% endcomment %}
-    {% comment %} If you still encounter language-display issues, check the available locale codes in github-readme-stats (different from ISO-639 standard used in your website) {% endcomment %}
-    {% comment %} https://github.com/anuraghazra/github-readme-stats?tab=readme-ov-file#available-locales {% endcomment %}
-{% endcase %}
+    <div class="repo-card__footer">
+      <div class="repo-card__stats">
+        {% if repo_language %}
+          <span class="repo-card__stat repo-card__language">
+            <span class="repo-card__language-dot" aria-hidden="true"></span>
+            <span>{{ repo_language }}</span>
+          </span>
+        {% endif %}
+        {% if repo_stars != null %}
+          <span class="repo-card__stat">
+            <i class="fa-regular fa-star" aria-hidden="true"></i>
+            <span>{{ repo_stars }}</span>
+          </span>
+        {% endif %}
+        {% if repo_forks != null %}
+          <span class="repo-card__stat">
+            <i class="fa-solid fa-code-fork" aria-hidden="true"></i>
+            <span>{{ repo_forks }}</span>
+          </span>
+        {% endif %}
+        {% if repo_updated %}
+          <span class="repo-card__stat">
+            <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+            <span>{{ repo_updated }}</span>
+          </span>
+        {% endif %}
+      </div>
 
-{% if site.data.repositories.repo_description_lines_max %}
-  {% assign max_lines = site.data.repositories.repo_description_lines_max %}
-{% else %}
-  {% assign max_lines = 2 %}
-{% endif %}
-
-<div class="repo p-2 text-center">
-  <a href="https://github.com/{{ include.repository }}">
-    <img
-      class="only-light w-100"
-      alt="{{ include.repository }}"
-      src="{{ site.external_services.github_readme_stats_url }}/api/pin/?username={{ repo_url[0] }}&repo={{ repo_url[1] }}&theme={{ site.repo_theme_light }}&locale={{ lang }}&show_owner={{ show_owner }}&description_lines_count={{ max_lines }}"
-    >
-    <img
-      class="only-dark w-100"
-      alt="{{ include.repository }}"
-      src="{{ site.external_services.github_readme_stats_url }}/api/pin/?username={{ repo_url[0] }}&repo={{ repo_url[1] }}&theme={{ site.repo_theme_dark }}&locale={{ lang }}&show_owner={{ show_owner }}&description_lines_count={{ max_lines }}"
-    >
+      <span class="repo-card__visit" aria-hidden="true">
+        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+      </span>
+    </div>
   </a>
-</div>
+</article>

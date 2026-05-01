@@ -4,6 +4,7 @@ title: Introduction to Algorithmics (Algorithmique I)
 description: Tutorial instruction for 2nd-year / L2 undergraduate students introducing algorithmic foundations.
 year: 2021
 term: Spring
+type: tutorial
 course_id: introduction-algorithmics-2021
 time: 11 weeks, 3.5 hours/week
 ---

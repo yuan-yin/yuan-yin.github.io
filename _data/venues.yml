@@ -1,6 +1,72 @@
 "AJP":
   url: https://aapt.scitation.org/journal/ajp
   color: "#00369f"
+  kind: journal
 
 "PhysRev":
   url: https://journals.aps.org/
+  kind: journal
+
+"CI":
+  color: "#2563eb"
+  kind: workshop
+
+"CVPR":
+  color: "#2563eb"
+  kind: conference
+
+"ECCV WS":
+  color: "#7c3aed"
+  kind: workshop
+
+"ICLR":
+  color: "#dc2626"
+  kind: conference
+
+"ICLR WS":
+  color: "#dc2626"
+  kind: workshop
+
+"ICML":
+  color: "#9333ea"
+  kind: conference
+
+"ICML WS":
+  color: "#9333ea"
+  kind: workshop
+
+"ICRA":
+  color: "#0891b2"
+  kind: conference
+
+"IVC":
+  color: "#0f766e"
+  kind: journal
+
+"JDSA":
+  color: "#0f766e"
+  kind: journal
+
+"JSTAT":
+  color: "#0f766e"
+  kind: journal
+
+"NeurIPS":
+  color: "#b45309"
+  kind: conference
+
+"NeurIPS WS":
+  color: "#ea580c"
+  kind: workshop
+
+"PhD":
+  color: "#475569"
+  kind: thesis
+
+"TMLR":
+  color: "#0f766e"
+  kind: journal
+
+"Preprint":
+  color: "#64748b"
+  kind: preprint

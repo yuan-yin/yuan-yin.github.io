@@ -4,6 +4,7 @@ title: Research in Data Science and Methodology
 description: Tutorial instruction for 2nd-year / M2 DAC graduate students, centered on research methodology and a final research proposal project.
 year: 2021
 term: Autumn
+type: tutorial
 course_id: research-data-science-methodology-2021
 time: 11 weeks, 3.5 hours/week
 ---

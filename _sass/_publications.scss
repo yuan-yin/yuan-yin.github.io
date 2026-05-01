@@ -41,6 +41,7 @@
 
       .publication-card {
         --pub-accent: var(--global-theme-color);
+        --pub-stripe-end: color-mix(in srgb, var(--pub-accent) 34%, #ffffff);
 
         position: relative;
         display: grid;
@@ -64,7 +65,7 @@
           inset: 0 auto 0 0;
           width: 0.32rem;
           content: "";
-          background: linear-gradient(180deg, var(--pub-accent), color-mix(in srgb, var(--pub-accent) 34%, #ffffff));
+          background: linear-gradient(180deg, var(--pub-accent), var(--pub-stripe-end));
         }
 
         &:hover {
@@ -103,19 +104,30 @@
       }
 
       .publication-card__type {
-        color: var(--pub-accent);
+        color: var(--venue-item-accent, var(--pub-accent));
       }
 
       .publication-card__dot {
         width: 0.34rem;
         height: 0.34rem;
         border-radius: 50%;
-        background: color-mix(in srgb, var(--pub-accent) 74%, transparent);
+        background: color-mix(in srgb, var(--venue-item-accent, var(--pub-accent)) 74%, transparent);
+      }
+
+      .publication-card__venue-item {
+        --venue-item-accent: var(--pub-accent);
+
+        display: inline-flex;
+        gap: 0.28rem;
+        align-items: center;
+        min-width: 0;
+        color: var(--venue-item-accent);
       }
 
       .publication-card__venue-name {
         max-width: 100%;
         overflow: hidden;
+        color: var(--venue-item-accent, var(--global-text-color-light));
         text-overflow: ellipsis;
         white-space: nowrap;
       }
@@ -146,46 +158,50 @@
         box-shadow: 0 10px 24px rgba(39, 48, 74, 0.1);
       }
 
-      .abbr {
+      .publication-card__venues {
+        display: block;
         margin-bottom: 0.5rem;
+      }
 
-        .publication-card__venues {
-          display: grid;
-          gap: 0.45rem;
+      .publication-card__venue {
+        --venue-accent: var(--pub-accent);
+        --venue-gradient: linear-gradient(
+          135deg,
+          color-mix(in srgb, var(--venue-accent) 92%, #ffffff),
+          color-mix(in srgb, var(--venue-accent) 72%, #111111)
+        );
+
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0.18rem 0.35rem;
+        align-items: center;
+        justify-content: center;
+        min-height: 2.15rem;
+        padding: 0.45rem 0.65rem;
+        border: 1px solid color-mix(in srgb, var(--venue-accent) 60%, transparent);
+        background: var(--venue-gradient), var(--venue-accent);
+        color: #ffffff !important;
+        font-size: 0.82rem;
+        font-weight: 800;
+        letter-spacing: 0;
+        box-shadow: 0 10px 22px color-mix(in srgb, var(--venue-accent) 22%, transparent);
+
+        a,
+        span {
+          color: #ffffff !important;
+          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.24);
         }
 
-        abbr {
-          --venue-accent: var(--pub-accent);
-
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 2.15rem;
-          padding: 0.45rem 0.65rem;
-          border: 1px solid color-mix(in srgb, var(--venue-accent) 60%, transparent);
-          background:
-            linear-gradient(135deg, color-mix(in srgb, var(--venue-accent) 92%, #ffffff), color-mix(in srgb, var(--venue-accent) 72%, #111111)),
-            var(--venue-accent);
-          margin-bottom: 0.5rem;
-          color: #ffffff !important;
-          font-size: 0.82rem;
-          font-weight: 800;
-          letter-spacing: 0;
-          box-shadow: 0 10px 22px color-mix(in srgb, var(--venue-accent) 22%, transparent);
-
-          a {
-            color: #ffffff !important;
-
-            &:hover {
-              text-decoration: none;
-            }
+        a {
+          &:hover {
+            text-decoration: none;
           }
         }
+      }
 
-        .award {
-          color: var(--global-theme-color) !important;
-          border: 1px solid var(--global-theme-color);
-        }
+      .publication-card__venue-chip-separator {
+        color: rgba(255, 255, 255, 0.72);
+        font-weight: 700;
       }
 
       .title {
@@ -400,6 +416,8 @@
 html[data-theme="dark"] {
   .publications ol.bibliography li {
     .publication-card {
+      --pub-stripe-end: color-mix(in srgb, var(--pub-accent) 42%, #05070b);
+
       background:
         linear-gradient(110deg, color-mix(in srgb, var(--pub-accent) 16%, transparent), transparent 48%),
         linear-gradient(180deg, rgba(35, 39, 47, 0.98), var(--global-card-bg-color));

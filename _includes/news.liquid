@@ -4,8 +4,9 @@
     <div
       class="table-responsive"
       {% if include.limit and page.announcements.scrollable and news_size > 3 %}
-      style="max-height: 30vh"
-      {% endif %}>
+        style="max-height: 30vh"
+      {% endif %}
+    >
       <table class="table table-sm table-borderless">
         {% assign news = site.news | reverse %}
         {% if include.limit and page.announcements.limit %}
@@ -30,7 +31,8 @@
                   <i class="fa-solid fa-user-plus" style="color:teal;"></i>
                 {% when 'alert' %}
                   <i class="fa-solid fa-bell" style="color: tomato;"></i>
-                  {% else %}
+                {% else %}
+
               {% endcase %}
             </td>
             <td>

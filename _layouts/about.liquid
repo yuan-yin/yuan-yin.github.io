@@ -2,52 +2,70 @@
 layout: default
 ---
 <div class="post">
-  <header class="post-header">
-    <h1 class="post-title">
-      <span class="font-weight-light">Hi! I'm</span>
-      {% if site.title == 'blank' %}
-        <span class="font-weight-bold">{{ site.first_name }}</span>
-        <span class="font-weight-light" style="font-variant: small-caps;">{{ site.middle_name }} {{ site.last_name }}</span>
-        <span class="font-weight-light" style="font-size:18px;">{{ site.last_name_alt }}</span><span class="font-weight-bold" style="font-size:18px;">{{ site.first_name_alt }}</span>
-      {% else %}
-        {{ site.title }}
-      {% endif %}
-    </h1>
-    <h4 class="desc">{{ page.subtitle }}</h4>
-  </header>
-
   <article>
-    {% if page.profile %}
-      <div class="profile float-{% if page.profile.align == 'left' %}left{% else %}right{% endif %}">
-        {% if page.profile.image %}
-          {% assign profile_image_path = page.profile.image | prepend: 'assets/img/' %}
-          {% if page.profile.image_circular %}
-            {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
-          {% else %}
-            {% assign profile_image_class = 'img-fluid z-depth-1
-                                                                                                        rounded' %}
-          {% endif %}
-          {% capture sizes %}(min-width: {{site.max_width}}) {{ site.max_width | minus: 30 | times: 0.3}}px, (min-width: 576px)
-      30vw, 95vw"{% endcapture %}
-          {%
-            include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=page.profile.image cache_bust=true
-          %}
-        {% endif %}
-        {% if page.profile.more_info %}
-          <div class="more-info">{{ page.profile.more_info }}</div>
+    <section class="about-hero">
+      <div class="about-hero__inner">
+        <div class="about-hero__copy">
+          <header class="post-header">
+            <h1 class="post-title">
+              <span class="font-weight-light">Hi! I'm</span>
+              {% if site.title == 'blank' %}
+                <span class="font-weight-bold">{{ site.first_name }}</span>
+                <span class="font-weight-light" style="font-variant: small-caps;">
+                  {{- site.middle_name }}
+                  {{ site.last_name -}}
+                </span>
+                <span class="font-weight-light" style="font-size:18px;">{{ site.last_name_alt }}</span
+                ><span class="font-weight-bold" style="font-size:18px;">{{ site.first_name_alt }}</span>
+              {% else %}
+                {{ site.title }}
+              {% endif %}
+            </h1>
+            <h4 class="desc">{{ page.subtitle }}</h4>
+          </header>
+
+          <div class="about-hero__intro">{{ content }}</div>
+        </div>
+
+        {% if page.profile %}
+          <div class="profile about-hero__profile">
+            {% if page.profile.image %}
+              {% assign profile_image_path = page.profile.image | prepend: 'assets/img/' %}
+              {% if page.profile.image_circular %}
+                {% assign profile_image_class = 'img-fluid z-depth-1 rounded-circle' %}
+              {% else %}
+                {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
+              {% endif %}
+              {% capture sizes %}(min-width: {{ site.max_width }}) 260px, (min-width: 768px) 28vw, 68vw{% endcapture %}
+              {% include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=page.profile.image cache_bust=true %}
+            {% endif %}
+            {% if page.profile.more_info %}
+              <div class="more-info">{{ page.profile.more_info }}</div>
+            {% endif %}
+          </div>
         {% endif %}
       </div>
-    {% endif %}
 
-    <div class="clearfix">{{ content }}</div>
+      {% if page.social %}
+        <div class="social about-hero__social">
+          <div class="contact-note">{{ site.contact_note }}</div>
+
+          <div class="contact-icons">{% include social.liquid %}</div>
+        </div>
+      {% endif %}
+    </section>
 
     <!-- News -->
     {% if page.announcements and page.announcements.enabled %}
-      <h2>
-        News
-        <a href="{{ '/news/' | relative_url }}" style="font-size: 1rem; font-style: italic;">More &gt;&gt;&gt;</a>
-      </h2>
-      {% include news.liquid limit=true %}
+      <section class="home-news-section" aria-labelledby="home-news-title">
+        <div class="home-news-section__header">
+          <div>
+            <h2 id="home-news-title">News</h2>
+          </div>
+          <a class="home-news-section__archive" href="{{ '/news/' | relative_url }}">View all</a>
+        </div>
+        {% include news.liquid limit=true %}
+      </section>
     {% endif %}
 
     <!-- Latest posts -->
@@ -64,15 +82,6 @@ layout: default
         <a href="{{ '/publications/' | relative_url }}" style="color: inherit">Selected Publications</a>
       </h2>
       {% include selected_papers.liquid %}
-    {% endif %}
-
-    <!-- Social -->
-    {% if page.social %}
-      <div class="social">
-        <div class="contact-icons">{% social_links %}</div>
-
-        <div class="contact-note">{{ site.contact_note }}</div>
-      </div>
     {% endif %}
   </article>
 </div>

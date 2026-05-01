@@ -51,6 +51,10 @@ layout: default
           <div class="contact-note">{{ site.contact_note }}</div>
 
           <div class="contact-icons">{% include social.liquid %}</div>
+          <a class="about-hero__cv-button" href="{{ '/cv/' | relative_url }}">
+            <span>View CV</span>
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+          </a>
         </div>
       {% endif %}
     </section>

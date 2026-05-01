@@ -1,7 +1,6 @@
 ---
 layout: default
 ---
-
 <div class="post cv-viewer cv-loading cv-initial-loading">
   <header class="post-header">
     <h1 class="post-title">
@@ -9,66 +8,69 @@ layout: default
     </h1>
 
     <div class="header-toolbar">
-      <h3 class="float-left">
-        <div class="lang-toolbar">
-          <!-- English split button -->
-          <div class="lang-split" data-lang="en">
-            <a
-              id="lang-en"
-              class="lang-primary"
-              data-lang="en"
-              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-              rel="noopener"
-              aria-pressed="false">
-              English
-            </a>
-            <a
-              id="download-en"
-              class="lang-download"
-              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-              download
-              rel="noopener"
-              aria-label="Download English CV">
-              <i class="fa-solid fa-download" aria-hidden="true"></i>
-            </a>
-          </div>
-
-          <!-- French split button -->
-          <div class="lang-split" data-lang="fr">
-            <a
-              id="lang-fr"
-              class="lang-primary"
-              data-lang="fr"
-              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-              rel="noopener"
-              aria-pressed="false">
-              Français
-            </a>
-            <a
-              id="download-fr"
-              class="lang-download"
-              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-              download
-              rel="noopener"
-              aria-label="Download French CV">
-              <i class="fa-solid fa-download" aria-hidden="true"></i>
-            </a>
-          </div>
+      <div class="lang-toolbar">
+        <!-- English split button -->
+        <div class="lang-split" data-lang="en">
+          <a
+            id="lang-en"
+            class="lang-primary"
+            data-lang="en"
+            href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+            rel="noopener"
+            aria-pressed="false"
+          >
+            English
+          </a>
+          <a
+            id="download-en"
+            class="lang-download"
+            href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+            download
+            rel="noopener"
+            aria-label="Download English CV"
+          >
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+          </a>
         </div>
-      </h3>
+
+        <!-- French split button -->
+        <div class="lang-split" data-lang="fr">
+          <a
+            id="lang-fr"
+            class="lang-primary"
+            data-lang="fr"
+            href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+            rel="noopener"
+            aria-pressed="false"
+          >
+            Français
+          </a>
+          <a
+            id="download-fr"
+            class="lang-download"
+            href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+            download
+            rel="noopener"
+            aria-label="Download French CV"
+          >
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
 
       <div class="pager">
-        <span style="font-weight:200">Page:
+        <span class="pager-status">
+          Page:
           <span id="page_num">...</span>
           /
           <span id="page_count">...</span>
         </span>
-        &nbsp; &nbsp;
         <button
           id="prev"
           class="pager-button"
           disabled
-          aria-label="Previous page">
+          aria-label="Previous page"
+        >
           <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
           <span>Previous</span>
         </button>
@@ -76,7 +78,8 @@ layout: default
           id="next"
           class="pager-button"
           disabled
-          aria-label="Next page">
+          aria-label="Next page"
+        >
           <span>Next</span>
           <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
         </button>
@@ -91,390 +94,408 @@ layout: default
   <link
     rel="modulepreload"
     href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs"
-    crossorigin="anonymous">
+    crossorigin="anonymous"
+  >
   <link
     rel="modulepreload"
     href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs"
-    crossorigin="anonymous">
+    crossorigin="anonymous"
+  >
   <link
     rel="preload"
     href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
     as="fetch"
-    type="application/pdf">
+    type="application/pdf"
+  >
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
 
   <script type="module">
-      const { pdfjsLib } = globalThis;
-      pdfjsLib.GlobalWorkerOptions.workerSrc =
-    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs';
+    const { pdfjsLib } = globalThis;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs';
 
-      document.addEventListener('DOMContentLoaded', () => {
-    const postElement = document.querySelector('.post');
-    const stage = document.querySelector('.pdf-stage');
-    const canvas = document.getElementById('the-canvas');
-    const ctx = canvas.getContext('2d');
+    document.addEventListener('DOMContentLoaded', () => {
+      const postElement = document.querySelector('.post');
+      const stage = document.querySelector('.pdf-stage');
+      const canvas = document.getElementById('the-canvas');
+      const ctx = canvas.getContext('2d');
 
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
-    const pageNumElement = document.getElementById('page_num');
-    const pageCountElement = document.getElementById('page_count');
+      const prevBtn = document.getElementById('prev');
+      const nextBtn = document.getElementById('next');
+      const pageNumElement = document.getElementById('page_num');
+      const pageCountElement = document.getElementById('page_count');
 
-    let pdfDoc = null;           // PDFDocumentProxy
-    let loadingTask = null;      // PDFLoadingTask
-    let renderTask = null;       // RenderTask
-    let pageNum = 1;
-    let pageRendering = false;
-    let pageNumPending = null;
-    let currentLang = 'en';
-    let firstPageRendered = false;
-    let hasLoadedOnce = false;
+      let pdfDoc = null; // PDFDocumentProxy
+      let loadingTask = null; // PDFLoadingTask
+      let renderTask = null; // RenderTask
+      let pageNum = 1;
+      let pageRendering = false;
+      let pageNumPending = null;
+      let currentLang = 'en';
+      let firstPageRendered = false;
+      let hasLoadedOnce = false;
 
-    const urls = {
-      en: {
-        light: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
-        dark: "{{ page.cv_pdf_en_dark | default: page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-      },
-      fr: {
-        light: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
-        dark: "{{ page.cv_pdf_fr_dark | default: page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-      }
-    };
-
-    async function disposePdf({ clearCanvas = true } = {}) {
-      // 1) Stop rendering
-      if (renderTask && typeof renderTask.cancel === 'function') {
-        try { renderTask.cancel(); } catch {}
-      }
-      renderTask = null;
-      pageRendering = false;
-      pageNumPending = null;
-
-      // 2) Kill any in-flight document load
-      if (loadingTask && typeof loadingTask.destroy === 'function') {
-        try { await loadingTask.destroy(); } catch {}
-      }
-      loadingTask = null;
-
-      // 3) Destroy current document (frees XRef, fonts, images, etc.)
-      if (pdfDoc) {
-        try {
-          // cleanup() is optional; destroy() is enough, but both is fine.
-          if (typeof pdfDoc.cleanup === 'function') await pdfDoc.cleanup();
-          await pdfDoc.destroy();
-        } catch {}
-      }
-      pdfDoc = null;
-
-      // 4) Clear overlay links
-      stage.querySelectorAll('a.pdf-link.overlay').forEach(a => a.remove());
-
-      if (clearCanvas) {
-        // 5) Clear and shrink canvas to release bitmap memory
-        try { ctx && ctx.clearRect(0, 0, canvas.width, canvas.height); } catch {}
-        canvas.classList.remove('is-rendered');
-        canvas.width = 0;
-        canvas.height = 0;
-        canvas.style.width = '0px';
-        canvas.style.height = '0px';
-      }
-
-      // 6) Disable pager while there is no active PDF document
-      prevBtn.disabled = true;
-      nextBtn.disabled = true;
-    }
-
-    async function loadPdf(lang, { initialPage = 1 } = {}) {
-      const url = getPdfUrl(lang);
-      currentLang = lang;
-      const isInitialLoad = !hasLoadedOnce;
-
-      // Fully tear down previous resources before starting a new load
-      firstPageRendered = false;
-      postElement.classList.add('cv-loading');
-      postElement.classList.remove('cv-error');
-      postElement.classList.toggle('cv-initial-loading', isInitialLoad);
-      stage.setAttribute('aria-busy', 'true');
-      if (isInitialLoad) {
-        postElement.classList.remove('cv-ready', 'cv-controls-ready');
-      } else {
-        postElement.classList.add('cv-ready', 'cv-controls-ready');
-      }
-      await disposePdf({ clearCanvas: isInitialLoad });
-      if (isInitialLoad) {
-        pageNumElement.textContent = '...';
-        pageCountElement.textContent = '...';
-      }
-      prevBtn.disabled = true;
-      nextBtn.disabled = true;
-
-      // Start a new loading task
-      loadingTask = pdfjsLib.getDocument(url);
-      try {
-        pdfDoc = await loadingTask.promise;
-      } catch (err) {
-        console.error('PDF load failed:', err);
-        postElement.classList.remove('cv-loading', 'cv-ready', 'cv-controls-ready', 'cv-initial-loading');
-        postElement.classList.add('cv-error');
-        stage.setAttribute('aria-busy', 'false');
-        pageNumElement.textContent = '';
-        pageCountElement.textContent = '';
-        return;
-      } finally {
-        // The loadingTask becomes less useful after we have pdfDoc
-        loadingTask = null;
-      }
-
-      pageCountElement.textContent = pdfDoc.numPages;
-      pageNum = Math.min(initialPage, pdfDoc.numPages);
-      updateSplitButtons(lang);
-      updatePagerState();
-      await renderPage(pageNum);
-    }
-
-    async function renderPage(num) {
-      if (!pdfDoc) return;
-      pageRendering = true;
-      stage.classList.add('is-rendering');
-      const page = await pdfDoc.getPage(num);
-
-      const viewport = page.getViewport({ scale: getScaleFactor(page) });
-      const renderCanvas = document.createElement('canvas');
-      const renderCtx = renderCanvas.getContext('2d');
-      adjustCanvasSize(renderCanvas, viewport);
-      const renderContext = {
-        canvasContext: renderCtx,
-        transform: getTransform(viewport),
-        viewport
+      const urls = {
+        en: {
+          light: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
+          dark: "{{ page.cv_pdf_en_dark | default: page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
+        },
+        fr: {
+          light: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
+          dark: "{{ page.cv_pdf_fr_dark | default: page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
+        },
       };
 
-      // Cancel any previous RenderTask just in case
-      if (renderTask && typeof renderTask.cancel === 'function') {
-        try { renderTask.cancel(); } catch {}
-      }
-      renderTask = page.render(renderContext);
-      let rendered = false;
-
-      try {
-        await renderTask.promise;
-        rendered = true;
-      } catch (e) {
-        // Rendering was likely canceled; ignore
-      } finally {
-        renderTask = null;
-        // Let PDF.js drop page-level caches
-        pageRendering = false;
-        if (rendered) {
-          commitRenderedPage(renderCanvas);
-          await addAnnotationsToPage(page, viewport).catch(() => {});
-          updatePageCounter(num);
-        }
-        try { page.cleanup(); } catch {}
-        if (pageNumPending !== null) {
-          const pending = pageNumPending;
-          pageNumPending = null;
-          return renderPage(pending);
-        }
-        updatePagerState();
-        if (!firstPageRendered) {
-          firstPageRendered = true;
-          hasLoadedOnce = true;
-          postElement.classList.remove('cv-loading', 'cv-error', 'cv-initial-loading');
-          postElement.classList.add('cv-ready');
-          stage.setAttribute('aria-busy', 'false');
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => postElement.classList.add('cv-controls-ready'));
-          });
-        }
-        if (rendered) {
-          requestAnimationFrame(() => canvas.classList.add('is-rendered'));
-        }
-        stage.classList.remove('is-rendering');
-      }
-    }
-
-    function getScaleFactor(page) {
-      const desiredWidth = postElement.getBoundingClientRect().width;
-      const origViewport = page.getViewport({ scale: 1 });
-      return desiredWidth / origViewport.width;
-    }
-
-    function adjustCanvasSize(targetCanvas, viewport) {
-      const outputScale = (window.devicePixelRatio || 1) * 2.0;
-      targetCanvas.width = Math.floor(viewport.width * outputScale);
-      targetCanvas.height = Math.floor(viewport.height * outputScale);
-      targetCanvas.style.width = `${Math.floor(viewport.width)}px`;
-      targetCanvas.style.height = `${Math.floor(viewport.height)}px`;
-    }
-
-    function commitRenderedPage(renderCanvas) {
-      canvas.classList.remove('is-rendered');
-      canvas.width = renderCanvas.width;
-      canvas.height = renderCanvas.height;
-      canvas.style.width = renderCanvas.style.width;
-      canvas.style.height = renderCanvas.style.height;
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.drawImage(renderCanvas, 0, 0);
-    }
-
-    function getComputedSiteTheme() {
-      const theme = document.documentElement.getAttribute('data-theme');
-      if (theme) return theme;
-      return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    }
-
-    function getPdfUrl(lang = currentLang) {
-      const theme = getComputedSiteTheme();
-      return urls[lang]?.[theme] || urls[lang]?.light;
-    }
-
-    function getTransform(viewport) {
-      const outputScale = (window.devicePixelRatio || 1) * 2.0;
-      return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-    }
-
-    async function addAnnotationsToPage(page, viewport) {
-      stage.querySelectorAll('a.pdf-link.overlay').forEach(a => a.remove());
-      const annotations = await page.getAnnotations();
-      annotations.forEach(annotation => {
-        if (annotation.subtype === 'Link' && annotation.url) {
-          createLinkElement(annotation, viewport);
-        }
-      });
-    }
-
-    function createLinkElement(annotation, viewport) {
-      const [x1, y1, x2, y2] = annotation.rect;
-      const t = viewport.transform;
-      const devX1 = x1 * t[0] + t[4];
-      const devY2 = y2 * t[3] + t[5];
-      const devW  = (x2 - x1) * t[0];
-      const devH  = (y2 - y1) * t[3];
-
-      const cssScaleX = canvas.clientWidth  / canvas.width;
-      const cssScaleY = canvas.clientHeight / canvas.height;
-
-      const left   = devX1 * cssScaleX;
-      const top    = (canvas.height - devY2) * cssScaleY;
-      const width  = devW * cssScaleX;
-      const height = devH * cssScaleY;
-
-      const linkElement = document.createElement('a');
-      linkElement.href = annotation.url;
-      linkElement.target = '_blank';
-      linkElement.rel = 'noopener';
-      linkElement.className = 'pdf-link overlay';
-      Object.assign(linkElement.style, {
-        position: 'absolute',
-        left: `${left}px`,
-        top: `${top}px`,
-        width: `${width}px`,
-        height: `${height}px`,
-      });
-      stage.appendChild(linkElement);
-    }
-
-    function updateSplitButtons(activeLang) {
-      document.querySelectorAll('.lang-split').forEach(group => {
-        const lang = group.dataset.lang;
-        const primary = group.querySelector('.lang-primary');
-        const download = group.querySelector('.lang-download');
-
-        const isActive = lang === activeLang;
-        group.classList.toggle('active', isActive);
-        primary.classList.toggle('active', isActive);
-        primary.setAttribute('aria-pressed', String(isActive));
-
-        const href = getPdfUrl(lang);
-        const downloadHref = urls[lang]?.light;
-        if (href) {
-          primary.setAttribute('href', href);
-        }
-        if (downloadHref) {
-          download.setAttribute('href', downloadHref);
+      async function disposePdf({ clearCanvas = true } = {}) {
+        // 1) Stop rendering
+        if (renderTask && typeof renderTask.cancel === 'function') {
           try {
-            const filename = downloadHref.split('/').pop() || `cv-${lang}.pdf`;
-            download.setAttribute('download', filename);
-          } catch { download.setAttribute('download', ''); }
+            renderTask.cancel();
+          } catch {}
         }
-        download.setAttribute('aria-hidden', String(!isActive));
-        if (!isActive) download.setAttribute('tabindex', '-1');
-        else download.removeAttribute('tabindex');
-      });
-    }
+        renderTask = null;
+        pageRendering = false;
+        pageNumPending = null;
 
-    function updatePageCounter(num) {
-      pageNumElement.textContent = num;
-    }
+        // 2) Kill any in-flight document load
+        if (loadingTask && typeof loadingTask.destroy === 'function') {
+          try {
+            await loadingTask.destroy();
+          } catch {}
+        }
+        loadingTask = null;
 
-    function queueRenderPage(num) {
-      if (pageRendering) pageNumPending = num;
-      else {
-        canvas.classList.add('is-updating');
-        renderPage(num).finally(() => canvas.classList.remove('is-updating'));
+        // 3) Destroy current document (frees XRef, fonts, images, etc.)
+        if (pdfDoc) {
+          try {
+            // cleanup() is optional; destroy() is enough, but both is fine.
+            if (typeof pdfDoc.cleanup === 'function') await pdfDoc.cleanup();
+            await pdfDoc.destroy();
+          } catch {}
+        }
+        pdfDoc = null;
+
+        // 4) Clear overlay links
+        stage.querySelectorAll('a.pdf-link.overlay').forEach((a) => a.remove());
+
+        if (clearCanvas) {
+          // 5) Clear and shrink canvas to release bitmap memory
+          try {
+            ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
+          } catch {}
+          canvas.classList.remove('is-rendered');
+          canvas.width = 0;
+          canvas.height = 0;
+          canvas.style.width = '0px';
+          canvas.style.height = '0px';
+        }
+
+        // 6) Disable pager while there is no active PDF document
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
       }
-    }
 
-    function onPrevPage() {
-      if (!pdfDoc || pageNum <= 1) return;
-      pageNum--;
-      queueRenderPage(pageNum);
-    }
+      async function loadPdf(lang, { initialPage = 1 } = {}) {
+        const url = getPdfUrl(lang);
+        currentLang = lang;
+        const isInitialLoad = !hasLoadedOnce;
 
-    function onNextPage() {
-      if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
-      pageNum++;
-      queueRenderPage(pageNum);
-    }
-
-    function updatePagerState() {
-      if (!pdfDoc) { prevBtn.disabled = true; nextBtn.disabled = true; return; }
-      prevBtn.disabled = pageNum <= 1;
-      nextBtn.disabled = pageNum >= pdfDoc.numPages;
-    }
-
-    // Hook up pager
-    prevBtn.addEventListener('click', onPrevPage);
-    nextBtn.addEventListener('click', onNextPage);
-
-    // Intercept language button clicks to switch the viewer instead of navigating
-    document.querySelectorAll('.lang-primary').forEach(btn => {
-      btn.addEventListener('click', async (e) => {
-        e.preventDefault();
-        const lang = e.currentTarget.dataset.lang;
-        if (lang && lang !== currentLang) {
-          await loadPdf(lang);
+        // Fully tear down previous resources before starting a new load
+        firstPageRendered = false;
+        postElement.classList.add('cv-loading');
+        postElement.classList.remove('cv-error');
+        postElement.classList.toggle('cv-initial-loading', isInitialLoad);
+        stage.setAttribute('aria-busy', 'true');
+        if (isInitialLoad) {
+          postElement.classList.remove('cv-ready', 'cv-controls-ready');
         } else {
-          updateSplitButtons(lang);
+          postElement.classList.add('cv-ready', 'cv-controls-ready');
+        }
+        await disposePdf({ clearCanvas: isInitialLoad });
+        if (isInitialLoad) {
+          pageNumElement.textContent = '...';
+          pageCountElement.textContent = '...';
+        }
+        prevBtn.disabled = true;
+        nextBtn.disabled = true;
+
+        // Start a new loading task
+        loadingTask = pdfjsLib.getDocument(url);
+        try {
+          pdfDoc = await loadingTask.promise;
+        } catch (err) {
+          console.error('PDF load failed:', err);
+          postElement.classList.remove('cv-loading', 'cv-ready', 'cv-controls-ready', 'cv-initial-loading');
+          postElement.classList.add('cv-error');
+          stage.setAttribute('aria-busy', 'false');
+          pageNumElement.textContent = '';
+          pageCountElement.textContent = '';
+          return;
+        } finally {
+          // The loadingTask becomes less useful after we have pdfDoc
+          loadingTask = null;
+        }
+
+        pageCountElement.textContent = pdfDoc.numPages;
+        pageNum = Math.min(initialPage, pdfDoc.numPages);
+        updateSplitButtons(lang);
+        updatePagerState();
+        await renderPage(pageNum);
+      }
+
+      async function renderPage(num) {
+        if (!pdfDoc) return;
+        pageRendering = true;
+        stage.classList.add('is-rendering');
+        const page = await pdfDoc.getPage(num);
+
+        const viewport = page.getViewport({ scale: getScaleFactor(page) });
+        const renderCanvas = document.createElement('canvas');
+        const renderCtx = renderCanvas.getContext('2d');
+        adjustCanvasSize(renderCanvas, viewport);
+        const renderContext = {
+          canvasContext: renderCtx,
+          transform: getTransform(viewport),
+          viewport,
+        };
+
+        // Cancel any previous RenderTask just in case
+        if (renderTask && typeof renderTask.cancel === 'function') {
+          try {
+            renderTask.cancel();
+          } catch {}
+        }
+        renderTask = page.render(renderContext);
+        let rendered = false;
+
+        try {
+          await renderTask.promise;
+          rendered = true;
+        } catch (e) {
+          // Rendering was likely canceled; ignore
+        } finally {
+          renderTask = null;
+          // Let PDF.js drop page-level caches
+          pageRendering = false;
+          if (rendered) {
+            commitRenderedPage(renderCanvas);
+            await addAnnotationsToPage(page, viewport).catch(() => {});
+            updatePageCounter(num);
+          }
+          try {
+            page.cleanup();
+          } catch {}
+          if (pageNumPending !== null) {
+            const pending = pageNumPending;
+            pageNumPending = null;
+            return renderPage(pending);
+          }
+          updatePagerState();
+          if (!firstPageRendered) {
+            firstPageRendered = true;
+            hasLoadedOnce = true;
+            postElement.classList.remove('cv-loading', 'cv-error', 'cv-initial-loading');
+            postElement.classList.add('cv-ready');
+            stage.setAttribute('aria-busy', 'false');
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => postElement.classList.add('cv-controls-ready'));
+            });
+          }
+          if (rendered) {
+            requestAnimationFrame(() => canvas.classList.add('is-rendered'));
+          }
+          stage.classList.remove('is-rendering');
+        }
+      }
+
+      function getScaleFactor(page) {
+        const desiredWidth = postElement.getBoundingClientRect().width;
+        const origViewport = page.getViewport({ scale: 1 });
+        return desiredWidth / origViewport.width;
+      }
+
+      function adjustCanvasSize(targetCanvas, viewport) {
+        const outputScale = (window.devicePixelRatio || 1) * 2.0;
+        targetCanvas.width = Math.floor(viewport.width * outputScale);
+        targetCanvas.height = Math.floor(viewport.height * outputScale);
+        targetCanvas.style.width = `${Math.floor(viewport.width)}px`;
+        targetCanvas.style.height = `${Math.floor(viewport.height)}px`;
+      }
+
+      function commitRenderedPage(renderCanvas) {
+        canvas.classList.remove('is-rendered');
+        canvas.width = renderCanvas.width;
+        canvas.height = renderCanvas.height;
+        canvas.style.width = renderCanvas.style.width;
+        canvas.style.height = renderCanvas.style.height;
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(renderCanvas, 0, 0);
+      }
+
+      function getComputedSiteTheme() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        if (theme) return theme;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function getPdfUrl(lang = currentLang) {
+        const theme = getComputedSiteTheme();
+        return urls[lang]?.[theme] || urls[lang]?.light;
+      }
+
+      function getTransform(viewport) {
+        const outputScale = (window.devicePixelRatio || 1) * 2.0;
+        return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+      }
+
+      async function addAnnotationsToPage(page, viewport) {
+        stage.querySelectorAll('a.pdf-link.overlay').forEach((a) => a.remove());
+        const annotations = await page.getAnnotations();
+        annotations.forEach((annotation) => {
+          if (annotation.subtype === 'Link' && annotation.url) {
+            createLinkElement(annotation, viewport);
+          }
+        });
+      }
+
+      function createLinkElement(annotation, viewport) {
+        const [x1, y1, x2, y2] = annotation.rect;
+        const t = viewport.transform;
+        const devX1 = x1 * t[0] + t[4];
+        const devY2 = y2 * t[3] + t[5];
+        const devW = (x2 - x1) * t[0];
+        const devH = (y2 - y1) * t[3];
+
+        const cssScaleX = canvas.clientWidth / canvas.width;
+        const cssScaleY = canvas.clientHeight / canvas.height;
+
+        const left = devX1 * cssScaleX;
+        const top = (canvas.height - devY2) * cssScaleY;
+        const width = devW * cssScaleX;
+        const height = devH * cssScaleY;
+
+        const linkElement = document.createElement('a');
+        linkElement.href = annotation.url;
+        linkElement.target = '_blank';
+        linkElement.rel = 'noopener';
+        linkElement.className = 'pdf-link overlay';
+        Object.assign(linkElement.style, {
+          position: 'absolute',
+          left: `${left}px`,
+          top: `${top}px`,
+          width: `${width}px`,
+          height: `${height}px`,
+        });
+        stage.appendChild(linkElement);
+      }
+
+      function updateSplitButtons(activeLang) {
+        document.querySelectorAll('.lang-split').forEach((group) => {
+          const lang = group.dataset.lang;
+          const primary = group.querySelector('.lang-primary');
+          const download = group.querySelector('.lang-download');
+
+          const isActive = lang === activeLang;
+          group.classList.toggle('active', isActive);
+          primary.classList.toggle('active', isActive);
+          primary.setAttribute('aria-pressed', String(isActive));
+
+          const href = getPdfUrl(lang);
+          const downloadHref = urls[lang]?.light;
+          if (href) {
+            primary.setAttribute('href', href);
+          }
+          if (downloadHref) {
+            download.setAttribute('href', downloadHref);
+            try {
+              const filename = downloadHref.split('/').pop() || `cv-${lang}.pdf`;
+              download.setAttribute('download', filename);
+            } catch {
+              download.setAttribute('download', '');
+            }
+          }
+          download.setAttribute('aria-hidden', String(!isActive));
+          if (!isActive) download.setAttribute('tabindex', '-1');
+          else download.removeAttribute('tabindex');
+        });
+      }
+
+      function updatePageCounter(num) {
+        pageNumElement.textContent = num;
+      }
+
+      function queueRenderPage(num) {
+        if (pageRendering) pageNumPending = num;
+        else {
+          canvas.classList.add('is-updating');
+          renderPage(num).finally(() => canvas.classList.remove('is-updating'));
+        }
+      }
+
+      function onPrevPage() {
+        if (!pdfDoc || pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum);
+      }
+
+      function onNextPage() {
+        if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        queueRenderPage(pageNum);
+      }
+
+      function updatePagerState() {
+        if (!pdfDoc) {
+          prevBtn.disabled = true;
+          nextBtn.disabled = true;
+          return;
+        }
+        prevBtn.disabled = pageNum <= 1;
+        nextBtn.disabled = pageNum >= pdfDoc.numPages;
+      }
+
+      // Hook up pager
+      prevBtn.addEventListener('click', onPrevPage);
+      nextBtn.addEventListener('click', onNextPage);
+
+      // Intercept language button clicks to switch the viewer instead of navigating
+      document.querySelectorAll('.lang-primary').forEach((btn) => {
+        btn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const lang = e.currentTarget.dataset.lang;
+          if (lang && lang !== currentLang) {
+            await loadPdf(lang);
+          } else {
+            updateSplitButtons(lang);
+          }
+        });
+      });
+
+      // Clean leftover overlay links
+      stage.querySelectorAll('a.pdf-link.overlay').forEach((link) => link.remove());
+
+      const themeObserver = new MutationObserver((records) => {
+        if (pdfDoc && firstPageRendered && records.some((record) => record.attributeName === 'data-theme')) {
+          loadPdf(currentLang, { initialPage: pageNum });
         }
       });
-    });
+      themeObserver.observe(document.documentElement, { attributes: true });
 
-    // Clean leftover overlay links
-    stage.querySelectorAll('a.pdf-link.overlay').forEach(link => link.remove());
-
-    const themeObserver = new MutationObserver((records) => {
-      if (pdfDoc && firstPageRendered && records.some(record => record.attributeName === 'data-theme')) {
-        loadPdf(currentLang, { initialPage: pageNum });
-      }
-    });
-    themeObserver.observe(document.documentElement, { attributes: true });
-
-    // Dispose on page unload to be extra safe
-    window.addEventListener('beforeunload', () => {
-      themeObserver.disconnect();
-      disposePdf();
-    });
-
-    // Initial load
-    loadPdf('en');
+      // Dispose on page unload to be extra safe
+      window.addEventListener('beforeunload', () => {
+        themeObserver.disconnect();
+        disposePdf();
       });
-  </script>
 
+      // Initial load
+      loadPdf('en');
+    });
+  </script>
 
   <div
     class="pdf-stage"
     aria-live="polite"
-    aria-busy="true">
+    aria-busy="true"
+  >
     <div class="pdf-loading" role="status">Loading CV...</div>
     <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
     <canvas id="the-canvas"></canvas>
@@ -483,6 +504,7 @@ layout: default
   <style>
     .header-toolbar {
       display: flex;
+      gap: 0.85rem 1rem;
       justify-content: space-between;
       /* push left/right */
       align-items: center;
@@ -494,9 +516,10 @@ layout: default
       opacity: 0;
       visibility: hidden;
       transform: translateY(-4px);
-      transition: opacity 160ms ease
-      , transform 160ms ease
-      , visibility 0s linear 160ms;
+      transition:
+        opacity 160ms ease,
+        transform 160ms ease,
+        visibility 0s linear 160ms;
     }
 
     .cv-controls-ready .header-toolbar,
@@ -504,8 +527,9 @@ layout: default
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
-      transition: opacity 240ms ease
-      , transform 240ms ease;
+      transition:
+        opacity 240ms ease,
+        transform 240ms ease;
     }
 
     .pdf-stage {
@@ -514,21 +538,27 @@ layout: default
       max-width: 100%;
       min-height: min(720px, calc((100vw - 2rem) * 1.294));
       aspect-ratio: 8.5 / 11;
-      background: linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%), linear-gradient(var(--global-bg-color), var(--global-bg-color)), var(--global-card-bg-color);
-      background-size: 240% 100%, calc(100% - 4rem) calc(100% - 4rem)
-      , auto;
-      background-position: 120% 0
-      , 2rem 2rem
-      , 0 0;
+      background:
+        linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%),
+        linear-gradient(var(--global-bg-color), var(--global-bg-color)), var(--global-card-bg-color);
+      background-size:
+        240% 100%,
+        calc(100% - 4rem) calc(100% - 4rem),
+        auto;
+      background-position:
+        120% 0,
+        2rem 2rem,
+        0 0;
       background-repeat: no-repeat;
       border: 1px solid var(--global-divider-color);
       border-radius: 2px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
       overflow: hidden;
       line-height: 0;
-      transition: background-color 180ms ease
-      , border-color 180ms ease
-      , box-shadow 180ms ease;
+      transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
     }
 
     .cv-loading .pdf-stage {
@@ -537,14 +567,16 @@ layout: default
 
     @keyframes pdf-loading-sheen {
       0% {
-        background-position: 120% 0
-        , 2rem 2rem
-        , 0 0;
+        background-position:
+          120% 0,
+          2rem 2rem,
+          0 0;
       }
       100% {
-        background-position: -120% 0
-        , 2rem 2rem
-        , 0 0;
+        background-position:
+          -120% 0,
+          2rem 2rem,
+          0 0;
       }
     }
 
@@ -554,8 +586,9 @@ layout: default
       height: auto;
       opacity: 0;
       transform: translateY(6px);
-      transition: opacity 220ms ease
-      , transform 220ms ease;
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
     } /* avoid inline baseline gap */
 
     #the-canvas.is-rendered {
@@ -565,8 +598,9 @@ layout: default
 
     #the-canvas.is-updating {
       opacity: 0.92;
-      transition: opacity 120ms ease
-      , transform 120ms ease;
+      transition:
+        opacity 120ms ease,
+        transform 120ms ease;
     }
 
     .pdf-loading,
@@ -604,16 +638,17 @@ layout: default
 
     .lang-toolbar {
       display: inline-flex;
-      gap: 10px;
+      gap: 8px;
       align-items: center;
       order: 1;
+      font-size: 1rem;
     }
 
     /* Split button container */
     .lang-split {
       display: inline-flex;
       border: 1px solid var(--global-divider-color);
-      border-radius: 10px;
+      border-radius: 999px;
       overflow: hidden;
       /* unify rounded corners */
     }
@@ -623,20 +658,24 @@ layout: default
       display: inline-flex;
       align-items: center;
       gap: 0.35em;
-      padding: 6px 12px;
-      font-weight: 300;
+      min-height: 2.35rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1;
       text-decoration: none;
       color: var(--global-text-color);
       cursor: pointer;
       user-select: none;
-      transition: background-color 150ms ease
-      , border-color 150ms ease;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease;
     }
     .lang-primary:hover {
       background: var(--global-code-bg-color);
     }
     .lang-primary.active {
-      background-color: #9678B6;
+      background-color: #9678b6;
       color: #fff;
     }
 
@@ -664,6 +703,8 @@ layout: default
       /* collapsed */
       text-decoration: none;
       color: var(--global-text-color);
+      font-size: 0.92rem;
+      line-height: 1;
       cursor: pointer;
       user-select: none;
       opacity: 0;
@@ -672,23 +713,18 @@ layout: default
       /* slight slide-in when opening */
       overflow: hidden;
       /* hide icon while collapsed */
-      transition: width 200ms ease
-      , padding 200ms ease
-      , border-left-width 200ms ease
-      , opacity 180ms ease
-      , transform 180ms ease
-      , background-color 150ms ease;
+      transition:
+        width 200ms ease,
+        padding 200ms ease,
+        border-left-width 200ms ease,
+        opacity 180ms ease,
+        transform 180ms ease,
+        background-color 150ms ease;
     }
     .lang-primary *,
     .lang-download,
     .lang-download * {
-      transition-property: background-color
-      , border-color
-      , opacity
-      , transform
-      , width
-      , padding
-      , border-left-width !important;
+      transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
     }
     .lang-download:hover {
       background: var(--global-code-bg-color);
@@ -696,9 +732,9 @@ layout: default
 
     /* Expanded state (when group is .active) */
     .lang-split.active .lang-download {
-      width: 40px;
+      width: 34px;
       /* visible width */
-      padding: 6px 8px;
+      padding: 0.5rem 0.6rem;
       /* vertical padding restored */
       border-left-width: 1px;
       opacity: 1;
@@ -713,34 +749,48 @@ layout: default
     /* Pager: match language button style */
     .pager {
       display: inline-flex;
-      gap: 6px;
+      gap: 0.5rem;
       align-items: center;
-      margin-top: 8px;
+      margin-top: 0;
       order: 2;
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .pager-status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2.35rem;
+      color: var(--global-text-color-light);
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1;
+      white-space: nowrap;
     }
 
     .pager-button {
       display: inline-flex;
       align-items: center;
       gap: 0.35em;
-      padding: 6px 12px;
-      font-weight: 300;
+      min-height: 2.35rem;
+      padding: 0.5rem 0.9rem;
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1;
       color: var(--global-text-color);
       background: transparent;
       border: 1px solid var(--global-divider-color);
-      border-radius: 10px;
+      border-radius: 999px;
       cursor: pointer;
       user-select: none;
-      transition: background-color 150ms ease
-      , border-color 150ms ease
-      , opacity 150ms ease;
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        opacity 150ms ease;
     }
     .pager-button,
     .pager-button * {
-      transition-property: background-color
-      , border-color
-      , opacity
-      , transform !important;
+      transition-property: background-color, border-color, opacity, transform !important;
     }
     .pager-button:hover {
       background: var(--global-code-bg-color);

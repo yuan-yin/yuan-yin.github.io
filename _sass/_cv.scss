@@ -2,6 +2,8 @@
  * CV shared styles
  *****************************/
 
+@use "variables" as v;
+
 div.container-link-button {
   margin-right: 0.5rem;
 }
@@ -13,7 +15,7 @@ table.table-cv {
 a.btncv {
   color: var(--global-text-color) !important;
   border: 1px solid var(--global-text-color) !important;
-  border-radius: 0.125rem;
+  border-radius: v.$button-pill-radius;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 0.25rem;
@@ -171,7 +173,7 @@ ul.timeline li {
 span.badge-toc {
   color: var(--global-bg-color);
   background-color: var(--global-theme-color);
-  border-radius: 0.125rem;
+  border-radius: v.$button-pill-radius;
   padding: 0.125rem 0.5rem 0.125rem 0.5rem;
   font-weight: 700 !important;
   display: inline-block;

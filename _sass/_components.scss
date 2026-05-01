@@ -2,6 +2,8 @@
  * Reusable component styles: Cards, captions, profiles, etc.
  ******************************************************************************/
 
+@use "variables" as v;
+
 // Checklist
 
 ul.task-list {
@@ -313,8 +315,12 @@ html[data-theme-setting="dark"] {
 
       .links {
         a.btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
           color: var(--global-text-color);
           border: 1px solid var(--global-text-color);
+          border-radius: v.$button-pill-radius;
           padding-left: 1rem;
           padding-right: 1rem;
           padding-top: 0.25rem;

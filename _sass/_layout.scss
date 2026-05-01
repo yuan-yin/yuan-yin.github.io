@@ -117,6 +117,64 @@ body.sticky-bottom-footer {
   }
 }
 
+.about-hero__cv-button {
+  display: inline-flex;
+  gap: 0.48rem;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  min-height: 2.7rem;
+  padding: 0.65rem 1.15rem;
+  border: 1px solid rgba(255, 255, 255, 0.74);
+  border-radius: v.$button-pill-radius;
+  background:
+    linear-gradient(135deg, rgba(150, 120, 182, 0.98) 0%, rgba(17, 133, 254, 0.92) 48%, rgba(66, 185, 131, 0.92) 100%), var(--global-theme-color);
+  color: #ffffff !important;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  box-shadow:
+    0 14px 30px rgba(39, 48, 74, 0.18),
+    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+  transition:
+    filter 180ms ease,
+    box-shadow 180ms ease,
+    transform 180ms ease;
+
+  &:visited,
+  &:active {
+    color: #ffffff !important;
+  }
+
+  &:hover,
+  &:focus-visible {
+    color: #ffffff !important;
+    filter: saturate(1.08) brightness(1.05);
+    text-decoration: none;
+    transform: translateY(-2px);
+    box-shadow:
+      0 18px 36px rgba(39, 48, 74, 0.25),
+      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+  }
+
+  span,
+  i,
+  i::before {
+    color: #ffffff !important;
+  }
+
+  i {
+    font-size: 0.82rem;
+    line-height: 1;
+    transition: transform 180ms ease;
+  }
+
+  &:hover i,
+  &:focus-visible i {
+    transform: translateX(2px);
+  }
+}
+
 .profile.about-hero__profile {
   justify-self: end;
   width: 100%;
@@ -274,6 +332,13 @@ html[data-theme="dark"] {
         color: #ffffff;
       }
     }
+
+    .about-hero__cv-button {
+      border-color: rgba(255, 255, 255, 0.2);
+      box-shadow:
+        0 14px 30px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+    }
   }
 }
 
@@ -310,6 +375,10 @@ html[data-theme="dark"] {
 
     > .contact-icons {
       justify-content: center;
+    }
+
+    .about-hero__cv-button {
+      margin-left: 0;
     }
   }
 }
@@ -430,8 +499,7 @@ html[data-theme="dark"] {
   border-radius: 20px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.64)),
-    linear-gradient(135deg, rgba(150, 120, 182, 0.16), rgba(17, 133, 254, 0.08)),
-    var(--global-bg-color);
+    linear-gradient(135deg, rgba(150, 120, 182, 0.16), rgba(17, 133, 254, 0.08)), var(--global-bg-color);
   box-shadow: 0 20px 54px rgba(39, 48, 74, 0.1);
 }
 
@@ -544,8 +612,7 @@ html[data-theme="dark"] {
   .about-news-card {
     background:
       linear-gradient(135deg, rgba(35, 39, 47, 0.95), rgba(35, 39, 47, 0.76)),
-      linear-gradient(135deg, rgba(150, 120, 182, 0.17), rgba(17, 133, 254, 0.08)),
-      var(--global-card-bg-color);
+      linear-gradient(135deg, rgba(150, 120, 182, 0.17), rgba(17, 133, 254, 0.08)), var(--global-card-bg-color);
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.24);
   }
 

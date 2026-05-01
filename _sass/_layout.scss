@@ -275,6 +275,35 @@ html[data-theme="dark"] {
   }
 }
 
+html[data-theme="dark"],
+html[data-theme-setting="dark"] {
+  .social.about-hero__social {
+    > .contact-icons a {
+      background: #f3f5f8 !important;
+      background-color: #f3f5f8 !important;
+      color: #111111 !important;
+
+      > i,
+      > i::before {
+        color: #111111 !important;
+      }
+
+      &:hover,
+      &:focus-visible {
+        background: var(--social-brand-color) !important;
+        background-color: var(--social-brand-color) !important;
+        border-color: var(--social-brand-color);
+        color: #ffffff !important;
+
+        > i,
+        > i::before {
+          color: #ffffff !important;
+        }
+      }
+    }
+  }
+}
+
 @media (max-width: 767.98px) {
   .about-hero {
     padding: 1.4rem;

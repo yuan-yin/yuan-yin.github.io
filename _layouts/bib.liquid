@@ -59,100 +59,67 @@
     {%- endif -%}
     , {{ venue_chip_color }}
   {%- endfor -%}
+  {%- if venue_labels.size == 1 -%}
+    , {{ venue_color }}
+  {%- endif -%}
   )
 {%- endcapture %}
+{% assign has_publication_media = false %}
+{% if site.enable_publication_thumbnails and entry.preview %}
+  {% assign has_publication_media = true %}
+{% endif %}
 
 <div
-  class="publication-card publication-card--{{ primary_kind }}{% unless site.enable_publication_thumbnails %} publication-card--no-media{% endunless %}"
+  class="publication-card publication-card--{{ primary_kind }}{% unless has_publication_media %} publication-card--no-media{% endunless %}"
   style="--pub-accent: {{ venue_color }};"
 >
-  {% if site.enable_publication_thumbnails %}
-    <div class="publication-card__media">
-      {%- if entry.venues -%}
-        <div class="publication-card__venues">
-          <div
-            class="badge rounded-pill w-100 publication-card__venue publication-card__venue--merged"
-            style="--venue-accent: {{ venue_color }}; --venue-gradient: {{ venue_gradient | strip }};"
-          >
-            {%- for venue_name_raw in venue_labels -%}
-              {% assign venue_name = venue_name_raw | strip %}
-              {% assign chip_kind = site.data.venues[venue_name].kind | downcase | strip %}
-              {% if chip_kind == blank %}
-                {% assign chip_kind = primary_kind %}
-              {% endif %}
-              {%- if venue_name != blank -%}
-                {% if site.data.venues[venue_name].url %}
-                  <a href="{{ site.data.venues[venue_name].url }}" title="{{ chip_kind | capitalize }}">{{ venue_name }}</a>
-                {% else %}
-                  <span title="{{ chip_kind | capitalize }}">{{- venue_name -}}</span>
-                {% endif %}
-                {% unless forloop.last -%}
-                  <span class="publication-card__venue-chip-separator" aria-hidden="true">+</span>
-                {%- endunless %}
-              {%- endif -%}
-            {%- endfor -%}
-          </div>
-        </div>
-      {% endif %}
-      {% if entry.preview %}
-        {% if entry.preview contains '://' %}
-          <img class="preview publication-card__preview" src="{{ entry.preview }}">
-        {% else %}
-          {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
-          {%
-            include figure.liquid
-            loading="eager"
-            path=entry_path
-            class="preview publication-card__preview"
-            zoomable=true
-            avoid_scaling=true
-            alt=entry.preview
-          %}
-        {% endif %}
-      {% endif %}
-    </div>
-  {% endif %}
-
   <!-- Entry bib key -->
   <div id="{{ entry.key }}" class="publication-card__body">
     <div class="publication-card__meta">
-      {% unless primary_kind == 'preprint' and venue_label == 'Preprint' %}
-        <span class="publication-card__venue-list">
+      {%- if entry.venues -%}
+        <div
+          class="badge rounded-pill publication-card__venue publication-card__venue--merged"
+          style="--venue-accent: {{ venue_color }}; --venue-gradient: {{ venue_gradient | strip }};"
+        >
           {%- for venue_name_raw in venue_labels -%}
             {% assign venue_name = venue_name_raw | strip %}
-            {% if venue_name != blank %}
-              {% assign item_kind = site.data.venues[venue_name].kind | default: primary_kind | downcase | strip %}
-              {% assign item_color = site.data.venues[venue_name].color %}
-              {% if item_color == blank %}
-                {% case item_kind %}
-                  {% when 'journal' %}
-                    {% assign item_color = '#0f766e' %}
-                  {% when 'conference' %}
-                    {% assign item_color = '#7c3aed' %}
-                  {% when 'workshop' %}
-                    {% assign item_color = '#ea580c' %}
-                  {% when 'thesis' %}
-                    {% assign item_color = '#475569' %}
-                  {% when 'preprint' %}
-                    {% assign item_color = '#64748b' %}
-                  {% else %}
-                    {% assign item_color = venue_color %}
-                {% endcase %}
-              {% endif %}
+            {% assign item_kind = site.data.venues[venue_name].kind | default: primary_kind | downcase | strip %}
+            {% assign item_color = site.data.venues[venue_name].color %}
+            {% if item_color == blank %}
+              {% case item_kind %}
+                {% when 'journal' %}
+                  {% assign item_color = '#0f766e' %}
+                {% when 'conference' %}
+                  {% assign item_color = '#7c3aed' %}
+                {% when 'workshop' %}
+                  {% assign item_color = '#ea580c' %}
+                {% when 'thesis' %}
+                  {% assign item_color = '#475569' %}
+                {% when 'preprint' %}
+                  {% assign item_color = '#64748b' %}
+                {% else %}
+                  {% assign item_color = venue_color %}
+              {% endcase %}
+            {% endif %}
+            {%- if venue_name != blank -%}
               <span class="publication-card__venue-item" style="--venue-item-accent: {{ item_color }};">
                 <span class="publication-card__type">{{ item_kind | capitalize }}</span>
                 <span class="publication-card__dot" aria-hidden="true"></span>
-                <span class="publication-card__venue-name">{{ venue_name }}</span>
+                {% if site.data.venues[venue_name].url %}
+                  <a class="publication-card__venue-name" href="{{ site.data.venues[venue_name].url }}">{{ venue_name }}</a>
+                {% else %}
+                  <span class="publication-card__venue-name">{{ venue_name }}</span>
+                {% endif %}
               </span>
               {% unless forloop.last -%}
-                <span class="publication-card__venue-separator">+</span>
+                <span class="publication-card__venue-chip-separator" aria-hidden="true">+</span>
               {%- endunless %}
-            {% endif %}
+            {%- endif -%}
           {%- endfor -%}
-        </span>
+        </div>
       {% else %}
         <span class="publication-card__type">{{ primary_kind | capitalize }}</span>
-      {% endunless %}
+      {% endif %}
     </div>
     <!-- Title -->
     <div class="title">{{ entry.title }}</div>
@@ -558,4 +525,23 @@
       </div>
     {% endif %}
   </div>
+
+  {% if has_publication_media %}
+    <div class="publication-card__media">
+      {% if entry.preview contains '://' %}
+        <img class="preview publication-card__preview" src="{{ entry.preview }}">
+      {% else %}
+        {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
+        {%
+          include figure.liquid
+          loading="eager"
+          path=entry_path
+          class="preview publication-card__preview"
+          zoomable=true
+          avoid_scaling=true
+          alt=entry.preview
+        %}
+      {% endif %}
+    </div>
+  {% endif %}
 </div>

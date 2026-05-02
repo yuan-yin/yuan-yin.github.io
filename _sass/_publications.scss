@@ -45,7 +45,7 @@
 
         position: relative;
         display: grid;
-        grid-template-columns: minmax(140px, 190px) minmax(0, 1fr);
+        grid-template-columns: minmax(0, 1fr) minmax(140px, 190px);
         gap: 1.2rem;
         overflow: hidden;
         padding: 1.1rem;
@@ -82,7 +82,7 @@
       .publication-card__media {
         display: flex;
         flex-direction: column;
-        gap: 0.75rem;
+        justify-content: flex-start;
         min-width: 0;
       }
 
@@ -105,43 +105,32 @@
 
       .publication-card__type {
         color: var(--venue-item-accent, var(--pub-accent));
+        font-weight: 300;
       }
 
       .publication-card__dot {
         width: 0.34rem;
         height: 0.34rem;
         border-radius: 50%;
-        background: color-mix(in srgb, var(--venue-item-accent, var(--pub-accent)) 74%, transparent);
+        background: #ffffff;
       }
 
       .publication-card__venue-item {
         --venue-item-accent: var(--pub-accent);
 
         display: inline-flex;
-        gap: 0.28rem;
+        gap: 0.3rem;
         align-items: center;
         min-width: 0;
-        color: var(--venue-item-accent);
+        color: #ffffff;
       }
 
       .publication-card__venue-name {
         max-width: 100%;
         overflow: hidden;
-        color: var(--venue-item-accent, var(--global-text-color-light));
+        color: #ffffff;
         text-overflow: ellipsis;
         white-space: nowrap;
-      }
-
-      .publication-card__venue-list {
-        display: inline-flex;
-        flex-wrap: wrap;
-        gap: 0.28rem;
-        align-items: center;
-        min-width: 0;
-      }
-
-      .publication-card__venue-separator {
-        color: var(--global-text-color-light);
       }
 
       .preview {
@@ -156,11 +145,6 @@
         border-radius: 14px;
         background: var(--global-bg-color);
         box-shadow: 0 10px 24px rgba(39, 48, 74, 0.1);
-      }
-
-      .publication-card__venues {
-        display: block;
-        margin-bottom: 0.5rem;
       }
 
       .publication-card__venue {

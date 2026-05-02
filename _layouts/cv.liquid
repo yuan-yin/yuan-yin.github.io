@@ -17,7 +17,8 @@ layout: default
             data-lang="en"
             href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
             rel="noopener"
-            aria-pressed="false">
+            aria-pressed="false"
+          >
             English
           </a>
           <a
@@ -26,7 +27,8 @@ layout: default
             href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
             download
             rel="noopener"
-            aria-label="Download English CV">
+            aria-label="Download English CV"
+          >
             <i class="fa-solid fa-download" aria-hidden="true"></i>
           </a>
         </div>
@@ -39,7 +41,8 @@ layout: default
             data-lang="fr"
             href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
             rel="noopener"
-            aria-pressed="false">
+            aria-pressed="false"
+          >
             Français
           </a>
           <a
@@ -48,7 +51,8 @@ layout: default
             href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
             download
             rel="noopener"
-            aria-label="Download French CV">
+            aria-label="Download French CV"
+          >
             <i class="fa-solid fa-download" aria-hidden="true"></i>
           </a>
         </div>
@@ -56,16 +60,19 @@ layout: default
 
       <div class="pager">
         <span class="pager-status">
-          Page:
-          <span id="page_num">...</span>
-          /
-          <span id="page_count">...</span>
+          <span class="pager-status__label">Page</span>
+          <span class="pager-status__numbers">
+            <span id="page_num">...</span>
+            <span class="pager-status__separator">/</span>
+            <span id="page_count">...</span>
+          </span>
         </span>
         <button
           id="prev"
           class="pager-button"
           disabled
-          aria-label="Previous page">
+          aria-label="Previous page"
+        >
           <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
           <span>Previous</span>
         </button>
@@ -73,7 +80,8 @@ layout: default
           id="next"
           class="pager-button"
           disabled
-          aria-label="Next page">
+          aria-label="Next page"
+        >
           <span>Next</span>
           <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
         </button>
@@ -88,16 +96,19 @@ layout: default
   <link
     rel="modulepreload"
     href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs"
-    crossorigin="anonymous">
+    crossorigin="anonymous"
+  >
   <link
     rel="modulepreload"
     href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs"
-    crossorigin="anonymous">
+    crossorigin="anonymous"
+  >
   <link
     rel="preload"
     href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
     as="fetch"
-    type="application/pdf">
+    type="application/pdf"
+  >
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
 
   <script type="module">
@@ -485,7 +496,8 @@ layout: default
   <div
     class="pdf-stage"
     aria-live="polite"
-    aria-busy="true">
+    aria-busy="true"
+  >
     <div class="pdf-loading" role="status">Loading CV...</div>
     <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
     <canvas id="the-canvas"></canvas>
@@ -506,9 +518,10 @@ layout: default
       opacity: 0;
       visibility: hidden;
       transform: translateY(-4px);
-      transition: opacity 160ms ease
-      , transform 160ms ease
-      , visibility 0s linear 160ms;
+      transition:
+        opacity 160ms ease,
+        transform 160ms ease,
+        visibility 0s linear 160ms;
     }
 
     .cv-controls-ready .header-toolbar,
@@ -516,8 +529,9 @@ layout: default
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
-      transition: opacity 240ms ease
-      , transform 240ms ease;
+      transition:
+        opacity 240ms ease,
+        transform 240ms ease;
     }
 
     .pdf-stage {
@@ -526,21 +540,27 @@ layout: default
       max-width: 100%;
       min-height: min(720px, calc((100vw - 2rem) * 1.294));
       aspect-ratio: 8.5 / 11;
-      background: linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%), linear-gradient(var(--global-bg-color), var(--global-bg-color)), var(--global-card-bg-color);
-      background-size: 240% 100%, calc(100% - 4rem) calc(100% - 4rem)
-      , auto;
-      background-position: 120% 0
-      , 2rem 2rem
-      , 0 0;
+      background:
+        linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%),
+        linear-gradient(var(--global-bg-color), var(--global-bg-color)), var(--global-card-bg-color);
+      background-size:
+        240% 100%,
+        calc(100% - 4rem) calc(100% - 4rem),
+        auto;
+      background-position:
+        120% 0,
+        2rem 2rem,
+        0 0;
       background-repeat: no-repeat;
       border: 1px solid var(--global-divider-color);
       border-radius: 2px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
       overflow: hidden;
       line-height: 0;
-      transition: background-color 180ms ease
-      , border-color 180ms ease
-      , box-shadow 180ms ease;
+      transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease;
     }
 
     .cv-loading .pdf-stage {
@@ -549,14 +569,16 @@ layout: default
 
     @keyframes pdf-loading-sheen {
       0% {
-        background-position: 120% 0
-        , 2rem 2rem
-        , 0 0;
+        background-position:
+          120% 0,
+          2rem 2rem,
+          0 0;
       }
       100% {
-        background-position: -120% 0
-        , 2rem 2rem
-        , 0 0;
+        background-position:
+          -120% 0,
+          2rem 2rem,
+          0 0;
       }
     }
 
@@ -566,8 +588,9 @@ layout: default
       height: auto;
       opacity: 0;
       transform: translateY(6px);
-      transition: opacity 220ms ease
-      , transform 220ms ease;
+      transition:
+        opacity 220ms ease,
+        transform 220ms ease;
     } /* avoid inline baseline gap */
 
     #the-canvas.is-rendered {
@@ -577,8 +600,9 @@ layout: default
 
     #the-canvas.is-updating {
       opacity: 0.92;
-      transition: opacity 120ms ease
-      , transform 120ms ease;
+      transition:
+        opacity 120ms ease,
+        transform 120ms ease;
     }
 
     .pdf-loading,
@@ -616,7 +640,7 @@ layout: default
 
     .lang-toolbar {
       display: inline-flex;
-      gap: 8px;
+      gap: 0.45rem;
       align-items: center;
       order: 1;
       font-size: 1rem;
@@ -625,10 +649,33 @@ layout: default
     /* Split button container */
     .lang-split {
       display: inline-flex;
-      border: 1px solid var(--global-divider-color);
+      gap: 0;
+      align-items: center;
+      border: 1px solid transparent;
       border-radius: 999px;
+      background: transparent;
       overflow: hidden;
-      /* unify rounded corners */
+      transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
+    }
+
+    .lang-split:hover {
+      border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
+      background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
+      transform: translateY(-1px);
+    }
+
+    .lang-split.active {
+      border-color: color-mix(in srgb, var(--global-theme-color) 42%, transparent);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 18%, transparent), transparent 74%),
+        color-mix(in srgb, var(--global-theme-color) 12%, var(--global-bg-color));
+      box-shadow:
+        0 9px 22px color-mix(in srgb, var(--global-theme-color) 16%, transparent),
+        inset 0 1px 0 color-mix(in srgb, #ffffff 52%, transparent);
     }
 
     /* Primary (switch language) */
@@ -645,21 +692,20 @@ layout: default
       color: var(--global-text-color);
       cursor: pointer;
       user-select: none;
-      transition: background-color 150ms ease
-      , border-color 150ms ease;
-    }
-    .lang-primary:hover {
-      background: var(--global-code-bg-color);
-    }
-    .lang-primary.active {
-      background-color: #9678b6;
-      color: #fff;
+      transition:
+        color 180ms ease,
+        background-color 180ms ease;
     }
 
-    /* Show a divider only when the download button is expanded */
-    .lang-split.active .lang-primary {
-      border-right: 0.5px solid var(--global-divider-color);
+    .lang-primary:hover {
+      color: var(--global-hover-color);
     }
+
+    .lang-primary.active {
+      color: var(--global-theme-color);
+      font-weight: 800;
+    }
+
     .lang-primary:hover,
     .lang-download:hover {
       text-decoration: none;
@@ -673,11 +719,12 @@ layout: default
       justify-content: center;
       box-sizing: border-box;
       width: 0;
+      height: 1.62rem;
       /* collapsed */
       padding: 0;
       /* collapsed */
-      border-left: 0 solid var(--global-divider-color);
-      /* collapsed */
+      border: 0 solid transparent;
+      border-radius: 999px;
       text-decoration: none;
       color: var(--global-text-color);
       font-size: 0.92rem;
@@ -690,37 +737,39 @@ layout: default
       /* slight slide-in when opening */
       overflow: hidden;
       /* hide icon while collapsed */
-      transition: width 200ms ease
-      , padding 200ms ease
-      , border-left-width 200ms ease
-      , opacity 180ms ease
-      , transform 180ms ease
-      , background-color 150ms ease;
+      transition:
+        width 200ms ease,
+        padding 200ms ease,
+        border-width 200ms ease,
+        opacity 180ms ease,
+        transform 180ms ease,
+        background-color 150ms ease,
+        color 150ms ease;
     }
+
     .lang-primary *,
     .lang-download,
     .lang-download * {
-      transition-property: background-color
-      , border-color
-      , opacity
-      , transform
-      , width
-      , padding
-      , border-left-width !important;
+      transition-property: background-color, border-color, color, opacity, transform, width, padding, border-width !important;
     }
+
     .lang-download:hover {
-      background: var(--global-code-bg-color);
+      color: var(--global-theme-color);
+      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
     }
 
     /* Expanded state (when group is .active) */
     .lang-split.active .lang-download {
-      width: 34px;
+      width: 1.62rem;
       /* visible width */
-      padding: 0.5rem 0.6rem;
+      padding: 0;
       /* vertical padding restored */
-      border-left-width: 1px;
+      border-width: 1px;
+      border-color: color-mix(in srgb, var(--global-theme-color) 30%, transparent);
+      background: color-mix(in srgb, var(--global-bg-color) 86%, transparent);
       opacity: 1;
       transform: translateX(0);
+      margin-right: 0.38rem;
     }
 
     .pdf-link.overlay {
@@ -741,13 +790,39 @@ layout: default
 
     .pager-status {
       display: inline-flex;
+      gap: 0.45rem;
       align-items: center;
       min-height: 2.35rem;
-      color: var(--global-text-color-light);
       font-size: 1rem;
-      font-weight: 400;
+      font-weight: 600;
       line-height: 1;
       white-space: nowrap;
+    }
+
+    .pager-status__label {
+      min-width: 2.65rem;
+      color: var(--global-text-color-light);
+      text-align: right;
+    }
+
+    .pager-status__numbers {
+      display: inline-flex;
+      gap: 0.3rem;
+      align-items: center;
+      justify-content: center;
+      min-width: 5.2rem;
+      min-height: 2.35rem;
+      padding: 0.5rem 0.85rem;
+      border: 1px solid color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
+      border-radius: 999px;
+      background-color: color-mix(in srgb, var(--global-theme-color) 8%, var(--global-bg-color));
+      color: var(--global-text-color);
+      font-variant-numeric: tabular-nums;
+      box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 42%, transparent);
+    }
+
+    .pager-status__separator {
+      color: var(--global-text-color-light);
     }
 
     .pager-button {
@@ -761,28 +836,42 @@ layout: default
       line-height: 1;
       color: var(--global-text-color);
       background: transparent;
-      border: 1px solid var(--global-divider-color);
+      border: 1px solid transparent;
       border-radius: 999px;
       cursor: pointer;
       user-select: none;
-      transition: background-color 150ms ease
-      , border-color 150ms ease
-      , opacity 150ms ease;
+      transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        color 180ms ease,
+        opacity 180ms ease,
+        transform 180ms ease;
     }
+
     .pager-button,
     .pager-button * {
-      transition-property: background-color
-      , border-color
-      , opacity
-      , transform !important;
+      transition-property: background-color, border-color, color, opacity, transform !important;
     }
+
     .pager-button:hover {
-      background: var(--global-code-bg-color);
+      border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
+      background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
+      color: var(--global-hover-color);
+      transform: translateY(-1px);
     }
+
     .pager-button:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+      transform: none;
     }
+
+    html[data-theme='dark'] .lang-split.active {
+      box-shadow:
+        0 9px 22px color-mix(in srgb, var(--global-theme-color) 20%, transparent),
+        inset 0 1px 0 color-mix(in srgb, #ffffff 14%, transparent);
+    }
+
     .post {
       position: relative;
     }

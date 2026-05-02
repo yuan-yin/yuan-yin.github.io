@@ -2,51 +2,50 @@
   {% if site.news != blank %}
     {% assign news_size = site.news | size %}
     <div
-      class="table-responsive"
+      class="news-list"
       {% if include.limit and page.announcements.scrollable and news_size > 3 %}
         style="max-height: 30vh"
       {% endif %}
     >
-      <table class="table table-sm table-borderless">
-        {% assign news = site.news | reverse %}
-        {% if include.limit and page.announcements.limit %}
-          {% assign news_limit = page.announcements.limit %}
-        {% else %}
-          {% assign news_limit = news_size %}
-        {% endif %}
+      {% assign news = site.news | reverse %}
+      {% if include.limit and page.announcements.limit %}
+        {% assign news_limit = page.announcements.limit %}
+      {% else %}
+        {% assign news_limit = news_size %}
+      {% endif %}
+      <ol class="news-list__items">
         {% for item in news limit: news_limit %}
-          <tr>
-            <td style="width: 18%">{{ item.date | date: '%b %e, %Y' }}</td>
-            <td style="text-align: center;">
+          {% assign news_type = item.type | default: 'default' %}
+          <li class="news-list__item">
+            <time class="news-list__date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: '%b %e, %Y' }}</time>
+            <span class="news-list__icon news-icon news-icon--{{ news_type }}" aria-hidden="true">
               {% case item.type %}
                 {% when 'life' %}
-                  <i class="fa-solid fa-seedling" style="color:green;"></i>
+                  <i class="fa-solid fa-seedling"></i>
                 {% when 'talk' %}
-                  <i class="fa-solid fa-chalkboard-user" style="color:steelblue;"></i>
+                  <i class="fa-solid fa-chalkboard-user"></i>
                 {% when 'publication' %}
-                  <i class="fa-solid fa-book" style="color:saddlebrown;"></i>
+                  <i class="fa-solid fa-book"></i>
                 {% when 'award' %}
-                  <i class="fa-solid fa-award" style="color:gold;"></i>
+                  <i class="fa-solid fa-award"></i>
                 {% when 'people' %}
-                  <i class="fa-solid fa-user-plus" style="color:teal;"></i>
+                  <i class="fa-solid fa-user-plus"></i>
                 {% when 'alert' %}
-                  <i class="fa-solid fa-bell" style="color: tomato;"></i>
-                {% else %}
-
+                  <i class="fa-solid fa-bell"></i>
               {% endcase %}
-            </td>
-            <td>
+            </span>
+            <div class="news-list__content">
               {% if item.inline %}
                 {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
               {% else %}
                 <a class="news-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
               {% endif %}
-            </td>
-          </tr>
+            </div>
+          </li>
         {% endfor %}
-      </table>
+      </ol>
     </div>
   {% else %}
-    <p>No news so far...</p>
+    <p class="news-list__empty">No news so far...</p>
   {% endif %}
 </div>

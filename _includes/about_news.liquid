@@ -15,22 +15,23 @@
     >
       <ol class="about-news-card__list">
         {% for item in news limit: news_limit %}
+          {% assign news_type = item.type | default: 'default' %}
           <li class="about-news-card__item">
             <time class="about-news-card__date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: '%b %e, %Y' }}</time>
-            <span class="about-news-card__icon" aria-hidden="true">
+            <span class="about-news-card__icon news-icon news-icon--{{ news_type }}" aria-hidden="true">
               {% case item.type %}
                 {% when 'life' %}
-                  <i class="fa-solid fa-seedling" style="color:green;"></i>
+                  <i class="fa-solid fa-seedling"></i>
                 {% when 'talk' %}
-                  <i class="fa-solid fa-chalkboard-user" style="color:steelblue;"></i>
+                  <i class="fa-solid fa-chalkboard-user"></i>
                 {% when 'publication' %}
-                  <i class="fa-solid fa-book" style="color:saddlebrown;"></i>
+                  <i class="fa-solid fa-book"></i>
                 {% when 'award' %}
-                  <i class="fa-solid fa-award" style="color:gold;"></i>
+                  <i class="fa-solid fa-award"></i>
                 {% when 'people' %}
-                  <i class="fa-solid fa-user-plus" style="color:teal;"></i>
+                  <i class="fa-solid fa-user-plus"></i>
                 {% when 'alert' %}
-                  <i class="fa-solid fa-bell" style="color: tomato;"></i>
+                  <i class="fa-solid fa-bell"></i>
               {% endcase %}
             </span>
             <span class="about-news-card__text">

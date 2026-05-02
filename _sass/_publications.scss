@@ -24,10 +24,25 @@
   }
 
   h2.bibliography {
-    color: var(--global-divider-color);
-    border-top: 1px solid var(--global-divider-color);
-    padding-top: 1rem;
+    position: sticky;
+    top: 4.55rem;
+    z-index: 3;
+    display: flex;
+    width: fit-content;
+    margin-left: auto;
+    padding: 0.25rem 0.62rem;
+    color: var(--global-theme-color);
+    border: 1px solid color-mix(in srgb, var(--global-theme-color) 22%, var(--global-divider-color));
+    border-radius: 999px;
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 7%, transparent), transparent 74%),
+      color-mix(in srgb, var(--global-bg-color) 92%, transparent);
+    box-shadow: 0 8px 18px rgba(39, 48, 74, 0.06);
+    backdrop-filter: saturate(1.1) blur(12px);
     margin-top: 2rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1;
     text-align: right;
   }
 
@@ -402,6 +417,13 @@
 }
 
 html[data-theme="dark"] {
+  .publications h2.bibliography {
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 10%, transparent), transparent 74%),
+      color-mix(in srgb, var(--global-card-bg-color) 92%, transparent);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.18);
+  }
+
   .publications ol.bibliography li {
     .publication-card {
       --pub-stripe-end: color-mix(in srgb, var(--pub-accent) 42%, #05070b);

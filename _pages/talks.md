@@ -2,7 +2,8 @@
 layout: page
 title: Talks
 permalink: /talks/
-description: Talks and Presentations
+description: 
+eyebrow: Seminars and presentations
 nav: false
 ---
 

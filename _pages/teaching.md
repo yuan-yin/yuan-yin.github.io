@@ -2,7 +2,8 @@
 layout: page
 permalink: /teaching/
 title: Teaching
-description: Teaching experience
+description: 
+eyebrow: Courses and mentoring
 nav: false
 ---
 

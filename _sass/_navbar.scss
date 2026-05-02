@@ -20,6 +20,7 @@
 
 .navbar .dropdown-menu,
 .btn-group.dropdown .dropdown-menu {
+  min-width: 7.5rem;
   background-color: var(--global-bg-color);
   border: 1px solid var(--global-divider-color);
   border-radius: 16px;
@@ -40,23 +41,46 @@
 }
 
 .dropdown-item {
-  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.15rem;
+  padding: 0.42rem 0.65rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
   color: var(--global-text-color);
-  font-weight: 600;
+  font-weight: 500;
+  line-height: 1;
+  text-align: center;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 
   &:hover {
-    color: var(--global-hover-color);
+    border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
     background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
+    color: var(--global-hover-color);
+    transform: translateY(-1px);
   }
 }
 
 .dropdown-item.active,
 .dropdown-item:active {
-  background-color: var(--global-hover-color);
-  color: var(--global-hover-text-color) !important;
+  border-color: color-mix(in srgb, var(--global-theme-color) 42%, transparent);
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 18%, transparent), transparent 74%),
+    color-mix(in srgb, var(--global-theme-color) 12%, var(--global-bg-color));
+  box-shadow:
+    0 9px 22px color-mix(in srgb, var(--global-theme-color) 16%, transparent),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 52%, transparent);
+  color: var(--global-theme-color) !important;
+  font-weight: 500;
 
   &:hover {
-    color: var(--global-hover-text-color);
+    border-color: color-mix(in srgb, var(--global-theme-color) 54%, transparent);
+    color: var(--global-theme-color) !important;
   }
 }
 
@@ -80,7 +104,7 @@
     border: 1px solid transparent;
     border-radius: 999px;
     color: var(--global-text-color);
-    font-weight: 650;
+    font-weight: 500;
     line-height: 1;
     white-space: nowrap;
     transition:
@@ -112,12 +136,23 @@
     box-shadow:
       0 9px 22px color-mix(in srgb, var(--global-theme-color) 16%, transparent),
       inset 0 1px 0 color-mix(in srgb, #ffffff 52%, transparent);
-    font-weight: 800;
+    font-weight: 500;
     color: var(--global-theme-color);
 
     &:hover {
       border-color: color-mix(in srgb, var(--global-theme-color) 54%, transparent);
       color: var(--global-theme-color);
+    }
+  }
+
+  .navbar-nav .nav-item--more .nav-link {
+    width: 2.15rem;
+    min-width: 2.15rem;
+    padding-right: 0;
+    padding-left: 0;
+
+    &.dropdown-toggle::after {
+      margin-left: 0;
     }
   }
 
@@ -264,6 +299,7 @@
     border: 0;
     background: transparent;
     box-shadow: none;
+    color: inherit;
   }
 
   .fa-magnifying-glass,
@@ -289,6 +325,7 @@
     .nav-link {
       border-color: transparent;
       background: transparent;
+      color: inherit;
       transform: none;
     }
   }

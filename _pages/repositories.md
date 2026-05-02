@@ -3,6 +3,7 @@ layout: page
 permalink: /repositories/
 title: Repositories
 description: Open-source implementations associated with my publications
+eyebrow: Open source
 nav: true
 nav_order: 4
 ---

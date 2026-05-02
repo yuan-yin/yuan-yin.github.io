@@ -18,7 +18,7 @@ ninja.data = [{
           },
         },{id: "nav-publications",
           title: "Publications",
-          description: "Publications by categories in reversed chronological order.  *Equal contribution.",
+          description: "Publications by categories in reversed chronological order.      *Equal contribution.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/publications/";
@@ -37,14 +37,7 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/blog/";
           },
-        },{id: "dropdown-repositories",
-              title: "Repositories",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/repositories/";
-              },
-            },{id: "dropdown-talks",
+        },{id: "dropdown-talks",
               title: "Talks",
               description: "",
               section: "Dropdown",

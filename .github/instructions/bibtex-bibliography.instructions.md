@@ -54,7 +54,7 @@ Beyond standard BibTeX fields, al-folio supports custom keywords for rich public
 - **preview:** URL to preview image (`preview: /assets/img/papers/paper-preview.jpg`)
 - **selected:** Boolean to feature on publications page (`selected: true`)
 - **slides:** URL to presentation slides (`slides: /assets/slides/2023.pdf`)
-- **venues:** One or more venue labels separated by `|` (`venues: TMLR|NeurIPS WS`)
+- **venues:** One or more venue labels separated by `|` (`venues: TMLR|NeurIPS CCFM`)
 
 ### Example Entry with Custom Keywords
 

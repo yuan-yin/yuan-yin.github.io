@@ -1,19 +1,34 @@
 $(document).ready(function () {
   // add toggle functionality to abstract, award and bibtex buttons
+  function togglePublicationPanel(button, panelSelector) {
+    var panelGroup = $(button).parent().parent();
+    var target = panelGroup.find(panelSelector + ".hidden").first();
+    var openPanels = panelGroup.find(".abstract.hidden.open, .award.hidden.open, .bibtex.hidden.open").not(target);
+
+    if (target.hasClass("open") && openPanels.length === 0) {
+      target.removeClass("open");
+      return;
+    }
+
+    if (openPanels.length > 0) {
+      openPanels.removeClass("open");
+      window.setTimeout(function () {
+        target.addClass("open");
+      }, 120);
+      return;
+    }
+
+    target.addClass("open");
+  }
+
   $("a.abstract").click(function () {
-    $(this).parent().parent().find(".abstract.hidden").toggleClass("open");
-    $(this).parent().parent().find(".award.hidden.open").toggleClass("open");
-    $(this).parent().parent().find(".bibtex.hidden.open").toggleClass("open");
+    togglePublicationPanel(this, ".abstract");
   });
   $("a.award").click(function () {
-    $(this).parent().parent().find(".abstract.hidden.open").toggleClass("open");
-    $(this).parent().parent().find(".award.hidden").toggleClass("open");
-    $(this).parent().parent().find(".bibtex.hidden.open").toggleClass("open");
+    togglePublicationPanel(this, ".award");
   });
   $("a.bibtex").click(function () {
-    $(this).parent().parent().find(".abstract.hidden.open").toggleClass("open");
-    $(this).parent().parent().find(".award.hidden.open").toggleClass("open");
-    $(this).parent().parent().find(".bibtex.hidden").toggleClass("open");
+    togglePublicationPanel(this, ".bibtex");
   });
   $("a").removeClass("waves-effect waves-light");
 

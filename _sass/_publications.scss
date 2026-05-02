@@ -90,6 +90,15 @@
         min-width: 0;
       }
 
+      .publication-card__actions {
+        grid-column: 1 / -1;
+        min-width: 0;
+
+        .links {
+          margin-top: 0;
+        }
+      }
+
       .publication-card__meta {
         display: flex;
         flex-wrap: wrap;
@@ -251,7 +260,7 @@
           border-radius: v.$button-pill-radius;
           background: color-mix(in srgb, var(--pub-accent) 7%, transparent);
           padding: 0.36rem 0.72rem;
-          margin-left: 0;
+          margin: 0;
           font-size: 0.8rem;
           font-weight: 700;
           line-height: 1;
@@ -333,14 +342,16 @@
         margin-top: 0;
         padding: 0;
         font-size: 0.875rem;
-        max-height: 0px;
+        max-height: 0;
+        opacity: 0;
         overflow: hidden;
         text-align: justify;
-        transition-property: 0.15s ease;
-        -moz-transition: 0.15s ease;
-        -ms-transition: 0.15s ease;
-        -o-transition: 0.15s ease;
-        transition: all 0.15s ease;
+        transition:
+          max-height 150ms ease,
+          margin-top 150ms ease,
+          opacity 120ms ease,
+          background-color 150ms ease,
+          box-shadow 150ms ease;
 
         p {
           line-height: 1.4em;
@@ -354,40 +365,33 @@
         }
       }
 
-      .hidden:not(.open) {
-        border-width: 0 !important;
-      }
-
       .hidden.open {
         margin-top: 0.75rem;
         max-height: 100em;
-        transition-property: 0.15s ease;
-        -moz-transition: 0.15s ease;
-        -ms-transition: 0.15s ease;
-        -o-transition: 0.15s ease;
-        transition: all 0.15s ease;
+        opacity: 1;
       }
 
       div.abstract.hidden {
-        border: 1px dashed transparent;
         border-radius: 14px;
         background: color-mix(in srgb, var(--pub-accent) 4%, transparent);
+        box-shadow: inset 0 0 0 1px transparent;
       }
 
       div.abstract.hidden.open {
-        border-color: color-mix(in srgb, var(--pub-accent) 42%, var(--global-divider-color));
+        box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--pub-accent) 42%, var(--global-divider-color));
       }
     }
     div.award.hidden {
       --pub-prize-color: #d4a017;
 
-      border: 1px solid transparent;
       border-radius: 14px;
       background: color-mix(in srgb, var(--pub-prize-color) 8%, transparent);
+      box-shadow: inset 0 0 0 1px transparent;
     }
     div.award.hidden.open {
-      border-color: color-mix(in srgb, var(--pub-prize-color) 46%, var(--global-divider-color));
-      box-shadow: inset 0 1px 0 color-mix(in srgb, var(--pub-prize-color) 14%, transparent);
+      box-shadow:
+        inset 0 0 0 1px color-mix(in srgb, var(--pub-prize-color) 46%, var(--global-divider-color)),
+        inset 0 1px 0 color-mix(in srgb, var(--pub-prize-color) 14%, transparent);
     }
   }
 }

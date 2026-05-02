@@ -1,3 +1,15 @@
-<div class="publications">
-  {% bibliography --group_by none --query @*[selected=true]* %}
+<div
+  class="about-selected-publications"
+  data-home-carousel
+  data-carousel-items="ol.bibliography > li"
+  data-carousel-item-class="about-selected-publications__item"
+  data-carousel-interval="5200"
+>
+  <div class="about-selected-publications__viewport" data-carousel-viewport>
+    <div class="publications about-selected-publications__list">
+      {% bibliography --group_by none --query @*[selected=true]* %}
+    </div>
+  </div>
+  <div class="about-selected-publications__dots" aria-label="Selected publication controls" data-carousel-dots></div>
 </div>
+<script defer src="{{ '/assets/js/selected-publications-carousel.js' | relative_url | bust_file_cache }}"></script>

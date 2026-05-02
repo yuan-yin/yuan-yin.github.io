@@ -387,6 +387,10 @@ html[data-theme="dark"] {
   margin-top: 3rem;
 }
 
+.home-selected-section {
+  margin-top: 3rem;
+}
+
 .home-news-section__header {
   display: flex;
   gap: 1rem;
@@ -504,59 +508,44 @@ html[data-theme="dark"] {
 }
 
 .about-news-card__viewport {
-  height: calc((var(--about-news-row-height) * var(--about-news-visible-count)));
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scroll-snap-type: y proximity;
+  position: relative;
+  height: var(--about-news-row-height);
+  overflow: visible;
+  transition: height 220ms ease;
 }
 
 .about-news-card__list {
   display: grid;
   gap: 0;
-  padding: 0.25rem 0;
+  position: relative;
+  padding: 0.25rem 0 0;
   margin: 0;
   list-style: none;
 }
 
 .about-news-card__item {
+  position: absolute;
+  inset: 0 auto auto 0;
   display: grid;
   grid-template-columns: 2.1rem minmax(0, 1fr);
   gap: 0.35rem 0.85rem;
   align-items: center;
   box-sizing: border-box;
+  width: 100%;
   height: var(--about-news-row-height);
   padding: 1rem 1.1rem;
-  border-bottom: 1px solid var(--global-divider-color);
-  scroll-snap-align: start;
+  pointer-events: none;
   opacity: 0;
-  animation: about-news-fade-up 440ms ease forwards;
+  transform: translateY(0.35rem);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 
-  &:last-child {
-    border-bottom: 0;
-  }
-
-  &:nth-child(1) {
-    animation-delay: 40ms;
-  }
-
-  &:nth-child(2) {
-    animation-delay: 80ms;
-  }
-
-  &:nth-child(3) {
-    animation-delay: 120ms;
-  }
-
-  &:nth-child(4) {
-    animation-delay: 160ms;
-  }
-
-  &:nth-child(5) {
-    animation-delay: 200ms;
-  }
-
-  &:nth-child(6) {
-    animation-delay: 240ms;
+  &.is-active {
+    position: relative;
+    pointer-events: auto;
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
@@ -607,6 +596,85 @@ html[data-theme="dark"] {
   color: var(--global-text-color-light);
 }
 
+.about-selected-publications__dots.about-news-card__dots {
+  margin-top: 0.15rem;
+  padding: 0 1rem 0.9rem;
+}
+
+.about-selected-publications {
+  margin-top: 0;
+}
+
+.about-selected-publications__viewport {
+  position: relative;
+  overflow: visible;
+  transition: height 220ms ease;
+}
+
+.about-selected-publications__list {
+  margin-top: 0;
+
+  ol.bibliography {
+    position: relative;
+    padding: 0;
+    margin: 0;
+
+    > li {
+      position: absolute;
+      inset: 0 auto auto 0;
+      width: 100%;
+      margin-bottom: 0;
+      pointer-events: none;
+      opacity: 0;
+      transform: translateY(0.35rem);
+      transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+    }
+
+    > li.is-active {
+      position: relative;
+      pointer-events: auto;
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+.about-selected-publications__dots {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.9rem;
+}
+
+.about-selected-publications__dot {
+  width: 0.62rem;
+  height: 0.62rem;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--global-text-color-light) 38%, transparent);
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    transform 180ms ease,
+    width 180ms ease;
+
+  &.is-active {
+    width: 1.55rem;
+    background: var(--global-theme-color);
+  }
+
+  &:hover,
+  &:focus-visible {
+    background: var(--global-theme-color);
+    outline: none;
+    transform: translateY(-1px);
+  }
+}
+
 html[data-theme="dark"] {
   .home-news-section .news .table-responsive,
   .about-news-card {
@@ -619,11 +687,22 @@ html[data-theme="dark"] {
   .about-news-card__icon {
     background: color-mix(in srgb, var(--global-theme-color) 18%, transparent);
   }
+
+  .about-selected-publications__dot {
+    background: color-mix(in srgb, var(--global-text-color-light) 48%, transparent);
+
+    &.is-active,
+    &:hover,
+    &:focus-visible {
+      background: var(--global-theme-color);
+    }
+  }
 }
 
 @media (max-width: 575.98px) {
   .home-news-section__header {
     align-items: flex-start;
+    flex-direction: column;
   }
 
   .home-news-section .news td {
@@ -660,10 +739,18 @@ html[data-theme="dark"] {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .home-news-section .news tr,
-  .about-news-card__item {
-    opacity: 1;
+  .home-news-section .news tr {
     animation: none;
+    opacity: 1;
+  }
+
+  .about-news-card__item,
+  .about-selected-publications__list ol.bibliography > li {
+    transition: none;
+  }
+
+  .about-news-card__item {
+    transform: none;
   }
 }
 

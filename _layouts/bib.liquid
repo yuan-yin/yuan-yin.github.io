@@ -103,8 +103,10 @@
             {% endif %}
             {%- if venue_name != blank -%}
               <span class="publication-card__venue-item" style="--venue-item-accent: {{ item_color }};">
-                <span class="publication-card__type">{{ item_kind | capitalize }}</span>
-                <span class="publication-card__dot" aria-hidden="true"></span>
+                {% unless item_kind == 'preprint' and venue_name == 'Preprint' %}
+                  <span class="publication-card__type">{{ item_kind | capitalize }}</span>
+                  <span class="publication-card__dot" aria-hidden="true"></span>
+                {% endunless %}
                 {% if site.data.venues[venue_name].url %}
                   <a class="publication-card__venue-name" href="{{ site.data.venues[venue_name].url }}">{{ venue_name }}</a>
                 {% else %}
@@ -223,6 +225,8 @@
     </div>
 
     <!-- Journal/Book title and date -->
+    {% assign proceedings = 'inproceedings,incollection' | split: ',' %}
+    {% assign thesis = 'thesis,mastersthesis,phdthesis' | split: ',' %}
     {% if entry.type == 'article' %}
       {% capture entrytype %}<em>{{ entry.journal }}</em>{% endcapture %}
     {% elsif proceedings contains entry.type %}
@@ -258,7 +262,28 @@
     <div class="periodical">
       {{ entry.note | strip }}
     </div>
+  </div>
 
+  {% if has_publication_media %}
+    <div class="publication-card__media">
+      {% if entry.preview contains '://' %}
+        <img class="preview publication-card__preview" src="{{ entry.preview }}">
+      {% else %}
+        {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
+        {%
+          include figure.liquid
+          loading="eager"
+          path=entry_path
+          class="preview publication-card__preview"
+          zoomable=true
+          avoid_scaling=true
+          alt=entry.preview
+        %}
+      {% endif %}
+    </div>
+  {% endif %}
+
+  <div class="publication-card__actions">
     <!-- Links/Buttons -->
     <div class="links">
       {% if entry.award %}
@@ -412,7 +437,20 @@
       {% if entry.inspirehep_id %}
         {% assign entry_has_inspirehep_badge = true %}
       {% endif %}
-      {% if entry_has_altmetric_badge or entry_has_dimensions_badge or entry_has_google_scholar_badge or entry_has_inspirehep_badge %}
+      {% assign entry_should_show_badges = false %}
+      {% if site.enable_publication_badges.altmetric and entry_has_altmetric_badge %}
+        {% assign entry_should_show_badges = true %}
+      {% endif %}
+      {% if site.enable_publication_badges.dimensions and entry_has_dimensions_badge %}
+        {% assign entry_should_show_badges = true %}
+      {% endif %}
+      {% if site.enable_publication_badges.google_scholar and entry_has_google_scholar_badge %}
+        {% assign entry_should_show_badges = true %}
+      {% endif %}
+      {% if site.enable_publication_badges.inspirehep and entry_has_inspirehep_badge %}
+        {% assign entry_should_show_badges = true %}
+      {% endif %}
+      {% if entry_should_show_badges %}
         <div class="badges">
           {% if site.enable_publication_badges.altmetric and entry_has_altmetric_badge %}
             <span
@@ -498,7 +536,7 @@
     {% if entry.award %}
       <!-- Hidden Award block -->
       <div class="award hidden d-print-inline">
-        <p>{{ entry.award | markdownify }}</p>
+        {{ entry.award | markdownify | strip }}
       </div>
     {% endif %}
 
@@ -525,23 +563,4 @@
       </div>
     {% endif %}
   </div>
-
-  {% if has_publication_media %}
-    <div class="publication-card__media">
-      {% if entry.preview contains '://' %}
-        <img class="preview publication-card__preview" src="{{ entry.preview }}">
-      {% else %}
-        {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
-        {%
-          include figure.liquid
-          loading="eager"
-          path=entry_path
-          class="preview publication-card__preview"
-          zoomable=true
-          avoid_scaling=true
-          alt=entry.preview
-        %}
-      {% endif %}
-    </div>
-  {% endif %}
 </div>

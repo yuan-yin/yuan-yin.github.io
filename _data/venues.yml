@@ -1,22 +1,11 @@
-"AJP":
-  url: https://aapt.scitation.org/journal/ajp
-  color: "#00369f"
-  kind: journal
-
-"PhysRev":
-  url: https://journals.aps.org/
-  kind: journal
-
 "CI":
-  color: "#2563eb"
   kind: workshop
 
 "CVPR":
   color: "#2563eb"
   kind: conference
 
-"ECCV WS":
-  color: "#7c3aed"
+"ECCV W-CODA":
   kind: workshop
 
 "ICLR":
@@ -24,15 +13,13 @@
   kind: conference
 
 "ICLR WS":
-  color: "#dc2626"
   kind: workshop
 
 "ICML":
   color: "#9333ea"
   kind: conference
 
-"ICML WS":
-  color: "#9333ea"
+"ICML SynS&ML":
   kind: workshop
 
 "ICRA":
@@ -40,23 +27,19 @@
   kind: conference
 
 "IVC":
-  color: "#0f766e"
   kind: journal
 
 "JDSA":
-  color: "#0f766e"
   kind: journal
 
 "JSTAT":
-  color: "#0f766e"
   kind: journal
 
 "NeurIPS":
   color: "#b45309"
   kind: conference
 
-"NeurIPS WS":
-  color: "#ea580c"
+"NeurIPS CCFM":
   kind: workshop
 
 "PhD":

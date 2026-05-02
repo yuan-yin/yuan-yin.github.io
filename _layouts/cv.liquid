@@ -17,8 +17,7 @@ layout: default
             data-lang="en"
             href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
             rel="noopener"
-            aria-pressed="false"
-          >
+            aria-pressed="false">
             English
           </a>
           <a
@@ -27,8 +26,7 @@ layout: default
             href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
             download
             rel="noopener"
-            aria-label="Download English CV"
-          >
+            aria-label="Download English CV">
             <i class="fa-solid fa-download" aria-hidden="true"></i>
           </a>
         </div>
@@ -41,8 +39,7 @@ layout: default
             data-lang="fr"
             href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
             rel="noopener"
-            aria-pressed="false"
-          >
+            aria-pressed="false">
             Français
           </a>
           <a
@@ -51,8 +48,7 @@ layout: default
             href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
             download
             rel="noopener"
-            aria-label="Download French CV"
-          >
+            aria-label="Download French CV">
             <i class="fa-solid fa-download" aria-hidden="true"></i>
           </a>
         </div>
@@ -69,8 +65,7 @@ layout: default
           id="prev"
           class="pager-button"
           disabled
-          aria-label="Previous page"
-        >
+          aria-label="Previous page">
           <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
           <span>Previous</span>
         </button>
@@ -78,8 +73,7 @@ layout: default
           id="next"
           class="pager-button"
           disabled
-          aria-label="Next page"
-        >
+          aria-label="Next page">
           <span>Next</span>
           <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
         </button>
@@ -94,19 +88,16 @@ layout: default
   <link
     rel="modulepreload"
     href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs"
-    crossorigin="anonymous"
-  >
+    crossorigin="anonymous">
   <link
     rel="modulepreload"
     href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs"
-    crossorigin="anonymous"
-  >
+    crossorigin="anonymous">
   <link
     rel="preload"
     href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
     as="fetch"
-    type="application/pdf"
-  >
+    type="application/pdf">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
 
   <script type="module">
@@ -494,8 +485,7 @@ layout: default
   <div
     class="pdf-stage"
     aria-live="polite"
-    aria-busy="true"
-  >
+    aria-busy="true">
     <div class="pdf-loading" role="status">Loading CV...</div>
     <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
     <canvas id="the-canvas"></canvas>
@@ -516,10 +506,9 @@ layout: default
       opacity: 0;
       visibility: hidden;
       transform: translateY(-4px);
-      transition:
-        opacity 160ms ease,
-        transform 160ms ease,
-        visibility 0s linear 160ms;
+      transition: opacity 160ms ease
+      , transform 160ms ease
+      , visibility 0s linear 160ms;
     }
 
     .cv-controls-ready .header-toolbar,
@@ -527,9 +516,8 @@ layout: default
       opacity: 1;
       visibility: visible;
       transform: translateY(0);
-      transition:
-        opacity 240ms ease,
-        transform 240ms ease;
+      transition: opacity 240ms ease
+      , transform 240ms ease;
     }
 
     .pdf-stage {
@@ -538,27 +526,21 @@ layout: default
       max-width: 100%;
       min-height: min(720px, calc((100vw - 2rem) * 1.294));
       aspect-ratio: 8.5 / 11;
-      background:
-        linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%),
-        linear-gradient(var(--global-bg-color), var(--global-bg-color)), var(--global-card-bg-color);
-      background-size:
-        240% 100%,
-        calc(100% - 4rem) calc(100% - 4rem),
-        auto;
-      background-position:
-        120% 0,
-        2rem 2rem,
-        0 0;
+      background: linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%), linear-gradient(var(--global-bg-color), var(--global-bg-color)), var(--global-card-bg-color);
+      background-size: 240% 100%, calc(100% - 4rem) calc(100% - 4rem)
+      , auto;
+      background-position: 120% 0
+      , 2rem 2rem
+      , 0 0;
       background-repeat: no-repeat;
       border: 1px solid var(--global-divider-color);
       border-radius: 2px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
       overflow: hidden;
       line-height: 0;
-      transition:
-        background-color 180ms ease,
-        border-color 180ms ease,
-        box-shadow 180ms ease;
+      transition: background-color 180ms ease
+      , border-color 180ms ease
+      , box-shadow 180ms ease;
     }
 
     .cv-loading .pdf-stage {
@@ -567,16 +549,14 @@ layout: default
 
     @keyframes pdf-loading-sheen {
       0% {
-        background-position:
-          120% 0,
-          2rem 2rem,
-          0 0;
+        background-position: 120% 0
+        , 2rem 2rem
+        , 0 0;
       }
       100% {
-        background-position:
-          -120% 0,
-          2rem 2rem,
-          0 0;
+        background-position: -120% 0
+        , 2rem 2rem
+        , 0 0;
       }
     }
 
@@ -586,9 +566,8 @@ layout: default
       height: auto;
       opacity: 0;
       transform: translateY(6px);
-      transition:
-        opacity 220ms ease,
-        transform 220ms ease;
+      transition: opacity 220ms ease
+      , transform 220ms ease;
     } /* avoid inline baseline gap */
 
     #the-canvas.is-rendered {
@@ -598,9 +577,8 @@ layout: default
 
     #the-canvas.is-updating {
       opacity: 0.92;
-      transition:
-        opacity 120ms ease,
-        transform 120ms ease;
+      transition: opacity 120ms ease
+      , transform 120ms ease;
     }
 
     .pdf-loading,
@@ -667,9 +645,8 @@ layout: default
       color: var(--global-text-color);
       cursor: pointer;
       user-select: none;
-      transition:
-        background-color 150ms ease,
-        border-color 150ms ease;
+      transition: background-color 150ms ease
+      , border-color 150ms ease;
     }
     .lang-primary:hover {
       background: var(--global-code-bg-color);
@@ -713,18 +690,23 @@ layout: default
       /* slight slide-in when opening */
       overflow: hidden;
       /* hide icon while collapsed */
-      transition:
-        width 200ms ease,
-        padding 200ms ease,
-        border-left-width 200ms ease,
-        opacity 180ms ease,
-        transform 180ms ease,
-        background-color 150ms ease;
+      transition: width 200ms ease
+      , padding 200ms ease
+      , border-left-width 200ms ease
+      , opacity 180ms ease
+      , transform 180ms ease
+      , background-color 150ms ease;
     }
     .lang-primary *,
     .lang-download,
     .lang-download * {
-      transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
+      transition-property: background-color
+      , border-color
+      , opacity
+      , transform
+      , width
+      , padding
+      , border-left-width !important;
     }
     .lang-download:hover {
       background: var(--global-code-bg-color);
@@ -783,14 +765,16 @@ layout: default
       border-radius: 999px;
       cursor: pointer;
       user-select: none;
-      transition:
-        background-color 150ms ease,
-        border-color 150ms ease,
-        opacity 150ms ease;
+      transition: background-color 150ms ease
+      , border-color 150ms ease
+      , opacity 150ms ease;
     }
     .pager-button,
     .pager-button * {
-      transition-property: background-color, border-color, opacity, transform !important;
+      transition-property: background-color
+      , border-color
+      , opacity
+      , transform !important;
     }
     .pager-button:hover {
       background: var(--global-code-bg-color);

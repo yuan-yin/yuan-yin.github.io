@@ -82,10 +82,15 @@ layout: default
 
     <!-- Selected papers -->
     {% if page.selected_papers %}
-      <h2>
-        <a href="{{ '/publications/' | relative_url }}" style="color: inherit">Selected Publications</a>
-      </h2>
-      {% include selected_papers.liquid %}
+      <section class="home-selected-section" aria-labelledby="home-selected-title">
+        <div class="home-news-section__header">
+          <div>
+            <h2 id="home-selected-title">Selected publications</h2>
+          </div>
+          <a class="home-news-section__archive" href="{{ '/publications/' | relative_url }}">View all publications</a>
+        </div>
+        {% include selected_papers.liquid %}
+      </section>
     {% endif %}
   </article>
 </div>

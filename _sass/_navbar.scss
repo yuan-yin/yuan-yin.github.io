@@ -5,16 +5,25 @@
 @use "variables" as v;
 
 .navbar {
-  box-shadow: none;
+  box-shadow: 0 10px 32px rgba(39, 48, 74, 0.06);
   border-bottom: 1px solid var(--global-divider-color);
-  background-color: var(--global-bg-color);
-  opacity: 0.95;
+  background: color-mix(in srgb, var(--global-bg-color) 90%, transparent);
+  backdrop-filter: saturate(1.15) blur(14px);
+  opacity: 0.98;
+}
+
+.navbar-nav {
+  gap: 0.3rem;
+  align-items: center;
 }
 
 .navbar .dropdown-menu,
 .btn-group.dropdown .dropdown-menu {
   background-color: var(--global-bg-color);
   border: 1px solid var(--global-divider-color);
+  border-radius: 16px;
+  padding: 0.4rem;
+  box-shadow: 0 18px 45px rgba(39, 48, 74, 0.12);
 
   a:not(.active) {
     color: var(--global-text-color);
@@ -30,11 +39,13 @@
 }
 
 .dropdown-item {
+  border-radius: 12px;
   color: var(--global-text-color);
+  font-weight: 600;
 
   &:hover {
     color: var(--global-hover-color);
-    background-color: var(--global-bg-color);
+    background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
   }
 }
 
@@ -60,25 +71,52 @@
   }
 
   .navbar-nav .nav-item .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.15rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
     color: var(--global-text-color);
+    font-weight: 650;
+    line-height: 1;
+    white-space: nowrap;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease,
+      transform 180ms ease;
 
     &.dropdown-toggle::after {
+      margin-left: 0.4rem;
       color: inherit;
       transition: none;
     }
 
     &:hover {
+      border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
+      background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
       color: var(--global-hover-color);
+      transform: translateY(-1px);
     }
   }
 
   .navbar-nav .nav-item.active > .nav-link {
-    background-color: inherit;
-    font-weight: bolder;
+    border-color: color-mix(in srgb, var(--global-theme-color) 42%, transparent);
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 18%, transparent), transparent 74%),
+      color-mix(in srgb, var(--global-theme-color) 12%, var(--global-bg-color));
+    box-shadow:
+      0 9px 22px color-mix(in srgb, var(--global-theme-color) 16%, transparent),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 52%, transparent);
+    font-weight: 800;
     color: var(--global-theme-color);
 
     &:hover {
-      color: var(--global-hover-color);
+      border-color: color-mix(in srgb, var(--global-theme-color) 54%, transparent);
+      color: var(--global-theme-color);
     }
   }
 
@@ -121,6 +159,21 @@
 }
 
 .navbar-toggler {
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 20%, var(--global-divider-color));
+  border-radius: 999px;
+  padding: 0.48rem 0.62rem;
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    transform 180ms ease;
+
+  &:hover,
+  &:focus {
+    border-color: color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
+    background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
+    outline: none;
+  }
+
   .icon-bar {
     display: block;
     width: 22px;
@@ -164,32 +217,34 @@
 }
 
 #light-toggle {
-  padding: 0;
-  border: 0;
-  background-color: inherit;
-  color: var(--global-text-color);
-  /* Fix footprint to prevent navbar shifting when icon changes */
-  width: 2rem;
-  height: 2rem;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background-color: transparent;
+  color: var(--global-text-color);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 
   &:hover {
+    border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
+    background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
     color: var(--global-hover-color);
-  }
-}
-
-@media (min-width: 576px) {
-  #light-toggle {
-    transform: translateY(4px);
+    transform: translateY(-1px);
   }
 }
 
 #search-toggle {
   padding: 0;
   border: 0;
-  background-color: inherit;
+  background-color: transparent;
   color: var(--global-text-color);
 
   .nav-link,
@@ -219,5 +274,39 @@ html.shortcut-is-mac #search-toggle {
 
   .shortcut-key-default {
     display: none;
+  }
+}
+
+html[data-theme="dark"] {
+  .navbar {
+    box-shadow: 0 10px 32px rgba(0, 0, 0, 0.24);
+  }
+
+  .navbar .dropdown-menu,
+  .btn-group.dropdown .dropdown-menu {
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.32);
+  }
+
+  .navbar.navbar-light .navbar-nav .nav-item.active > .nav-link {
+    box-shadow:
+      0 9px 22px color-mix(in srgb, var(--global-theme-color) 20%, transparent),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 14%, transparent);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .navbar-nav {
+    gap: 0.45rem;
+    align-items: stretch;
+    padding-top: 0.75rem;
+  }
+
+  .navbar.navbar-light .navbar-nav .nav-item .nav-link {
+    justify-content: flex-end;
+    width: 100%;
+  }
+
+  .toggle-container {
+    align-self: flex-end;
   }
 }

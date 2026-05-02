@@ -36,7 +36,7 @@
       </button>
 
       <div class="collapse navbar-collapse text-right" id="navbarNav">
-        <ul class="navbar-nav ml-auto flex-nowrap">
+        <ul class="navbar-nav ml-auto">
           {% for page in site.pages %}
             {% if page.permalink == '/' %} {% assign about_title = page.title %} {% endif %}
           {% endfor %}
@@ -62,7 +62,7 @@
                     {% assign has_active_child = true %}
                   {% endif %}
                 {% endfor %}
-                <li class="nav-item dropdown {% if page.title == p.title or has_active_child %}active{% endif %}">
+                <li class="nav-item nav-item--tail dropdown {% if page.title == p.title or has_active_child %}active{% endif %}">
                   <a
                     class="nav-link dropdown-toggle"
                     href="#"
@@ -114,7 +114,7 @@
           {% endfor %}
           {% if site.search_enabled %}
             <!-- Search -->
-            <li class="nav-item">
+            <li class="nav-item nav-item--tail nav-item--search">
               <button id="search-toggle" title="Search" onclick="openSearchModal()">
                 <span class="nav-link">
                   <span class="shortcut-key shortcut-key-default">ctrl k</span>
@@ -126,7 +126,7 @@
           {% endif %}
           {% if site.enable_darkmode %}
             <!-- Toogle theme mode -->
-            <li class="toggle-container">
+            <li class="nav-item--tail toggle-container">
               <button id="light-toggle" title="Change theme">
                 <i class="fa-half-sun-moon" id="light-toggle-system"></i>
                 <i class="fa-solid fa-moon" id="light-toggle-dark"></i>

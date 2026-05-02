@@ -15,6 +15,7 @@
 .navbar-nav {
   gap: 0.3rem;
   align-items: center;
+  flex-wrap: nowrap;
 }
 
 .navbar .dropdown-menu,
@@ -242,12 +243,29 @@
 }
 
 #search-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.15rem;
   padding: 0;
-  border: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
   background-color: transparent;
   color: var(--global-text-color);
+  transition:
+    background-color 180ms ease,
+    border-color 180ms ease,
+    color 180ms ease,
+    transform 180ms ease;
 
-  .nav-link,
+  .nav-link {
+    width: 100%;
+    min-height: inherit;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
+  }
+
   .fa-magnifying-glass,
   .fa-magnifying-glass::before {
     color: inherit;
@@ -263,7 +281,16 @@
   }
 
   &:hover {
+    border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
+    background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
     color: var(--global-hover-color);
+    transform: translateY(-1px);
+
+    .nav-link {
+      border-color: transparent;
+      background: transparent;
+      transform: none;
+    }
   }
 }
 
@@ -296,17 +323,40 @@ html[data-theme="dark"] {
 
 @media (max-width: 575.98px) {
   .navbar-nav {
+    flex-flow: row wrap;
     gap: 0.45rem;
-    align-items: stretch;
+    align-items: center;
+    justify-content: center;
     padding-top: 0.75rem;
   }
 
+  .navbar-nav > .nav-item,
+  .navbar-nav > .toggle-container {
+    flex: 0 0 100%;
+    text-align: center;
+  }
+
+  .navbar-nav > .nav-item--tail {
+    flex: 0 0 auto;
+  }
+
   .navbar.navbar-light .navbar-nav .nav-item .nav-link {
-    justify-content: flex-end;
-    width: 100%;
+    justify-content: center;
+    width: auto;
+  }
+
+  .navbar.navbar-light .navbar-nav .nav-item--search .nav-link {
+    width: 2.15rem;
+    min-width: 2.15rem;
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .navbar.navbar-light .navbar-nav .nav-item--search #search-toggle .shortcut-key {
+    display: none !important;
   }
 
   .toggle-container {
-    align-self: flex-end;
+    align-self: center;
   }
 }

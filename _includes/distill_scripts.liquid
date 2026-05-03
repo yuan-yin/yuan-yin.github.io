@@ -331,7 +331,9 @@
   <!-- Back to Top -->
   <script src="{{ '/assets/js/vanilla-back-to-top.min.js' | relative_url | bust_file_cache }}"></script>
   <script>
-    addBackToTop();
+    addBackToTop({
+      innerHTML: '<i class="fa-solid fa-angle-up" aria-hidden="true"></i>',
+    });
   </script>
 {% endif %}
 

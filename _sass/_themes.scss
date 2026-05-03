@@ -83,10 +83,12 @@
       transform 180ms ease,
       bottom 200ms ease;
 
-    svg {
-      width: 1.05rem;
-      height: 1.05rem;
-      margin: 0;
+    i,
+    i::before {
+      color: currentColor;
+      font-size: 0.95rem;
+      line-height: 1;
+      transition: none;
     }
 
     &:hover {

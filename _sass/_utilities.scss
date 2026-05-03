@@ -130,6 +130,7 @@ html.transition *:after {
 html.transition #search-toggle,
 html.transition #search-toggle *,
 html.transition #search-toggle *::before,
+html.transition #back-to-top,
 html.transition .navbar .dropdown-toggle::after,
 html.transition .cv-viewer .lang-primary,
 html.transition .cv-viewer .lang-primary *,
@@ -140,6 +141,11 @@ html.transition .cv-viewer .pager-button,
 html.transition .cv-viewer .pager-button *,
 html.transition .cv-viewer .pager-button *::before {
   transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
+}
+
+html.transition #back-to-top i,
+html.transition #back-to-top i::before {
+  transition: none !important;
 }
 
 // Copy button

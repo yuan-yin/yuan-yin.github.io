@@ -67,14 +67,6 @@ layout: default
       </div>
 
       <div class="pager">
-        <span class="pager-status">
-          <span class="pager-status__label">Page</span>
-          <span class="pager-status__numbers">
-            <span id="page_num">...</span>
-            <span class="pager-status__separator">/</span>
-            <span id="page_count">...</span>
-          </span>
-        </span>
         <button
           id="prev"
           class="pager-button"
@@ -84,6 +76,14 @@ layout: default
           <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
           <span>Previous</span>
         </button>
+        <span class="pager-status">
+          <span class="pager-status__label">Page</span>
+          <span class="pager-status__numbers">
+            <span id="page_num">...</span>
+            <span class="pager-status__separator">/</span>
+            <span id="page_count">...</span>
+          </span>
+        </span>
         <button
           id="next"
           class="pager-button"
@@ -511,12 +511,11 @@ layout: default
   <style>
     .header-toolbar {
       display: flex;
+      flex-direction: column;
       gap: 0.85rem 1rem;
-      justify-content: space-between;
-      /* push left/right */
       align-items: center;
-      flex-wrap: wrap;
-      /* optional for small screens */
+      justify-content: center;
+      margin-left: auto;
       margin-top: 0.5rem;
       margin-bottom: 0.5rem;
       min-height: 44px;
@@ -647,6 +646,7 @@ layout: default
       display: inline-flex;
       gap: 0.45rem;
       align-items: center;
+      justify-content: center;
       order: 1;
       font-size: 1rem;
     }
@@ -784,9 +784,11 @@ layout: default
 
     /* Pager: match language button style */
     .pager {
-      display: inline-flex;
+      display: grid;
+      grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr);
       gap: 0.5rem;
       align-items: center;
+      justify-content: center;
       margin-top: 0;
       order: 2;
       font-size: 1rem;
@@ -797,11 +799,20 @@ layout: default
       display: inline-flex;
       gap: 0.45rem;
       align-items: center;
+      justify-content: center;
       min-height: 2.35rem;
       font-size: 1rem;
       font-weight: 600;
       line-height: 1;
       white-space: nowrap;
+    }
+
+    #prev {
+      justify-self: end;
+    }
+
+    #next {
+      justify-self: start;
     }
 
     .pager-status__label {
@@ -833,8 +844,10 @@ layout: default
     .pager-button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.35em;
       min-height: 2.35rem;
+      min-width: 7rem;
       padding: 0.5rem 0.9rem;
       font-size: 1rem;
       font-weight: 600;
@@ -881,11 +894,22 @@ layout: default
       position: relative;
     }
 
+    @media (max-width: 767.98px) {
+      .header-toolbar {
+        align-items: center;
+        width: 100%;
+      }
+
+      .lang-toolbar,
+      .pager {
+        justify-content: center;
+      }
+    }
+
     @media (max-width: 575.98px) {
       .header-toolbar {
         justify-content: center;
         gap: 0.65rem;
-        width: 100%;
       }
 
       .lang-toolbar,
@@ -916,6 +940,7 @@ layout: default
       }
 
       .pager {
+        grid-template-columns: minmax(2.1rem, 1fr) auto minmax(2.1rem, 1fr);
         gap: 0.35rem;
       }
 

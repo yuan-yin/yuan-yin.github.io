@@ -99,6 +99,7 @@
         flex-direction: column;
         justify-content: flex-start;
         min-width: 0;
+        width: 100%;
       }
 
       .publication-card__body {
@@ -163,12 +164,14 @@
 
       .publication-card__preview {
         width: 100%;
-        aspect-ratio: 4 / 3;
-        object-fit: cover;
+        height: auto;
+        max-height: 14rem;
+        object-fit: contain;
         border: 1px solid color-mix(in srgb, var(--pub-accent) 22%, var(--global-divider-color));
         border-radius: 14px;
         background: var(--global-bg-color);
         box-shadow: 0 10px 24px rgba(39, 48, 74, 0.1);
+        cursor: zoom-in;
       }
 
       .publication-card__venue {
@@ -465,14 +468,63 @@ html[data-theme="dark"] {
   }
 }
 
-.medium-zoom-image--opened.publication-card__preview {
-  width: auto !important;
-  height: auto !important;
-  max-width: min(78vw, 1080px) !important;
-  max-height: 76vh !important;
-  aspect-ratio: auto;
-  object-fit: contain;
+.publication-preview-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  background: color-mix(in srgb, var(--global-bg-color) 94%, transparent);
+  cursor: zoom-out;
+  animation: publication-preview-lightbox-fade 140ms ease-out;
+}
+
+.publication-preview-lightbox--closing {
+  pointer-events: none;
+  animation: publication-preview-lightbox-fade-out 140ms ease-in forwards;
+
+  .publication-preview-lightbox__image {
+    animation: publication-preview-lightbox-pop-out 140ms ease-in forwards;
+  }
+}
+
+.publication-preview-lightbox__image {
+  width: auto;
+  max-width: min(62vw, 760px);
+  max-height: 68vh;
+  border: 1px solid var(--global-divider-color);
   border-radius: 14px;
+  background: var(--global-bg-color);
+  box-shadow: 0 22px 70px rgba(39, 48, 74, 0.22);
+  cursor: zoom-out;
+  object-fit: contain;
+  animation: publication-preview-lightbox-pop 140ms ease-out;
+}
+
+@keyframes publication-preview-lightbox-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes publication-preview-lightbox-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes publication-preview-lightbox-pop {
+  from {
+    transform: scale(0.96);
+  }
+}
+
+@keyframes publication-preview-lightbox-pop-out {
+  to {
+    transform: scale(0.96);
+  }
 }
 
 @media (max-width: 767.98px) {
@@ -490,5 +542,12 @@ html[data-theme="dark"] {
     .publication-card__venue-name {
       white-space: normal;
     }
+  }
+  .publication-preview-lightbox {
+    padding: 1rem;
+  }
+
+  .publication-preview-lightbox__image {
+    max-width: 86vw;
   }
 }

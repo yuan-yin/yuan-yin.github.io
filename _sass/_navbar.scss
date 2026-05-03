@@ -239,35 +239,43 @@
   }
 
   .top-bar {
+    transform: translate(-50%, -50%) rotate(45deg);
     animation: navbar-toggler-top-open 260ms ease forwards;
   }
 
   .middle-bar {
+    opacity: 0;
+    transform: translate(-50%, -50%) scaleX(0);
     animation: navbar-toggler-middle-open 260ms ease forwards;
   }
 
   .bottom-bar {
+    transform: translate(-50%, -50%) rotate(-45deg);
     animation: navbar-toggler-bottom-open 260ms ease forwards;
   }
 }
 
 .navbar-toggler.collapsed {
   .top-bar {
+    transform: translate(-50%, -7px) rotate(0deg);
     animation: navbar-toggler-top-close 260ms ease forwards;
   }
 
   .middle-bar {
+    opacity: 1;
+    transform: translate(-50%, -50%) scaleX(1);
     animation: navbar-toggler-middle-close 260ms ease forwards;
   }
 
   .bottom-bar {
+    transform: translate(-50%, 5px) rotate(0deg);
     animation: navbar-toggler-bottom-close 260ms ease forwards;
   }
 }
 
 @keyframes navbar-toggler-top-open {
   0% {
-    transform: translate(-50%, calc(-50% - 6px)) rotate(0deg);
+    transform: translate(-50%, -7px) rotate(0deg);
   }
 
   45% {
@@ -289,7 +297,7 @@
   }
 
   100% {
-    transform: translate(-50%, calc(-50% - 6px)) rotate(0deg);
+    transform: translate(-50%, -7px) rotate(0deg);
   }
 }
 
@@ -321,7 +329,7 @@
 
 @keyframes navbar-toggler-bottom-open {
   0% {
-    transform: translate(-50%, calc(-50% + 6px)) rotate(0deg);
+    transform: translate(-50%, 5px) rotate(0deg);
   }
 
   45% {
@@ -343,7 +351,7 @@
   }
 
   100% {
-    transform: translate(-50%, calc(-50% + 6px)) rotate(0deg);
+    transform: translate(-50%, 5px) rotate(0deg);
   }
 }
 

@@ -195,7 +195,15 @@
   <script async src="https://badge.dimensions.ai/badge.js"></script>
 {% endif %}
 
-{% if site.enable_math %}
+{% assign load_math = false %}
+{% if site.enable_math and page.math %}
+  {% assign load_math = true %}
+{% endif %}
+{% if site.enable_math and page.pseudocode %}
+  {% assign load_math = true %}
+{% endif %}
+
+{% if load_math %}
   <!-- MathJax -->
   <script
     defer

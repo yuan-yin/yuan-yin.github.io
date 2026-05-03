@@ -170,7 +170,12 @@
 
 <!-- Removed Badges -->
 
-{% if site.enable_math %}
+{% assign load_math = false %}
+{% if site.enable_math and page.math %}
+  {% assign load_math = true %}
+{% endif %}
+
+{% if load_math %}
   <!-- MathJax -->
   <script
     defer

@@ -195,9 +195,15 @@
 }
 
 .navbar-toggler {
+  position: relative;
   border: 1px solid color-mix(in srgb, var(--global-theme-color) 20%, var(--global-divider-color));
   border-radius: 999px;
-  padding: 0.48rem 0.62rem;
+  background-color: transparent;
+  box-shadow: none;
+  width: 2.35rem;
+  min-width: 2.35rem;
+  height: 2.15rem;
+  padding: 0;
   transition:
     background-color 180ms ease,
     border-color 180ms ease,
@@ -206,49 +212,75 @@
   &:hover,
   &:focus {
     border-color: color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
-    background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
+    background-color: transparent;
+    box-shadow: none;
+    outline: none;
+  }
+
+  &:active,
+  &:focus-visible {
+    background-color: transparent;
+    box-shadow: none;
     outline: none;
   }
 
   .icon-bar {
+    position: absolute;
+    top: 50%;
+    left: 50%;
     display: block;
-    width: 22px;
+    width: 20px;
     height: 2px;
+    margin: 0;
+    border-radius: 999px;
     background-color: var(--global-text-color);
-    border-radius: 1px;
-    margin-bottom: 4px;
+    transform-origin: center;
+    translate: -50% -50%;
     transition:
       background-color 200ms ease,
       opacity 200ms ease,
-      transform 200ms ease;
+      rotate 160ms ease 140ms,
+      scale 160ms ease 140ms,
+      translate 140ms ease;
   }
 
   .top-bar {
-    transform: rotate(45deg);
-    transform-origin: 10% 10%;
+    rotate: 45deg;
   }
 
   .middle-bar {
     opacity: 0;
+    scale: 0 1;
   }
 
   .bottom-bar {
-    transform: rotate(-45deg);
-    transform-origin: 10% 90%;
+    rotate: -45deg;
   }
 }
 
 .navbar-toggler.collapsed {
+  .icon-bar {
+    transition:
+      background-color 200ms ease,
+      opacity 140ms ease 160ms,
+      rotate 140ms ease,
+      scale 140ms ease,
+      translate 160ms ease 140ms;
+  }
+
   .top-bar {
-    transform: rotate(0);
+    translate: -50% calc(-50% - 6px);
+    rotate: 0deg;
   }
 
   .middle-bar {
     opacity: 1;
+    scale: 1 1;
   }
 
   .bottom-bar {
-    transform: rotate(0);
+    translate: -50% calc(-50% + 6px);
+    rotate: 0deg;
   }
 }
 
@@ -359,12 +391,47 @@ html[data-theme="dark"] {
 }
 
 @media (max-width: 575.98px) {
+  .navbar > .container {
+    position: static;
+  }
+
+  .navbar-collapse {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    left: 0;
+    z-index: 1031;
+    max-height: calc(100vh - 5rem);
+    padding: 0 1rem 0.75rem;
+    overflow-y: auto;
+    border-bottom: 1px solid var(--global-divider-color);
+    background: color-mix(in srgb, var(--global-bg-color) 90%, transparent);
+    box-shadow: 0 10px 32px rgba(39, 48, 74, 0.06);
+    backdrop-filter: saturate(1.15) blur(14px);
+  }
+
+  .navbar-collapse.collapsing {
+    position: absolute;
+    overflow: hidden;
+  }
+
+  .navbar-toggler {
+    &:hover,
+    &:focus,
+    &:active,
+    &:focus-visible {
+      background-color: transparent;
+      box-shadow: none;
+      outline: none;
+    }
+  }
+
   .navbar-nav {
     flex-flow: row wrap;
     gap: 0.45rem;
     align-items: center;
     justify-content: center;
-    padding-top: 0.75rem;
+    padding-top: 0.25rem;
   }
 
   .navbar-nav > .nav-item,

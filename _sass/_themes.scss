@@ -2,7 +2,6 @@
  * Themes
  ******************************************************************************/
 @use "variables" as v;
-@use "sass:color";
 
 :root {
   color-scheme: light;
@@ -20,13 +19,9 @@
   --global-divider-color: rgba(0, 0, 0, 0.1);
   --global-card-bg-color: #{v.$white-color};
   --global-highlight-color: #{v.$red-color-dark};
-  --global-back-to-top-bg-color: rgba(
-    #{color.channel(v.$black-color, "red", v.$space: rgb)},
-    #{color.channel(v.$black-color, "green", v.$space: rgb)},
-    #{color.channel(v.$black-color, "blue", v.$space: rgb)},
-    0.4
-  );
-  --global-back-to-top-text-color: #{v.$white-color};
+  --global-back-to-top-bg-color: color-mix(in srgb, var(--global-theme-color) 10%, var(--global-bg-color));
+  --global-back-to-top-text-color: var(--global-text-color);
+  --global-back-to-top-border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
   --global-newsletter-bg-color: #{v.$white-color};
   --global-newsletter-text-color: #{v.$black-color};
 
@@ -64,13 +59,47 @@
   }
 
   #back-to-top {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--global-back-to-top-border-color);
+    border-radius: v.$button-pill-radius;
     color: var(--global-back-to-top-text-color);
     background: var(--global-back-to-top-bg-color);
     bottom: v.$back-to-top-bottom;
     right: v.$back-to-top-right;
     height: v.$back-to-top-height;
     width: v.$back-to-top-width;
+    box-shadow:
+      0 10px 28px rgba(39, 48, 74, 0.12),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 58%, transparent);
     z-index: v.$back-to-top-z-index;
+    transition:
+      background-color 180ms ease,
+      border-color 180ms ease,
+      box-shadow 180ms ease,
+      color 180ms ease,
+      opacity 200ms ease,
+      transform 180ms ease,
+      bottom 200ms ease;
+
+    svg {
+      width: 1.05rem;
+      height: 1.05rem;
+      margin: 0;
+    }
+
+    &:hover {
+      border-color: color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 18%, transparent), transparent 74%),
+        color-mix(in srgb, var(--global-theme-color) 12%, var(--global-bg-color));
+      box-shadow:
+        0 12px 30px color-mix(in srgb, var(--global-theme-color) 18%, transparent),
+        inset 0 1px 0 color-mix(in srgb, #ffffff 58%, transparent);
+      color: var(--global-theme-color);
+      transform: translateY(-2px);
+    }
   }
 }
 
@@ -89,13 +118,9 @@ html[data-theme="dark"] {
   --global-distill-app-color: #{v.$grey-color-light};
   --global-divider-color: #424246;
   --global-card-bg-color: #{v.$grey-900};
-  --global-back-to-top-bg-color: rgba(
-    #{color.channel(v.$white-color, "red", v.$space: rgb)},
-    #{color.channel(v.$white-color, "green", v.$space: rgb)},
-    #{color.channel(v.$white-color, "blue", v.$space: rgb)},
-    0.5
-  );
-  --global-back-to-top-text-color: #{v.$black-color};
+  --global-back-to-top-bg-color: color-mix(in srgb, var(--global-theme-color) 14%, var(--global-bg-color));
+  --global-back-to-top-text-color: var(--global-text-color);
+  --global-back-to-top-border-color: color-mix(in srgb, var(--global-theme-color) 34%, var(--global-divider-color));
   --global-newsletter-bg-color: #{v.$grey-color-light};
   --global-newsletter-text-color: #{v.$grey-color-dark};
 
@@ -118,6 +143,18 @@ html[data-theme="dark"] {
 
   .only-dark {
     display: block;
+  }
+
+  #back-to-top {
+    box-shadow:
+      0 10px 28px rgba(0, 0, 0, 0.28),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 14%, transparent);
+
+    &:hover {
+      box-shadow:
+        0 12px 30px color-mix(in srgb, var(--global-theme-color) 22%, transparent),
+        inset 0 1px 0 color-mix(in srgb, #ffffff 14%, transparent);
+    }
   }
 }
 

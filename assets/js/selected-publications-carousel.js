@@ -18,6 +18,7 @@
     let activeIndex = 0;
     let timer = null;
     let paused = false;
+    let isVisible = true;
 
     const setHeight = () => {
       const activeItem = items[activeIndex];
@@ -60,7 +61,7 @@
 
     function restartTimer() {
       stopTimer();
-      if (motionQuery.matches || items.length <= 1 || !Number.isFinite(interval) || interval <= 0) return;
+      if (document.hidden || !isVisible || motionQuery.matches || items.length <= 1 || !Number.isFinite(interval) || interval <= 0) return;
       timer = window.setInterval(advance, interval);
     }
 
@@ -100,6 +101,14 @@
     items.forEach((item) => item.addEventListener("transitionend", setHeight));
     root.querySelectorAll("img").forEach((image) => image.addEventListener("load", setHeight, { once: true }));
     window.addEventListener("resize", setHeight);
+    document.addEventListener("visibilitychange", restartTimer);
+    if ("IntersectionObserver" in window) {
+      const visibilityObserver = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        restartTimer();
+      });
+      visibilityObserver.observe(root);
+    }
     if (motionQuery.addEventListener) {
       motionQuery.addEventListener("change", restartTimer);
     } else {

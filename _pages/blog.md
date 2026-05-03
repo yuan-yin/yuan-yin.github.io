@@ -169,7 +169,7 @@ pagination:
 
               {% if post.thumbnail %}
                 <a class="post-card__media" href="{{ post.url | relative_url }}" aria-hidden="true" tabindex="-1">
-                  <img src="{{ post.thumbnail | relative_url }}" alt="">
+                  <img src="{{ post.thumbnail | relative_url }}" alt="" loading="lazy" decoding="async">
                 </a>
               {% endif %}
             </article>

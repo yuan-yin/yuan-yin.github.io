@@ -267,16 +267,15 @@
   {% if has_publication_media %}
     <div class="publication-card__media">
       {% if entry.preview contains '://' %}
-        <img class="preview publication-card__preview" src="{{ entry.preview }}">
+        <img class="preview publication-card__preview" src="{{ entry.preview }}" alt="{{ entry.preview }}" loading="lazy" decoding="async">
       {% else %}
         {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
         {%
           include figure.liquid
-          loading="eager"
+          loading="lazy"
           path=entry_path
           class="preview publication-card__preview"
           zoomable=true
-          avoid_scaling=true
           alt=entry.preview
         %}
       {% endif %}

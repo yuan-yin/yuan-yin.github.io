@@ -30,6 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const activeClass = "sticky-year--active";
   const revealDuration = 2000;
   const markerTop = 88;
+  const nearOriginalThreshold = 72;
 
   const isVisible = (container) => {
     const rect = container.getBoundingClientRect();
@@ -44,7 +45,9 @@ document.addEventListener("DOMContentLoaded", () => {
       sections.forEach((section) => {
         const heading = section.querySelector("h2.bibliography, .year");
         const rect = section.getBoundingClientRect();
-        const isFloating = rect.top < markerTop && rect.bottom > markerTop + (heading?.offsetHeight || 0);
+        const distanceFromOriginalPosition = markerTop - rect.top;
+        const isFarFromOriginalPosition = distanceFromOriginalPosition > nearOriginalThreshold;
+        const isFloating = isFarFromOriginalPosition && rect.bottom > markerTop + (heading?.offsetHeight || 0);
 
         heading?.classList.toggle(floatingClass, isFloating);
         heading?.classList.toggle(activeClass, Boolean(isFloating && showFloatingYears && containerVisible));

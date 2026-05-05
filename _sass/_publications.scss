@@ -53,9 +53,9 @@
     text-shadow: none;
     transform: translateY(0);
     transition:
-      opacity 180ms ease,
-      transform 180ms ease,
-      visibility 0s linear 180ms;
+      opacity 240ms ease,
+      transform 240ms ease,
+      visibility 0s linear 0s;
     visibility: visible;
 
     &::before {
@@ -79,7 +79,21 @@
   h2.bibliography.sticky-year--floating:not(.sticky-year--active) {
     opacity: 0;
     transform: translateY(-0.28rem);
+    transition:
+      opacity 260ms ease,
+      transform 260ms ease,
+      visibility 0s linear 260ms;
     visibility: hidden;
+  }
+
+  h2.bibliography.sticky-year--floating.sticky-year--active {
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+      opacity 260ms ease,
+      transform 260ms ease,
+      visibility 0s linear 0s;
+    visibility: visible;
   }
 
   ol.bibliography {

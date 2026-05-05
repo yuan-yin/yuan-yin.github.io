@@ -1,5 +1,5 @@
 {% if site.teachings %}
-  <div class="courses">
+  <div class="courses" data-floating-year-container>
     {% assign courses_by_year = site.teachings | sort: 'year' | reverse | group_by: 'year' %}
 
     {% for year_group in courses_by_year %}

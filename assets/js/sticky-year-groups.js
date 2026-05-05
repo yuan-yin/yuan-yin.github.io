@@ -18,4 +18,58 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   });
+
+  const floatingYearContainers = document.querySelectorAll("[data-floating-year-container], [data-sticky-year-groups]");
+
+  if (!floatingYearContainers.length) {
+    return;
+  }
+
+  let hideTimer;
+  const floatingClass = "sticky-year--floating";
+  const activeClass = "sticky-year--active";
+  const revealDuration = 2000;
+  const markerTop = 88;
+
+  const isVisible = (container) => {
+    const rect = container.getBoundingClientRect();
+    return rect.bottom > 0 && rect.top < window.innerHeight;
+  };
+
+  const updateFloatingStates = (showFloatingYears) => {
+    floatingYearContainers.forEach((container) => {
+      const containerVisible = isVisible(container);
+      const sections = container.querySelectorAll(".publication-year-section, .course-year-section");
+
+      sections.forEach((section) => {
+        const heading = section.querySelector("h2.bibliography, .year");
+        const rect = section.getBoundingClientRect();
+        const isFloating = rect.top < markerTop && rect.bottom > markerTop + (heading?.offsetHeight || 0);
+
+        heading?.classList.toggle(floatingClass, isFloating);
+        heading?.classList.toggle(activeClass, Boolean(isFloating && showFloatingYears && containerVisible));
+      });
+    });
+  };
+
+  const hideYears = () => {
+    updateFloatingStates(false);
+  };
+
+  const revealYears = () => {
+    window.clearTimeout(hideTimer);
+    updateFloatingStates(true);
+    hideTimer = window.setTimeout(hideYears, revealDuration);
+  };
+
+  floatingYearContainers.forEach((container) => {
+    const sections = container.querySelectorAll(".publication-year-section, .course-year-section");
+    sections.forEach((section) => {
+      const heading = section.querySelector("h2.bibliography, .year");
+      heading?.classList.add("sticky-year");
+    });
+  });
+
+  window.addEventListener("scroll", revealYears, { passive: true });
+  window.addEventListener("resize", hideYears);
 });

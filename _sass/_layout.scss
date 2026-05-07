@@ -334,7 +334,9 @@ body.sticky-bottom-footer {
   line-height: 1;
   white-space: nowrap;
   box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.34),
     0 14px 30px rgba(39, 48, 74, 0.18),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.22),
     inset 0 1px 0 rgba(255, 255, 255, 0.35);
   animation: cv-button-water 9.5s ease-in-out infinite;
   transition:
@@ -386,7 +388,9 @@ body.sticky-bottom-footer {
     text-decoration: none;
     transform: translateY(-2px);
     box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.38),
       0 17px 34px rgba(39, 48, 74, 0.22),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.26),
       inset 0 1px 0 rgba(255, 255, 255, 0.42);
   }
 
@@ -607,10 +611,21 @@ html[data-theme="dark"] {
     }
 
     .about-hero__cv-button {
-      border-color: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.42);
       box-shadow:
+        0 0 0 1px rgba(255, 255, 255, 0.28),
         0 14px 30px rgba(0, 0, 0, 0.28),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.18),
         inset 0 1px 0 rgba(255, 255, 255, 0.28);
+
+      &:hover,
+      &:focus-visible {
+        box-shadow:
+          0 0 0 1px rgba(255, 255, 255, 0.34),
+          0 17px 34px rgba(0, 0, 0, 0.3),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.22),
+          inset 0 1px 0 rgba(255, 255, 255, 0.34);
+      }
     }
   }
 }

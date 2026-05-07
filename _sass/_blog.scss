@@ -5,12 +5,16 @@
 .header-bar {
   margin-bottom: 1.35rem;
   padding: 2.35rem;
-  border: 1px solid rgba(125, 110, 170, 0.2);
+  border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
   border-radius: 30px;
   background:
-    linear-gradient(115deg, rgba(255, 255, 255, 0.94), rgba(255, 255, 255, 0.66)),
-    linear-gradient(135deg, #e8f7ff 0%, #f2edff 34%, #fff4dc 67%, #e9fff4 100%);
-  box-shadow: 0 24px 70px rgba(39, 48, 74, 0.12);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.34)),
+    linear-gradient(135deg, rgba(150, 120, 182, 0.14), rgba(17, 133, 254, 0.07)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
+  box-shadow:
+    0 20px 54px rgba(39, 48, 74, 0.11),
+    inset 0 1px 0 rgba(255, 255, 255, 0.66);
+  -webkit-backdrop-filter: blur(18px) saturate(1.14);
+  backdrop-filter: blur(18px) saturate(1.14);
 
   h1 {
     margin-bottom: 0.55rem;
@@ -40,10 +44,8 @@
     z-index: -1;
     pointer-events: none;
     content: "";
-    background:
-      linear-gradient(90deg, rgba(255, 255, 255, 0.38) 1px, transparent 1px), linear-gradient(0deg, rgba(255, 255, 255, 0.34) 1px, transparent 1px);
-    background-size: 34px 34px;
-    opacity: 0.38;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.34), transparent 42%);
+    opacity: 0.5;
   }
 }
 
@@ -150,16 +152,22 @@
 .post-card,
 .featured-posts__card,
 .blog-empty-state {
-  border: 1px solid var(--global-divider-color);
+  border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
   border-radius: 20px;
   background:
-    linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.64)),
-    linear-gradient(135deg, rgba(150, 120, 182, 0.11), rgba(17, 133, 254, 0.05)), var(--global-bg-color);
-  box-shadow: 0 14px 38px rgba(39, 48, 74, 0.08);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.32)),
+    linear-gradient(135deg, rgba(150, 120, 182, 0.14), rgba(17, 133, 254, 0.07)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
+  box-shadow:
+    0 16px 42px rgba(39, 48, 74, 0.09),
+    inset 0 1px 0 rgba(255, 255, 255, 0.64);
+  -webkit-backdrop-filter: blur(18px) saturate(1.14);
+  backdrop-filter: blur(18px) saturate(1.14);
 }
 
 .post-card,
 .featured-posts__card {
+  position: relative;
+  overflow: hidden;
   transition:
     border-color 180ms ease,
     box-shadow 180ms ease,
@@ -167,7 +175,9 @@
 
   &:hover {
     border-color: color-mix(in srgb, var(--global-theme-color) 36%, var(--global-divider-color));
-    box-shadow: 0 20px 48px rgba(39, 48, 74, 0.13);
+    box-shadow:
+      0 22px 54px rgba(39, 48, 74, 0.14),
+      inset 0 1px 0 rgba(255, 255, 255, 0.72);
     transform: translateY(-2px);
   }
 }
@@ -441,26 +451,30 @@
 
 html[data-theme="dark"] {
   .header-bar {
-    border-color: rgba(190, 174, 230, 0.22);
+    border-color: color-mix(in srgb, #ffffff 13%, var(--global-divider-color));
     background:
-      linear-gradient(115deg, rgba(31, 36, 45, 0.95), rgba(31, 36, 45, 0.76)),
-      linear-gradient(135deg, #173746 0%, #392d56 36%, #4a3a20 68%, #173d34 100%);
-    box-shadow: 0 24px 70px rgba(0, 0, 0, 0.3);
+      linear-gradient(145deg, rgba(48, 54, 66, 0.68), rgba(23, 26, 34, 0.44)),
+      linear-gradient(135deg, rgba(150, 120, 182, 0.15), rgba(17, 133, 254, 0.08)), color-mix(in srgb, var(--global-card-bg-color) 76%, transparent);
+    box-shadow:
+      0 18px 45px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
   }
 
   .blog-hero::before {
-    background:
-      linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px), linear-gradient(0deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
-    opacity: 0.45;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 44%);
+    opacity: 0.58;
   }
 
   .post-card,
   .featured-posts__card,
   .blog-empty-state {
+    border-color: color-mix(in srgb, #ffffff 13%, var(--global-divider-color));
     background:
-      linear-gradient(135deg, rgba(35, 39, 47, 0.95), rgba(35, 39, 47, 0.76)),
-      linear-gradient(135deg, rgba(150, 120, 182, 0.12), rgba(17, 133, 254, 0.05)), var(--global-card-bg-color);
-    box-shadow: 0 16px 42px rgba(0, 0, 0, 0.2);
+      linear-gradient(145deg, rgba(48, 54, 66, 0.66), rgba(23, 26, 34, 0.42)),
+      linear-gradient(135deg, rgba(150, 120, 182, 0.15), rgba(17, 133, 254, 0.08)), color-mix(in srgb, var(--global-card-bg-color) 76%, transparent);
+    box-shadow:
+      0 18px 45px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
   }
 }
 

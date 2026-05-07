@@ -310,11 +310,10 @@ body.sticky-bottom-footer {
   margin-left: auto;
   min-height: 2.7rem;
   padding: 0.65rem 1.15rem;
-  border: 1px solid rgba(255, 255, 255, 0.74);
+  border: 1px solid #ffffffbd;
   border-radius: v.$button-pill-radius;
   background:
-    radial-gradient(circle at 18% 38%, rgba(255, 255, 255, 0.24), transparent 22%),
-    radial-gradient(circle at 78% 24%, rgba(66, 185, 131, 0.34), transparent 30%),
+    radial-gradient(circle at 18% 38%, #ffffff3d, transparent 22%), radial-gradient(circle at 78% 24%, rgba(66, 185, 131, 0.34), transparent 30%),
     radial-gradient(circle at 55% 92%, rgba(17, 133, 254, 0.38), transparent 36%),
     linear-gradient(135deg, rgba(150, 120, 182, 0.98) 0%, rgba(17, 133, 254, 0.92) 48%, rgba(66, 185, 131, 0.92) 100%), var(--global-theme-color);
   background-position:
@@ -334,9 +333,9 @@ body.sticky-bottom-footer {
   line-height: 1;
   white-space: nowrap;
   box-shadow:
-    0 0 0 1px rgba(255, 255, 255, 0.34),
+    0 0 0 1px #ffffff57,
     0 14px 30px rgba(39, 48, 74, 0.18),
-    inset 0 1px 0 rgba(255, 255, 255, 0.35);
+    inset 0 1px 0 #ffffff59;
   animation: cv-button-water 9.5s ease-in-out infinite;
   transition:
     box-shadow 180ms ease,
@@ -354,8 +353,7 @@ body.sticky-bottom-footer {
     inset: -65% -18%;
     border-radius: inherit;
     background:
-      radial-gradient(ellipse at 24% 48%, rgba(255, 255, 255, 0.26), transparent 24%),
-      radial-gradient(ellipse at 76% 46%, rgba(66, 185, 131, 0.24), transparent 32%),
+      radial-gradient(ellipse at 24% 48%, #ffffff42, transparent 24%), radial-gradient(ellipse at 76% 46%, rgba(66, 185, 131, 0.24), transparent 32%),
       radial-gradient(ellipse at 48% 74%, rgba(17, 133, 254, 0.25), transparent 34%);
     opacity: 0.44;
     filter: blur(14px);
@@ -368,8 +366,7 @@ body.sticky-bottom-footer {
     width: auto;
     border-radius: 999px;
     background:
-      linear-gradient(115deg, transparent 16%, rgba(255, 255, 255, 0.18) 38%, transparent 58%),
-      radial-gradient(ellipse at 40% 12%, rgba(255, 255, 255, 0.2), transparent 42%);
+      linear-gradient(115deg, transparent 16%, #ffffff2e 38%, transparent 58%), radial-gradient(ellipse at 40% 12%, #ffffff33, transparent 42%);
     opacity: 0.48;
     transform: translate3d(-18%, 0, 0) skewX(-12deg);
     animation: cv-button-surface-ripple 10.5s ease-in-out infinite;
@@ -387,9 +384,9 @@ body.sticky-bottom-footer {
     text-decoration: none;
     transform: translateY(-2px);
     box-shadow:
-      0 0 0 1px rgba(255, 255, 255, 0.38),
+      0 0 0 1px #ffffff61,
       0 17px 34px rgba(39, 48, 74, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      inset 0 1px 0 #ffffff6b;
   }
 
   &:hover::before,
@@ -609,18 +606,18 @@ html[data-theme="dark"] {
     }
 
     .about-hero__cv-button {
-      border-color: rgba(255, 255, 255, 0.42);
+      border-color: #ffffff6b;
       box-shadow:
-        0 0 0 1px rgba(255, 255, 255, 0.28),
+        0 0 0 1px #ffffff47,
         0 14px 30px rgba(0, 0, 0, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.28);
+        inset 0 1px 0 #ffffff47;
 
       &:hover,
       &:focus-visible {
         box-shadow:
-          0 0 0 1px rgba(255, 255, 255, 0.34),
+          0 0 0 1px #ffffff57,
           0 17px 34px rgba(0, 0, 0, 0.3),
-          inset 0 1px 0 rgba(255, 255, 255, 0.34);
+          inset 0 1px 0 #ffffff57;
       }
     }
   }
@@ -1239,8 +1236,10 @@ html[data-theme="dark"] {
       0% 50%,
       0 0;
     box-shadow:
+      0 0 0 1px #ffffff57,
       0 14px 30px rgba(39, 48, 74, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      0 0 24px rgba(150, 120, 182, 0.18),
+      inset 0 1px 0 #ffffff59;
   }
 
   34% {
@@ -1251,8 +1250,10 @@ html[data-theme="dark"] {
       58% 44%,
       0 0;
     box-shadow:
+      0 0 0 1px #ffffff61,
       0 17px 36px rgba(17, 133, 254, 0.22),
-      inset 0 1px 0 rgba(255, 255, 255, 0.46);
+      0 0 30px rgba(17, 133, 254, 0.22),
+      inset 0 1px 0 #ffffff75;
   }
 
   68% {
@@ -1263,8 +1264,10 @@ html[data-theme="dark"] {
       100% 62%,
       0 0;
     box-shadow:
+      0 0 0 1px #ffffff5c,
       0 18px 40px rgba(66, 185, 131, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.42);
+      0 0 28px rgba(66, 185, 131, 0.18),
+      inset 0 1px 0 #ffffff6b;
   }
 
   100% {
@@ -1275,8 +1278,10 @@ html[data-theme="dark"] {
       0% 50%,
       0 0;
     box-shadow:
+      0 0 0 1px #ffffff57,
       0 14px 30px rgba(39, 48, 74, 0.18),
-      inset 0 1px 0 rgba(255, 255, 255, 0.35);
+      0 0 24px rgba(150, 120, 182, 0.18),
+      inset 0 1px 0 #ffffff59;
   }
 }
 

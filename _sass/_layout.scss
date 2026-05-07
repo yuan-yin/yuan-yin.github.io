@@ -305,6 +305,8 @@ body.sticky-bottom-footer {
   --cv-highlight-color: rgba(255, 255, 255, 0.35);
   --cv-hover-ring-color: rgba(255, 255, 255, 0.38);
   --cv-hover-highlight-color: rgba(255, 255, 255, 0.42);
+  --cv-glow-filter: drop-shadow(0 0 18px rgba(150, 120, 182, 0.24)) drop-shadow(0 0 10px rgba(17, 133, 254, 0.16));
+  --cv-hover-glow-filter: drop-shadow(0 0 22px rgba(17, 133, 254, 0.3)) drop-shadow(0 0 12px rgba(66, 185, 131, 0.18));
   --cv-water-light: rgba(255, 255, 255, 0.24);
   --cv-current-light: rgba(255, 255, 255, 0.26);
   --cv-sheen-light: rgba(255, 255, 255, 0.18);
@@ -349,8 +351,10 @@ body.sticky-bottom-footer {
     0 0 26px rgba(150, 120, 182, 0.2),
     inset 0 1px 0 var(--cv-highlight-color);
   animation: cv-button-water 9.5s ease-in-out infinite;
+  filter: var(--cv-glow-filter);
   transition:
     box-shadow 180ms ease,
+    filter 180ms ease,
     transform 180ms ease;
 
   &::before,
@@ -397,6 +401,7 @@ body.sticky-bottom-footer {
     animation-play-state: paused;
     text-decoration: none;
     transform: translateY(-2px);
+    filter: var(--cv-hover-glow-filter);
     box-shadow:
       0 0 0 1px var(--cv-hover-ring-color),
       0 17px 34px rgba(39, 48, 74, 0.22),
@@ -626,6 +631,8 @@ html[data-theme="dark"] {
       --cv-highlight-color: rgba(255, 255, 255, 0.28);
       --cv-hover-ring-color: rgba(255, 255, 255, 0.34);
       --cv-hover-highlight-color: rgba(255, 255, 255, 0.34);
+      --cv-glow-filter: drop-shadow(0 0 18px rgba(118, 158, 255, 0.28)) drop-shadow(0 0 10px rgba(66, 185, 131, 0.14));
+      --cv-hover-glow-filter: drop-shadow(0 0 24px rgba(118, 158, 255, 0.34)) drop-shadow(0 0 13px rgba(66, 185, 131, 0.18));
 
       box-shadow:
         0 0 0 1px var(--cv-ring-color),

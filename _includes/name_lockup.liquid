@@ -1,0 +1,37 @@
+{% assign name_variant = include.variant | default: 'inline' %}
+{% assign family_initial = site.last_name | slice: 0 %}
+{% assign family_rest = site.last_name | slice: 1, 99 %}
+{% assign chinese_family = site.last_name_alt | strip %}
+{% assign chinese_given = site.first_name_alt | strip %}
+{% capture latin_name %}
+  {%- if site.first_name -%}
+    <span class="name-lockup__given">{{ site.first_name }}</span>
+  {%- endif -%}
+  {%- if site.middle_name -%}
+    <span class="name-lockup__middle">{{ site.middle_name }}</span>
+  {%- endif -%}
+  {%- if site.last_name -%}
+    <span class="name-lockup__family">
+      <span class="name-lockup__family-initial">{{ family_initial }}</span><span class="name-lockup__family-rest">{{ family_rest | upcase }}</span>
+    </span>
+  {%- endif -%}
+{% endcapture %}
+{% capture chinese_name -%}
+  {%- if chinese_family != blank -%}
+    <span class="name-lockup__hanzi-family">{{ chinese_family }}</span>
+  {%- endif -%}
+  {%- if chinese_given != blank -%}
+    <span class="name-lockup__hanzi-given">{{ chinese_given }}</span>
+  {%- endif -%}
+{%- endcapture %}
+{% assign show_chinese = true %}
+{% if include.show_chinese == false or include.show_chinese == 'false' %}
+  {% assign show_chinese = false %}
+{% endif %}
+
+<span class="name-lockup name-lockup--{{ name_variant }}">
+  <span class="name-lockup__latin" lang="en">{{ latin_name }}</span>
+  {% if show_chinese and chinese_name != blank %}
+    <span class="name-lockup__hanzi" lang="zh-Hans">{{ chinese_name }}</span>
+  {% endif %}
+</span>

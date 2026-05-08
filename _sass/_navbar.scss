@@ -92,7 +92,14 @@
   }
 
   .navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.15rem;
+    padding-top: 0;
+    padding-bottom: 0;
     color: var(--global-text-color);
+    font-size: 1.08rem;
+    line-height: 1;
   }
 
   .navbar-nav .nav-item .nav-link {

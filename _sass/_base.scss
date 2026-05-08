@@ -4,6 +4,32 @@
 
 // Typography
 
+:root {
+  --global-font-family:
+    "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+html {
+  font-family: var(--global-font-family);
+  font-optical-sizing: auto;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+*,
+*::before,
+*::after {
+  font-optical-sizing: auto;
+}
+
+body {
+  font-family: var(--global-font-family);
+  font-optical-sizing: auto;
+  font-weight: 430;
+  line-height: 1.62;
+}
+
 p,
 h1,
 h2,
@@ -17,7 +43,117 @@ li,
 span,
 strong {
   color: var(--global-text-color);
-  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  font-family: var(--global-font-family);
+  font-optical-sizing: auto;
+}
+
+p,
+li,
+td,
+th {
+  line-height: 1.62;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: 720;
+
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.name-lockup {
+  display: inline-flex;
+  gap: 0.22em 0.42em;
+  align-items: center;
+  color: var(--global-text-color);
+  vertical-align: baseline;
+  white-space: nowrap;
+}
+
+.name-lockup__latin {
+  display: inline-flex;
+  gap: 0.16em;
+  align-items: baseline;
+  line-height: 0.96;
+}
+
+.name-lockup__given {
+  color: var(--global-text-color);
+  display: inline-block;
+  font-weight: 920;
+}
+
+.name-lockup__middle,
+.name-lockup__family {
+  font-weight: 560;
+}
+
+.name-lockup__family {
+  display: inline-flex;
+  gap: 0.015em;
+  align-items: baseline;
+}
+
+.name-lockup__family-initial {
+  font-size: 1em;
+  font-weight: 560;
+}
+
+.name-lockup__family-rest {
+  font-size: 0.72em;
+  font-weight: 620;
+}
+
+.name-lockup__hanzi {
+  display: inline-flex;
+  gap: 0.08em;
+  align-items: center;
+  padding: 0.16em 0.42em 0.18em;
+  border: 1px solid color-mix(in srgb, var(--global-text-color) 18%, var(--global-divider-color));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--global-text-color) 4%, transparent);
+  color: var(--global-text-color);
+  font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Heiti SC", sans-serif;
+  font-size: 0.44em;
+
+  line-height: 1;
+}
+
+.name-lockup__hanzi-family {
+  font-weight: 500;
+}
+
+.name-lockup__hanzi-given {
+  font-weight: 820;
+}
+
+.name-lockup--nav {
+  gap: 0.2em 0.34em;
+}
+
+.name-lockup--nav .name-lockup__given {
+  color: var(--global-text-color);
+  font-weight: 920;
+}
+
+.name-lockup--nav .name-lockup__middle,
+.name-lockup--nav .name-lockup__family {
+  font-weight: 560;
+}
+
+.name-lockup--nav .name-lockup__family-rest {
+  font-size: 0.74em;
+  font-weight: 620;
+}
+
+.name-lockup--nav .name-lockup__hanzi {
+  padding: 0.15em 0.4em 0.17em;
+  font-size: 0.64em;
 }
 
 hr {
@@ -204,7 +340,6 @@ ul.task-list input[type="checkbox"] {
       background-color: var(--global-theme-color);
     }
   }
-
 }
 
 // Citation
@@ -273,7 +408,8 @@ ul.task-list input[type="checkbox"] {
   background-color: var(--global-bg-color);
   opacity: 0.95;
 
-  .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+  .nav-pills .nav-link.active,
+  .nav-pills .show > .nav-link {
     background-color: var(--global-pill-bg-color);
   }
 }
@@ -339,7 +475,7 @@ ul.task-list input[type="checkbox"] {
     font-size: 1.7rem;
 
     a {
-            img {
+      img {
         width: 1.7rem;
         height: 1.7rem;
         margin-bottom: 0.5rem;
@@ -740,7 +876,6 @@ footer.sticky-bottom {
 }
 
 .talks {
-
   ol {
     list-style: none;
     padding: 0;
@@ -768,7 +903,6 @@ footer.sticky-bottom {
     }
   }
 }
-
 
 // Publications
 

@@ -263,7 +263,7 @@ body.sticky-bottom-footer {
     display: inline-block;
     font-optical-sizing: auto;
     font-variation-settings: normal;
-    font-weight: 560;
+    font-weight: 360;
   }
 
   .desc {
@@ -490,36 +490,41 @@ body.sticky-bottom-footer {
 
   > .contact-icons a {
     --social-brand-color: var(--global-theme-color);
+    --social-hover-icon-color: #ffffff;
+    --social-surface: rgba(255, 255, 255, 0.72);
+    --social-icon-color: #111111;
+    --social-border-color: color-mix(in srgb, var(--social-brand-color) 62%, transparent);
+    --social-shadow: 0 8px 22px rgba(39, 48, 74, 0.08);
+    --social-hover-shadow: 0 12px 26px color-mix(in srgb, var(--social-brand-color) 30%, transparent);
 
     display: inline-flex;
     align-items: center;
     justify-content: center;
     width: 2.7rem;
     height: 2.7rem;
-    border: 1px solid color-mix(in srgb, var(--social-brand-color) 62%, transparent);
+    border: 1px solid var(--social-border-color);
     border-radius: 999px;
-    background: rgba(255, 255, 255, 0.72);
-    color: #111111;
-    box-shadow: 0 8px 22px rgba(39, 48, 74, 0.08);
+    background: var(--social-surface);
+    color: var(--social-icon-color);
+    box-shadow: var(--social-shadow);
     transition:
       background 180ms ease,
       border-color 180ms ease,
       box-shadow 180ms ease,
-      color 180ms ease,
       transform 180ms ease;
 
     &:hover,
     &:focus-visible {
       background: var(--social-brand-color);
       border-color: var(--social-brand-color);
-      color: #ffffff;
+      color: var(--social-hover-icon-color);
       text-decoration: none;
       transform: translateY(-2px);
-      box-shadow: 0 12px 26px color-mix(in srgb, var(--social-brand-color) 30%, transparent);
+      box-shadow: var(--social-hover-shadow);
 
       > i,
       > i::before {
-        color: #ffffff;
+        color: var(--social-hover-icon-color);
       }
     }
 
@@ -621,14 +626,22 @@ html[data-theme="dark"] {
     border-top-color: rgba(190, 174, 230, 0.2);
 
     > .contact-icons a {
-      background: rgba(255, 255, 255, 0.82);
-      color: #111111;
+      --social-surface: color-mix(in srgb, #ffffff 8%, transparent);
+      --social-icon-color: var(--global-text-color);
+      --social-border-color: color-mix(in srgb, #ffffff 16%, var(--social-brand-color));
+      --social-shadow: 0 10px 24px rgba(0, 0, 0, 0.22), inset 0 1px 0 color-mix(in srgb, #ffffff 10%, transparent);
+      --social-hover-shadow: 0 12px 28px color-mix(in srgb, var(--social-brand-color) 24%, rgba(0, 0, 0, 0.2));
 
       &:hover,
       &:focus-visible {
         background: var(--social-brand-color);
-        color: #ffffff;
       }
+    }
+
+    > .contact-icons a[title="GitHub"],
+    > .contact-icons a[title="X"] {
+      --social-brand-color: #f3f5f8;
+      --social-hover-icon-color: #111111;
     }
 
     .about-hero__cv-button {

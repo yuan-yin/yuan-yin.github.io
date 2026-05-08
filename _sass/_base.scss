@@ -90,7 +90,7 @@ h6 {
 
 .name-lockup__middle,
 .name-lockup__family {
-  font-weight: 560;
+  font-weight: 360;
 }
 
 .name-lockup__family {
@@ -101,17 +101,17 @@ h6 {
 
 .name-lockup__family-initial {
   font-size: 1em;
-  font-weight: 560;
+  font-weight: 360;
 }
 
 .name-lockup__family-rest {
   font-size: 0.72em;
-  font-weight: 620;
+  font-weight: 420;
 }
 
 .name-lockup__hanzi {
   display: inline-flex;
-  gap: 0.08em;
+  gap: 0;
   align-items: center;
   padding: 0.16em 0.42em 0.18em;
   border: 1px solid color-mix(in srgb, var(--global-text-color) 18%, var(--global-divider-color));
@@ -143,12 +143,12 @@ h6 {
 
 .name-lockup--nav .name-lockup__middle,
 .name-lockup--nav .name-lockup__family {
-  font-weight: 560;
+  font-weight: 360;
 }
 
 .name-lockup--nav .name-lockup__family-rest {
   font-size: 0.74em;
-  font-weight: 620;
+  font-weight: 420;
 }
 
 .name-lockup--nav .name-lockup__hanzi {

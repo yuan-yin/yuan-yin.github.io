@@ -970,13 +970,15 @@ html[data-theme="dark"] {
         inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
     }
 
-    .links a.btn {
+    .links a.btn:not(:hover):not(:focus-visible) {
       background: color-mix(in srgb, var(--talk-accent) 12%, transparent);
+    }
 
-      &:hover,
-      &:focus-visible {
-        color: #ffffff;
-      }
+    .links a.btn:hover,
+    .links a.btn:focus-visible {
+      color: #ffffff;
+      background: var(--talk-accent);
+      border-color: var(--talk-accent);
     }
   }
 }

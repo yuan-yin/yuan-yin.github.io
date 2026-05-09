@@ -502,15 +502,18 @@ html[data-theme="dark"] {
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
     }
 
-    .links a.btn {
+    .links a.btn:not(:hover):not(:focus-visible) {
       background: color-mix(in srgb, var(--pub-accent) 12%, transparent);
-
-      &:hover {
-        color: #ffffff;
-      }
     }
 
-    .links a.award.btn {
+    .links a.btn:hover,
+    .links a.btn:focus-visible {
+      color: #ffffff;
+      background: var(--pub-accent);
+      border-color: var(--pub-accent);
+    }
+
+    .links a.award.btn:not(:hover):not(:focus-visible) {
       color: #f8d56b;
       border-color: color-mix(in srgb, var(--pub-prize-color) 62%, var(--global-divider-color));
       background:
@@ -520,11 +523,15 @@ html[data-theme="dark"] {
           color-mix(in srgb, var(--pub-prize-color) 9%, transparent)
         ),
         color-mix(in srgb, var(--pub-prize-color) 12%, transparent);
+    }
 
-      &:hover,
-      &:focus-visible {
-        color: #ffffff;
-      }
+    .links a.award.btn:hover,
+    .links a.award.btn:focus-visible {
+      color: #ffffff;
+      border-color: var(--pub-prize-color);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--pub-prize-color) 92%, #ffffff), color-mix(in srgb, var(--pub-prize-color) 72%, #4d3600)),
+        var(--pub-prize-color);
     }
   }
 }

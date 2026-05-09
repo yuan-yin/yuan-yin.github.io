@@ -13,26 +13,45 @@ table.table-cv {
 }
 
 a.btncv {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
   color: var(--global-text-color) !important;
-  border: 1px solid var(--global-text-color) !important;
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color)) !important;
   border-radius: v.$button-pill-radius;
   padding-left: 1rem;
   padding-right: 1rem;
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
   text-decoration: none;
-  font-weight: 400;
+  font-weight: 700;
   font-size: 0.7rem;
+  line-height: 1;
   text-align: center;
   vertical-align: middle;
   text-transform: uppercase;
   white-space: nowrap;
+  box-shadow: none;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
 }
 
-a.btncv:hover {
-  color: var(--global-theme-color) !important;
+a.btncv:hover,
+a.btncv:focus-visible {
+  color: #ffffff !important;
+  background: var(--global-theme-color);
   border-color: var(--global-theme-color) !important;
   text-decoration: none !important;
+  transform: translateY(-1px);
+}
+
+html[data-theme="dark"] a.btncv:not(:hover):not(:focus-visible) {
+  background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
 }
 
 /*****************************

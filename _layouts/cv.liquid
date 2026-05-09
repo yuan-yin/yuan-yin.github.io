@@ -656,31 +656,39 @@ layout: default
       display: inline-flex;
       gap: 0;
       align-items: center;
-      border: 1px solid transparent;
+      border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
       border-radius: 999px;
-      background: transparent;
+      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
       overflow: hidden;
       transition:
-        background-color 180ms ease,
-        border-color 180ms ease,
-        box-shadow 180ms ease,
-        transform 180ms ease;
+        background 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
     }
 
-    .lang-split:hover {
-      border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
-      background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
+    .lang-split:not(.active):hover,
+    .lang-split:not(.active):focus-within {
+      border-color: var(--global-theme-color);
+      background: var(--global-theme-color);
       transform: translateY(-1px);
     }
 
     .lang-split.active {
-      border-color: color-mix(in srgb, var(--global-theme-color) 42%, transparent);
+      border-color: color-mix(in srgb, var(--global-theme-color) 76%, var(--global-divider-color));
       background:
-        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 18%, transparent), transparent 74%),
-        color-mix(in srgb, var(--global-theme-color) 12%, var(--global-bg-color));
-      box-shadow:
-        0 9px 22px color-mix(in srgb, var(--global-theme-color) 16%, transparent),
-        inset 0 1px 0 color-mix(in srgb, #ffffff 52%, transparent);
+        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 16%, transparent), transparent 78%),
+        color-mix(in srgb, var(--global-theme-color) 13%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--global-theme-color) 18%, transparent);
+    }
+
+    .lang-split.active:hover,
+    .lang-split.active:focus-within {
+      border-color: var(--global-theme-color);
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 16%, transparent), transparent 78%),
+        color-mix(in srgb, var(--global-theme-color) 13%, transparent);
+      transform: translateY(-1px);
     }
 
     /* Primary (switch language) */
@@ -698,17 +706,25 @@ layout: default
       cursor: pointer;
       user-select: none;
       transition:
-        color 180ms ease,
-        background-color 180ms ease;
+        color 160ms ease,
+        background 160ms ease;
     }
 
-    .lang-primary:hover {
-      color: var(--global-hover-color);
+    .lang-split:not(.active):hover .lang-primary,
+    .lang-split:not(.active):hover .lang-download,
+    .lang-split:not(.active):focus-within .lang-primary,
+    .lang-split:not(.active):focus-within .lang-download {
+      color: #ffffff;
     }
 
     .lang-primary.active {
       color: var(--global-theme-color);
-      font-weight: 800;
+      font-weight: 820;
+    }
+
+    .lang-split.active:hover .lang-primary,
+    .lang-split.active:focus-within .lang-primary {
+      color: var(--global-theme-color);
     }
 
     .lang-primary:hover,
@@ -748,8 +764,8 @@ layout: default
         border-width 200ms ease,
         opacity 180ms ease,
         transform 180ms ease,
-        background-color 150ms ease,
-        color 150ms ease;
+        background 160ms ease,
+        color 160ms ease;
     }
 
     .lang-primary *,
@@ -759,8 +775,8 @@ layout: default
     }
 
     .lang-download:hover {
-      color: var(--global-theme-color);
-      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
+      color: #ffffff;
+      background: color-mix(in srgb, #ffffff 12%, transparent);
     }
 
     /* Expanded state (when group is .active) */
@@ -770,11 +786,20 @@ layout: default
       padding: 0;
       /* vertical padding restored */
       border-width: 1px;
-      border-color: color-mix(in srgb, var(--global-theme-color) 30%, transparent);
-      background: color-mix(in srgb, var(--global-bg-color) 86%, transparent);
+      border-color: color-mix(in srgb, var(--global-theme-color) 46%, transparent);
+      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
       opacity: 1;
       transform: translateX(0);
       margin-right: 0.38rem;
+    }
+
+    .lang-split.active:hover .lang-download,
+    .lang-split.active:focus-within .lang-download,
+    .lang-split.active .lang-download:hover,
+    .lang-split.active .lang-download:focus-visible {
+      border-color: var(--global-theme-color);
+      background: var(--global-theme-color);
+      color: #ffffff;
     }
 
     .pdf-link.overlay {
@@ -831,10 +856,10 @@ layout: default
       padding: 0.5rem 0.85rem;
       border: 1px solid color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
       border-radius: 999px;
-      background-color: color-mix(in srgb, var(--global-theme-color) 8%, var(--global-bg-color));
+      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
       color: var(--global-text-color);
       font-variant-numeric: tabular-nums;
-      box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 42%, transparent);
+      box-shadow: none;
     }
 
     .pager-status__separator {
@@ -853,17 +878,17 @@ layout: default
       font-weight: 600;
       line-height: 1;
       color: var(--global-text-color);
-      background: transparent;
-      border: 1px solid transparent;
+      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+      border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
       border-radius: 999px;
       cursor: pointer;
       user-select: none;
       transition:
-        background-color 180ms ease,
-        border-color 180ms ease,
-        color 180ms ease,
+        background 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
         opacity 180ms ease,
-        transform 180ms ease;
+        transform 160ms ease;
     }
 
     .pager-button,
@@ -871,10 +896,11 @@ layout: default
       transition-property: background-color, border-color, color, opacity, transform !important;
     }
 
-    .pager-button:hover {
-      border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
-      background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
-      color: var(--global-hover-color);
+    .pager-button:hover,
+    .pager-button:focus-visible {
+      border-color: var(--global-theme-color);
+      background: var(--global-theme-color);
+      color: #ffffff;
       transform: translateY(-1px);
     }
 
@@ -884,10 +910,32 @@ layout: default
       transform: none;
     }
 
+    html[data-theme='dark'] .lang-split:not(.active):not(:hover):not(:focus-within),
+    html[data-theme='dark'] .pager-button:not(:hover):not(:focus-visible),
+    html[data-theme='dark'] .pager-status__numbers {
+      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
+    }
+
     html[data-theme='dark'] .lang-split.active {
-      box-shadow:
-        0 9px 22px color-mix(in srgb, var(--global-theme-color) 20%, transparent),
-        inset 0 1px 0 color-mix(in srgb, #ffffff 14%, transparent);
+      border-color: color-mix(in srgb, var(--global-theme-color) 82%, var(--global-divider-color));
+      background:
+        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 22%, transparent), transparent 78%),
+        color-mix(in srgb, var(--global-theme-color) 17%, transparent);
+      box-shadow: inset 0 0 0 1px color-mix(in srgb, #ffffff 10%, transparent);
+    }
+
+    html[data-theme='dark'] .lang-split.active:not(:hover):not(:focus-within) .lang-download {
+      border-color: color-mix(in srgb, var(--global-theme-color) 60%, var(--global-divider-color));
+      background: color-mix(in srgb, #ffffff 8%, transparent);
+    }
+
+    html[data-theme='dark'] .lang-split.active:hover .lang-download,
+    html[data-theme='dark'] .lang-split.active:focus-within .lang-download,
+    html[data-theme='dark'] .lang-split.active .lang-download:hover,
+    html[data-theme='dark'] .lang-split.active .lang-download:focus-visible {
+      border-color: var(--global-theme-color);
+      background: var(--global-theme-color);
+      color: #ffffff;
     }
 
     .post {

@@ -183,6 +183,32 @@ html.transition .social.about-hero__social .contact-icons a i::before {
   border-radius: v.$button-pill-radius;
 }
 
+.btn-outline-primary {
+  color: var(--global-text-color) !important;
+  border-color: color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color)) !important;
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent) !important;
+  box-shadow: none !important;
+  text-transform: none;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    color: #ffffff !important;
+    border-color: var(--global-theme-color) !important;
+    background: var(--global-theme-color) !important;
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+}
+
+html[data-theme="dark"] .btn-outline-primary:not(:hover):not(:focus-visible) {
+  background: color-mix(in srgb, var(--global-theme-color) 12%, transparent) !important;
+}
+
 .btn-group.dropdown {
   .btn {
     box-shadow: none;
@@ -190,23 +216,37 @@ html.transition .social.about-hero__social .contact-icons a i::before {
   }
 
   .btn-secondary.dropdown-toggle {
-    border: 1px solid var(--global-divider-color);
+    border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
     border-radius: v.$button-pill-radius;
+    box-shadow: none;
+    transition:
+      background 160ms ease,
+      border-color 160ms ease,
+      color 160ms ease,
+      transform 160ms ease;
 
     .page-size {
       color: inherit;
     }
 
     &:not(.active) {
-      background-color: var(--global-bg-color) !important;
+      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent) !important;
       color: var(--global-text-color);
     }
 
-    &:hover {
-      background-color: var(--global-hover-color) !important;
-      color: var(--global-hover-text-color) !important;
+    &:hover,
+    &:focus-visible {
+      border-color: var(--global-theme-color);
+      background: var(--global-theme-color) !important;
+      color: #ffffff !important;
+      text-decoration: none;
+      transform: translateY(-1px);
     }
   }
+}
+
+html[data-theme="dark"] .btn-group.dropdown .btn-secondary.dropdown-toggle:not(.active):not(:hover):not(:focus-visible) {
+  background: color-mix(in srgb, var(--global-theme-color) 12%, transparent) !important;
 }
 
 // Table of Contents
@@ -351,8 +391,8 @@ nav[data-toggle="toc"] {
 }
 
 .newsletter-form-button {
-  background: var(--global-theme-color);
-  color: var(--global-bg-color);
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+  color: var(--global-text-color);
   display: flex;
   width: min-content;
   max-width: 200px;
@@ -361,19 +401,32 @@ nav[data-toggle="toc"] {
   align-items: center;
   flex-direction: row;
   padding: 9px 17px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px;
+  box-shadow: none;
   border-radius: v.$button-pill-radius;
   text-align: center;
   font-style: normal;
-  font-weight: 500;
-  line-height: 20px;
-  border: none;
+  font-weight: 700;
+  line-height: 1;
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
   cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--global-theme-color);
+    background: var(--global-theme-color);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
 }
 
 .newsletter-loading-button {
-  background: var(--global-theme-color);
-  color: var(--global-bg-color);
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+  color: var(--global-text-color);
   display: none;
   width: min-content;
   max-width: 300px;
@@ -382,15 +435,28 @@ nav[data-toggle="toc"] {
   align-items: center;
   flex-direction: row;
   padding: 9px 17px;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px;
+  box-shadow: none;
   border-radius: v.$button-pill-radius;
   text-align: center;
   font-style: normal;
-  font-weight: 500;
-  line-height: 20px;
-  border: none;
+  font-weight: 700;
+  line-height: 1;
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
   cursor: pointer;
   margin-right: 20px;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--global-theme-color);
+    background: var(--global-theme-color);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
 }
 
 .newsletter-success {
@@ -408,15 +474,38 @@ nav[data-toggle="toc"] {
 }
 
 .newsletter-back-button {
-  color: var(--global-theme-color);
+  color: var(--global-text-color);
   margin: 10px auto;
   padding: 0.35rem 0.9rem;
   text-align: center;
   display: none;
-  background: transparent;
-  border: 1px solid transparent;
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
   border-radius: v.$button-pill-radius;
   cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--global-theme-color);
+    background: var(--global-theme-color);
+    color: #ffffff;
+    transform: translateY(-1px);
+  }
+}
+
+html[data-theme="dark"] {
+  .newsletter-form-button,
+  .newsletter-loading-button,
+  .newsletter-back-button {
+    &:not(:hover):not(:focus-visible) {
+      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
+    }
+  }
 }
 
 @media (max-width: 575px) {

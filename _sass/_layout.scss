@@ -181,24 +181,24 @@ body.sticky-bottom-footer {
   min-height: 2.3rem;
   margin-top: 0.6rem;
   padding: 0.48rem 0.9rem;
-  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, transparent);
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
   border-radius: 999px;
-  background:
-    linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 18%, transparent), transparent 74%),
-    color-mix(in srgb, var(--global-theme-color) 12%, var(--global-bg-color));
-  color: var(--global-theme-color);
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+  color: var(--global-text-color);
   line-height: 1;
   text-decoration: none;
-  box-shadow: 0 9px 22px color-mix(in srgb, var(--global-theme-color) 16%, transparent);
+  box-shadow: none;
   transition:
+    background 160ms ease,
     border-color 180ms ease,
-    box-shadow 180ms ease,
+    color 160ms ease,
     transform 180ms ease;
 
   &:hover,
   &:focus-visible {
-    border-color: color-mix(in srgb, var(--global-theme-color) 54%, transparent);
-    color: var(--global-theme-color);
+    border-color: var(--global-theme-color);
+    background: var(--global-theme-color);
+    color: #ffffff;
     text-decoration: none;
     transform: translateY(-1px);
   }
@@ -407,7 +407,7 @@ body.sticky-bottom-footer {
     color: #ffffff !important;
     animation-play-state: paused;
     text-decoration: none;
-    transform: translateY(-2px);
+    transform: translateY(-1px);
     filter: var(--cv-hover-glow-filter);
     box-shadow:
       0 0 0 1px var(--cv-hover-ring-color),
@@ -592,6 +592,13 @@ body.sticky-bottom-footer {
 }
 
 html[data-theme="dark"] {
+  .not-found-card__button,
+  .home-news-section__archive {
+    &:not(:hover):not(:focus-visible) {
+      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
+    }
+  }
+
   .page-hero {
     border-color: color-mix(in srgb, #ffffff 13%, var(--global-divider-color));
     background:
@@ -797,20 +804,24 @@ html[data-theme="dark"] {
   justify-content: center;
   min-height: 2.25rem;
   padding: 0.35rem 0.85rem;
-  border: 1px solid var(--global-divider-color);
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
   border-radius: 999px;
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
   color: var(--global-text-color);
   font-size: 0.9rem;
   font-weight: 600;
   text-decoration: none;
   transition:
-    border-color 180ms ease,
-    color 180ms ease,
-    transform 180ms ease;
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
 
-  &:hover {
+  &:hover,
+  &:focus-visible {
     border-color: var(--global-theme-color);
-    color: var(--global-theme-color);
+    background: var(--global-theme-color);
+    color: #ffffff;
     text-decoration: none;
     transform: translateY(-1px);
   }

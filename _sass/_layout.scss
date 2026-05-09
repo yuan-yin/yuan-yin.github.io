@@ -745,10 +745,22 @@ html[data-theme="dark"] {
     gap: 1.5rem;
   }
 
+  .about-hero__copy {
+    display: contents;
+  }
+
+  .about-hero .post-header {
+    order: 1;
+  }
+
   .profile.about-hero__profile {
     justify-self: center;
     max-width: 220px;
-    order: -1;
+    order: 2;
+  }
+
+  .about-hero__intro {
+    order: 3;
   }
 
   .social.about-hero__social {

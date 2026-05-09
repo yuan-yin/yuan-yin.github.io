@@ -891,17 +891,32 @@ layout: default
         transform 160ms ease;
     }
 
+    .pager-button span,
+    .pager-button i,
+    .pager-button i::before {
+      color: currentColor;
+    }
+
     .pager-button,
     .pager-button * {
       transition-property: background-color, border-color, color, opacity, transform !important;
     }
 
-    .pager-button:hover,
-    .pager-button:focus-visible {
+    .pager-button:not(:disabled):hover,
+    .pager-button:not(:disabled):focus-visible {
       border-color: var(--global-theme-color);
       background: var(--global-theme-color);
       color: #ffffff;
       transform: translateY(-1px);
+    }
+
+    .pager-button:not(:disabled):hover span,
+    .pager-button:not(:disabled):hover i,
+    .pager-button:not(:disabled):hover i::before,
+    .pager-button:not(:disabled):focus-visible span,
+    .pager-button:not(:disabled):focus-visible i,
+    .pager-button:not(:disabled):focus-visible i::before {
+      color: #ffffff;
     }
 
     .pager-button:disabled {

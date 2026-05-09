@@ -7,10 +7,14 @@
 #  username:  AlbertEinstein # your username
 # acm_id: # your dl.acm.org/profile/id
 # blogger_url: # your blogger URL
-bluesky_url: https://bsky.app/profile/yuanyinnn.bsky.social  # your bluesky URL
+email:
+  user_codes: [121, 117, 97, 110, 46, 121, 105, 110]
+  domain_codes: [118, 97, 108, 101, 111, 46, 99, 111, 109]
+bluesky_url: https://bsky.app/profile/yuanyinnn.bsky.social # your bluesky URL
+linkedin_username: yuan-yin-nn # your LinkedIn user name
+x_username: yuanyinnn # your X handle
 # dblp_url: # your DBLP profile url
 # discord_id: # your discord id (18-digit unique numerical identifier)
-# email: you@example.com # your email address
 # facebook_id: # your facebook id
 # flickr_id: # your flickr id
 github_username: yuan-yin # your GitHub user name
@@ -24,7 +28,6 @@ github_username: yuan-yin # your GitHub user name
 # lastfm_id: # your lastfm id
 # lattes_id: # your ID on Lattes (Brazilian Lattes CV)
 # leetcode_id: # your LeetCode id
-linkedin_username: yuan-yin-nn # your LinkedIn user name
 # mastodon_username: # your mastodon instance+username in the format instance.tld/@username
 # medium_username: # your Medium username
 orcid_id: 0000-0003-1515-0696 # your ORCID ID
@@ -47,7 +50,6 @@ scholar_userid: ynep174AAAAJ # your Google Scholar ID
 # wikidata_id: # your wikidata id
 # wikipedia_id: # your wikipedia id (Case sensitive)
 # work_url: # work page URL
-x_username: yuanyinnn # your X handle
 # youtube_id: # your youtube channel id (youtube.com/@<youtube_id>)
 # zotero_username: # your zotero username
 # custom_social: # can be any name here other than the ones already defined above

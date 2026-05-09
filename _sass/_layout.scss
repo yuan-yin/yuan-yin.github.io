@@ -488,6 +488,27 @@ body.sticky-bottom-footer {
     font-size: 1rem;
   }
 
+  .social-icon-group {
+    display: inline-flex;
+    position: relative;
+    gap: 0.55rem;
+    align-items: center;
+  }
+
+  .social-icon-group + .social-icon-group {
+    padding-left: 0.95rem;
+  }
+
+  .social-icon-group + .social-icon-group::before {
+    content: "";
+    position: absolute;
+    left: 0.18rem;
+    width: 1px;
+    height: 1.65rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--global-text-color) 18%, transparent);
+  }
+
   > .contact-icons a {
     --social-brand-color: var(--global-theme-color);
     --social-hover-icon-color: #ffffff;
@@ -624,6 +645,10 @@ html[data-theme="dark"] {
 
   .social.about-hero__social {
     border-top-color: rgba(190, 174, 230, 0.2);
+
+    .social-icon-group + .social-icon-group::before {
+      background: color-mix(in srgb, #ffffff 22%, transparent);
+    }
 
     > .contact-icons a {
       --social-surface: color-mix(in srgb, #ffffff 8%, transparent);

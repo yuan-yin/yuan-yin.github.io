@@ -1,4 +1,27 @@
+{% assign social_media_keys = 'bluesky_url,blogger_url,discord_id,facebook_id,flickr_id,instagram_id,linkedin_username,mastodon_username,medium_username,pinterest_id,quora_username,spotify_id,strava_userid,telegram_username,unsplash_id,wechat_qr,whatsapp_number,x_username,youtube_id'
+  | split: ','
+%}
+{% assign active_social_group = '' %}
+
 {% for social in site.data.socials %}
+  {% assign social_group = 'social-icon-group--other' %}
+  {% assign social_group_label = 'Other links' %}
+  {% if social[0] == 'email' %}
+    {% assign social_group = 'social-icon-group--email' %}
+    {% assign social_group_label = 'Email' %}
+  {% elsif social_media_keys contains social[0] %}
+    {% assign social_group = 'social-icon-group--social' %}
+    {% assign social_group_label = 'Social media' %}
+  {% endif %}
+
+  {% if social_group != active_social_group %}
+    {% unless forloop.first %}
+      </span>
+    {% endunless %}
+    <span class="social-icon-group {{ social_group }}" role="group" aria-label="{{ social_group_label }}">
+      {% assign active_social_group = social_group %}
+  {% endif %}
+
   {% case social[0] %}
     {% when 'academia_edu' %}
       <a href="https://{{ social[1].organization }}.academia.edu/{{ social[1].username }}" title="Academia.edu">
@@ -25,9 +48,21 @@
         <i class="fa-brands fa-discord"></i>
       </a>
     {% when 'email' %}
-      <a href="mailto:{{ social[1] | encode_email }}" title="email">
+      <a
+        href="#"
+        class="js-obfuscated-email"
+        title="email"
+        aria-label="email"
+        data-user-codes="{{ social[1].user_codes | join: ',' }}"
+        data-domain-codes="{{ social[1].domain_codes | join: ',' }}"
+      >
         <i class="fa-solid fa-envelope"></i>
       </a>
+      <script
+        defer
+        src="{{ '/assets/js/obfuscated-email.js' | relative_url | bust_file_cache }}"
+        type="text/javascript"
+      ></script>
     {% when 'facebook_id' %}
       <a href="https://facebook.com/{{ social[1] }}" title="Facebook">
         <i class="fa-brands fa-facebook"></i>
@@ -218,3 +253,7 @@
       </a>
   {% endcase %}
 {% endfor %}
+
+{% if active_social_group != '' %}
+  </span>
+{% endif %}

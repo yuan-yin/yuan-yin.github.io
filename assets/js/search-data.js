@@ -310,6 +310,13 @@ ninja.data = [{
           section: "Teachings",handler: () => {
               window.location.href = "/teachings/research-data-science-methodology-2021/";
             },},{
+        id: 'social-email',
+        title: 'email',
+        section: 'Socials',
+        handler: () => {
+          window.open("mailto:{"%75%73%65%72_%63%6F%64%65%73"=>[%31%32%31, %31%31%37, %39%37, %31%31%30, %34%36, %31%32%31, %31%30%35, %31%31%30], "%64%6F%6D%61%69%6E_%63%6F%64%65%73"=>[%31%31%38, %39%37, %31%30%38, %31%30%31, %31%31%31, %34%36, %39%39, %31%31%31, %31%30%39]}", "_blank");
+        },
+      },{
         id: 'social-bluesky',
         title: 'Bluesky',
         section: 'Socials',
@@ -317,18 +324,25 @@ ninja.data = [{
           window.open("https://bsky.app/profile/yuanyinnn.bsky.social", "_blank");
         },
       },{
-        id: 'social-github',
-        title: 'GitHub',
-        section: 'Socials',
-        handler: () => {
-          window.open("https://github.com/yuan-yin", "_blank");
-        },
-      },{
         id: 'social-linkedin',
         title: 'LinkedIn',
         section: 'Socials',
         handler: () => {
           window.open("https://www.linkedin.com/in/yuan-yin-nn", "_blank");
+        },
+      },{
+        id: 'social-x',
+        title: 'X',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://twitter.com/yuanyinnn", "_blank");
+        },
+      },{
+        id: 'social-github',
+        title: 'GitHub',
+        section: 'Socials',
+        handler: () => {
+          window.open("https://github.com/yuan-yin", "_blank");
         },
       },{
         id: 'social-orcid',
@@ -343,13 +357,6 @@ ninja.data = [{
         section: 'Socials',
         handler: () => {
           window.open("https://scholar.google.com/citations?user=ynep174AAAAJ", "_blank");
-        },
-      },{
-        id: 'social-x',
-        title: 'X',
-        section: 'Socials',
-        handler: () => {
-          window.open("https://twitter.com/yuanyinnn", "_blank");
         },
       },{
       id: 'light-theme',

@@ -123,14 +123,9 @@ h1,
   display: inline-flex;
   gap: 0;
   align-items: center;
-  padding: 0.16em 0.42em 0.18em;
-  border: 1px solid color-mix(in srgb, var(--global-text-color) 18%, var(--global-divider-color));
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--global-text-color) 4%, transparent);
   color: var(--global-text-color);
   font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", "Heiti SC", sans-serif;
   font-size: 0.44em;
-
   line-height: 1;
 }
 
@@ -162,7 +157,6 @@ h1,
 }
 
 .name-lockup--nav .name-lockup__hanzi {
-  padding: 0.15em 0.4em 0.17em;
   font-size: 0.64em;
 }
 

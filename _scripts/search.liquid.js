@@ -134,7 +134,9 @@ ninja.data = [
         {%- when "email" -%}
           {%- assign social_id = "social-email" -%}
           {%- assign social_title = "email" -%}
-          {%- capture social_url %}"mailto:{{ social[1] | encode_email }}"{% endcapture -%}
+          {%- assign email_user_codes = social[1].user_codes | join: ", " -%}
+          {%- assign email_domain_codes = social[1].domain_codes | join: ", " -%}
+          {%- capture social_url -%}"mailto:" + [{{ email_user_codes }}].map((c) => String.fromCharCode(c)).join("") + "@" + [{{ email_domain_codes }}].map((c) => String.fromCharCode(c)).join(""){%- endcapture -%}
         {%- when "facebook_id" -%}
           {%- assign social_id = "social-facebook" -%}
           {%- assign social_title = "Facebook" -%}

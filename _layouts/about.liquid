@@ -19,6 +19,13 @@ layout: default
           </header>
 
           <div class="about-hero__intro">{{ content }}</div>
+
+          {% if page.social %}
+            <div class="social about-hero__social">
+              <div class="contact-note">{{ site.contact_note }}</div>
+              <div class="contact-icons">{% include social.liquid %}</div>
+            </div>
+          {% endif %}
         </div>
 
         {% if page.profile %}
@@ -36,21 +43,13 @@ layout: default
             {% if page.profile.more_info %}
               <div class="more-info">{{ page.profile.more_info }}</div>
             {% endif %}
+            <a class="about-hero__cv-button" href="{{ '/cv/' | relative_url }}">
+              <span>View CV</span>
+              <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            </a>
           </div>
         {% endif %}
       </div>
-
-      {% if page.social %}
-        <div class="social about-hero__social">
-          <div class="contact-note">{{ site.contact_note }}</div>
-
-          <div class="contact-icons">{% include social.liquid %}</div>
-          <a class="about-hero__cv-button" href="{{ '/cv/' | relative_url }}">
-            <span>View CV</span>
-            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
-          </a>
-        </div>
-      {% endif %}
     </section>
 
     <!-- News -->

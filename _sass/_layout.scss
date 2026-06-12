@@ -19,6 +19,20 @@ body {
   }
 }
 
+// Ambient backdrop: large soft brand-hue blobs fixed behind the content so the
+// glass cards' backdrop-filter has actual color to refract instead of flat bg.
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(42rem 42rem at 12% -4%, rgba(150, 120, 182, 0.17), transparent 62%),
+    radial-gradient(36rem 36rem at 94% 18%, rgba(17, 133, 254, 0.12), transparent 62%),
+    radial-gradient(44rem 44rem at 72% 104%, rgba(66, 185, 131, 0.11), transparent 62%);
+}
+
 body.fixed-top-nav {
   // Add some padding for the nav-bar.
   padding-top: 57px;
@@ -357,7 +371,9 @@ body.sticky-bottom-footer {
     0 14px 30px rgba(39, 48, 74, 0.18),
     0 0 26px rgba(150, 120, 182, 0.2),
     inset 0 1px 0 var(--cv-highlight-color);
-  animation: cv-button-water 9.5s ease-in-out infinite;
+  animation:
+    cv-button-water 9.5s ease-in-out infinite,
+    cv-button-glow 9.5s ease-in-out infinite;
   filter: var(--cv-glow-filter);
   transition:
     box-shadow 180ms ease,
@@ -408,7 +424,7 @@ body.sticky-bottom-footer {
     animation-play-state: paused;
     text-decoration: none;
     transform: translateY(-1px);
-    filter: var(--cv-hover-glow-filter);
+    filter: var(--cv-hover-glow-filter) !important;
     box-shadow:
       0 0 0 1px var(--cv-hover-ring-color),
       0 17px 34px rgba(39, 48, 74, 0.22),
@@ -622,6 +638,13 @@ body.sticky-bottom-footer {
 }
 
 html[data-theme="dark"] {
+  body::before {
+    background:
+      radial-gradient(42rem 42rem at 12% -4%, rgba(150, 120, 182, 0.13), transparent 62%),
+      radial-gradient(36rem 36rem at 94% 18%, rgba(17, 133, 254, 0.1), transparent 62%),
+      radial-gradient(44rem 44rem at 72% 104%, rgba(66, 185, 131, 0.08), transparent 62%);
+  }
+
   .not-found-card__button,
   .home-news-section__archive {
     &:not(:hover):not(:focus-visible) {
@@ -705,30 +728,30 @@ html[data-theme="dark"] {
       --social-brand-color: #f3f5f8;
       --social-hover-icon-color: #111111;
     }
+  }
 
-    .about-hero__cv-button {
-      --cv-border-color: rgba(255, 255, 255, 0.42);
-      --cv-ring-color: rgba(255, 255, 255, 0.28);
-      --cv-highlight-color: rgba(255, 255, 255, 0.28);
-      --cv-hover-ring-color: rgba(255, 255, 255, 0.34);
-      --cv-hover-highlight-color: rgba(255, 255, 255, 0.34);
-      --cv-glow-filter: drop-shadow(0 0 18px rgba(118, 158, 255, 0.28)) drop-shadow(0 0 10px rgba(66, 185, 131, 0.14));
-      --cv-hover-glow-filter: drop-shadow(0 0 24px rgba(118, 158, 255, 0.34)) drop-shadow(0 0 13px rgba(66, 185, 131, 0.18));
+  .about-hero__cv-button {
+    --cv-border-color: rgba(255, 255, 255, 0.42);
+    --cv-ring-color: rgba(255, 255, 255, 0.28);
+    --cv-highlight-color: rgba(255, 255, 255, 0.28);
+    --cv-hover-ring-color: rgba(255, 255, 255, 0.34);
+    --cv-hover-highlight-color: rgba(255, 255, 255, 0.34);
+    --cv-glow-filter: drop-shadow(0 0 18px rgba(118, 158, 255, 0.28)) drop-shadow(0 0 10px rgba(66, 185, 131, 0.14));
+    --cv-hover-glow-filter: drop-shadow(0 0 24px rgba(118, 158, 255, 0.34)) drop-shadow(0 0 13px rgba(66, 185, 131, 0.18));
 
+    box-shadow:
+      0 0 0 1px var(--cv-ring-color),
+      0 14px 30px rgba(0, 0, 0, 0.28),
+      0 0 28px rgba(118, 158, 255, 0.22),
+      inset 0 1px 0 var(--cv-highlight-color);
+
+    &:hover,
+    &:focus-visible {
       box-shadow:
-        0 0 0 1px var(--cv-ring-color),
-        0 14px 30px rgba(0, 0, 0, 0.28),
-        0 0 28px rgba(118, 158, 255, 0.22),
-        inset 0 1px 0 var(--cv-highlight-color);
-
-      &:hover,
-      &:focus-visible {
-        box-shadow:
-          0 0 0 1px var(--cv-hover-ring-color),
-          0 17px 34px rgba(0, 0, 0, 0.3),
-          0 0 34px rgba(118, 158, 255, 0.24),
-          inset 0 1px 0 var(--cv-hover-highlight-color);
-      }
+        0 0 0 1px var(--cv-hover-ring-color),
+        0 17px 34px rgba(0, 0, 0, 0.3),
+        0 0 34px rgba(118, 158, 255, 0.24),
+        inset 0 1px 0 var(--cv-hover-highlight-color);
     }
   }
 }
@@ -1382,6 +1405,27 @@ html[data-theme="dark"] {
       48% 100%,
       0% 50%,
       0 0;
+  }
+}
+
+// Glow halo kept in lockstep with cv-button-water: the button face reads
+// purple -> blue -> green -> purple across the 0/34/68/100 stops, and the
+// drop-shadow palette rotates through the same hues at the same offsets.
+@keyframes cv-button-glow {
+  0% {
+    filter: drop-shadow(0 0 18px rgba(150, 120, 182, 0.26)) drop-shadow(0 0 10px rgba(17, 133, 254, 0.16));
+  }
+
+  34% {
+    filter: drop-shadow(0 0 18px rgba(17, 133, 254, 0.28)) drop-shadow(0 0 10px rgba(66, 185, 131, 0.16));
+  }
+
+  68% {
+    filter: drop-shadow(0 0 18px rgba(66, 185, 131, 0.26)) drop-shadow(0 0 10px rgba(150, 120, 182, 0.16));
+  }
+
+  100% {
+    filter: drop-shadow(0 0 18px rgba(150, 120, 182, 0.26)) drop-shadow(0 0 10px rgba(17, 133, 254, 0.16));
   }
 }
 

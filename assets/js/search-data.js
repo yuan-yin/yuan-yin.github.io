@@ -30,13 +30,6 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/repositories/";
           },
-        },{id: "nav-blog",
-          title: "Blog",
-          description: "",
-          section: "Navigation",
-          handler: () => {
-            window.location.href = "/blog/";
-          },
         },{id: "dropdown-talks",
               title: "Talks",
               description: "",
@@ -57,6 +50,13 @@ ninja.data = [{
               section: "Dropdown",
               handler: () => {
                 window.location.href = "/teaching/";
+              },
+            },{id: "dropdown-blog",
+              title: "Blog",
+              description: "",
+              section: "Dropdown",
+              handler: () => {
+                window.location.href = "/blog/";
               },
             },{id: "news-i-started-my-intership-in-the-mlia-team-at-sorbonne-université",
           title: 'I started my intership in the MLIA team at Sorbonne Université.',

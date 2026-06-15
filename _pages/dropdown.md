@@ -11,4 +11,6 @@ children:
     permalink: /projects/
   - title: Teaching
     permalink: /teaching/
+  - title: Blog
+    permalink: /blog/
 ---

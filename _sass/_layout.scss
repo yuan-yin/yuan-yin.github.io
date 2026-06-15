@@ -49,31 +49,7 @@ body.sticky-bottom-footer {
 
 // Shared page title hero
 .page-hero {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
   margin-bottom: 2rem;
-  padding: 2.35rem;
-  border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
-  border-radius: 30px;
-  background:
-    linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.34)),
-    linear-gradient(135deg, rgba(150, 120, 182, 0.14), rgba(17, 133, 254, 0.07)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
-  box-shadow:
-    0 20px 54px rgba(39, 48, 74, 0.11),
-    inset 0 1px 0 rgba(255, 255, 255, 0.66);
-  -webkit-backdrop-filter: blur(18px) saturate(1.14);
-  backdrop-filter: blur(18px) saturate(1.14);
-
-  &::before {
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    content: "";
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.34), transparent 42%);
-    opacity: 0.5;
-  }
 
   .post-title {
     margin-bottom: 0.55rem;
@@ -652,21 +628,6 @@ html[data-theme="dark"] {
     }
   }
 
-  .page-hero {
-    border-color: color-mix(in srgb, #ffffff 13%, var(--global-divider-color));
-    background:
-      linear-gradient(145deg, rgba(48, 54, 66, 0.68), rgba(23, 26, 34, 0.44)),
-      linear-gradient(135deg, rgba(150, 120, 182, 0.15), rgba(17, 133, 254, 0.08)), color-mix(in srgb, var(--global-card-bg-color) 76%, transparent);
-    box-shadow:
-      0 18px 45px rgba(0, 0, 0, 0.24),
-      inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
-  }
-
-  .page-hero::before {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), transparent 44%);
-    opacity: 0.58;
-  }
-
   .not-found-card {
     border-color: color-mix(in srgb, #ffffff 13%, var(--global-divider-color));
     background:
@@ -758,9 +719,6 @@ html[data-theme="dark"] {
 
 @media (max-width: 767.98px) {
   .page-hero {
-    padding: 1.4rem;
-    border-radius: 24px;
-
     .post-title {
       font-size: 2.45rem;
     }

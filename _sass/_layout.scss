@@ -95,6 +95,7 @@ body.sticky-bottom-footer {
   padding: 2.4rem;
   border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
   border-radius: 30px;
+  corner-shape: v.$corner-shape;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.34)),
     linear-gradient(135deg, rgba(150, 120, 182, 0.14), rgba(17, 133, 254, 0.07)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
@@ -207,6 +208,7 @@ body.sticky-bottom-footer {
   padding: 2.35rem;
   border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
   border-radius: 30px;
+  corner-shape: v.$corner-shape;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.34)),
     linear-gradient(135deg, rgba(150, 120, 182, 0.14), rgba(17, 133, 254, 0.07)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
@@ -724,6 +726,7 @@ html[data-theme="dark"] {
   .not-found-card {
     padding: 1.45rem;
     border-radius: 24px;
+    corner-shape: v.$corner-shape;
 
     h1 {
       font-size: 2.45rem;
@@ -733,6 +736,7 @@ html[data-theme="dark"] {
   .about-hero {
     padding: 1.4rem;
     border-radius: 24px;
+    corner-shape: v.$corner-shape;
 
     .post-title {
       font-size: 2.45rem;
@@ -835,6 +839,7 @@ html[data-theme="dark"] {
   .table-responsive {
     border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
     border-radius: 18px;
+    corner-shape: v.$corner-shape;
     background:
       linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.34)),
       linear-gradient(135deg, rgba(150, 120, 182, 0.18), rgba(17, 133, 254, 0.1)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
@@ -899,6 +904,7 @@ html[data-theme="dark"] {
   overflow: hidden;
   border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
   border-radius: 20px;
+  corner-shape: v.$corner-shape;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.76), rgba(255, 255, 255, 0.34)),
     linear-gradient(135deg, rgba(150, 120, 182, 0.18), rgba(17, 133, 254, 0.1)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
@@ -937,17 +943,24 @@ html[data-theme="dark"] {
   height: var(--about-news-row-height);
   padding: 1rem 1.1rem;
   pointer-events: none;
+  visibility: hidden;
   opacity: 0;
   transform: translateY(0.35rem);
   transition:
     opacity 180ms ease,
-    transform 180ms ease;
+    transform 180ms ease,
+    visibility 0s linear 180ms;
 
   &.is-active {
     position: relative;
     pointer-events: auto;
+    visibility: visible;
     opacity: 1;
     transform: translateY(0);
+    transition:
+      opacity 180ms ease,
+      transform 180ms ease,
+      visibility 0s;
   }
 }
 
@@ -1069,6 +1082,7 @@ html[data-theme="dark"] {
   padding: 1rem 1.1rem;
   border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
   border-radius: 20px;
+  corner-shape: v.$corner-shape;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.32)),
     linear-gradient(135deg, rgba(150, 120, 182, 0.14), rgba(17, 133, 254, 0.07)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);
@@ -1140,18 +1154,30 @@ html[data-theme="dark"] {
       width: 100%;
       margin-bottom: 0;
       pointer-events: none;
+      // `opacity: 0` still paints. Every slide carries its own
+      // backdrop-filtered, gradient-filled card, so the inactive ones stayed
+      // stacked over the visible slide and were re-rasterized on any nearby
+      // repaint. `visibility` drops them from the paint tree while keeping
+      // their layout, which `setHeight()` still measures.
+      visibility: hidden;
       opacity: 0;
       transform: translateY(0.35rem);
       transition:
         opacity 180ms ease,
-        transform 180ms ease;
+        transform 180ms ease,
+        visibility 0s linear 180ms;
     }
 
     > li.is-active {
       position: relative;
       pointer-events: auto;
+      visibility: visible;
       opacity: 1;
       transform: translateY(0);
+      transition:
+        opacity 180ms ease,
+        transform 180ms ease,
+        visibility 0s;
     }
   }
 }

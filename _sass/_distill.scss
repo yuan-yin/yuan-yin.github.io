@@ -2,6 +2,8 @@
  * Style overrides for distill blog posts.
  ******************************************************************************/
 
+@use "variables" as v;
+
 d-byline {
   border-top-color: var(--global-divider-color) !important;
 }
@@ -60,6 +62,7 @@ d-article {
     padding: 8px 12px;
     position: relative;
     border-radius: 6px;
+    corner-shape: v.$corner-shape;
     display: block;
     margin-bottom: 20px;
     grid-column: text;

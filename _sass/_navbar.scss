@@ -24,6 +24,7 @@
   background-color: var(--global-bg-color);
   border: 1px solid var(--global-divider-color);
   border-radius: 16px;
+  corner-shape: v.$corner-shape;
   padding: 0.4rem;
   box-shadow: 0 18px 45px rgba(39, 48, 74, 0.12);
 

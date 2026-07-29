@@ -1,8 +1,22 @@
 ---
 ---
-@misc{xu2026toad,
+@misc{yin2026pictura,
       venues={Preprint},
       selected={true},
+      title={Pictura: Perspective-View Self-Play at Scale for Driving},
+      author={Yuan Yin and Elias Ramzi and Marc Lafon and Valentin Charraut and Victor Bares and Yihong Xu and Éloi Zablocki and Alexandre Boulch and Thibault Buhet and Andrei Bursuc and Matthieu Cord},
+      year={2026},
+      month={Jul},
+      arxiv={2607.26005},
+      pdf={https://arxiv.org/pdf/2607.26005},
+      code={https://github.com/valeoai/Pictura},
+      html={https://valeoai.github.io/Pictura/},
+      preview={2026-pictura.png},
+      abstract={Self-play in simulation produces robust driving policies at scale. Demonstrations of such behavior have been made using privileged vectorized observations such as exact poses and velocities, even for occluded agents. This assumes that perception is solved and introduces a representation gap with the partial observation of a deployed agent driving from the perspective view of egocentric cameras. A common fix, distilling the privileged policy into a camera-input student, leaves the student imitating decisions its own view cannot justify. Instead, we establish perspective-view self-play as a practical training regime. We introduce Pictura, a GPU-accelerated multi-agent driving simulator that renders each agent's egocentric view at every step, mitigating the representation gap at its source. Pictura sustains up to 500K agent-steps/s (2M images/s) on a single H100. Using Pictura, we train Alberti by self-play with plain PPO. It is the first large-scale driving self-play policy trained directly from perspective images, without privileged observations. Training spans 50B agent steps for ~35M km of driving. It approaches the driving performance of its privileged vectorized counterpart, and transfers zero-shot to Waymo Open Motion Dataset layouts re-rendered in Pictura, where it outperforms privileged vectorized agents.},
+}
+
+@misc{xu2026toad,
+      venues={Preprint},
       title={TOAD: Test-Time Trajectory Optimization for Autonomous Driving},
       author={Yihong Xu and Éloi Zablocki and Yuan Yin and Elias Ramzi and Ellington Kirby and Alexandre Boulch and Matthieu Cord},
       year={2026},
@@ -97,7 +111,6 @@ code={https://github.com/2ailesB/neural-parametric-solver},
 }
 
 @inproceedings{xu2026ppt,
-    selected={true},
     title={PPT: Pre-Training with Pseudo-Labeled Trajectories for Motion Forecasting},
     author={Yihong Xu* and Yuan Yin* and Tuan-Hung Vu and Alexandre Boulch and Éloi Zablocki and Matthieu Cord},
     year={2026},

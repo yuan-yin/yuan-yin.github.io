@@ -2,6 +2,8 @@
  * Blog post and listing styles
  ******************************************************************************/
 
+@use "variables" as v;
+
 .header-bar {
   margin-bottom: 1.35rem;
 
@@ -121,6 +123,7 @@
 .blog-empty-state {
   border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
   border-radius: 20px;
+  corner-shape: v.$corner-shape;
   background:
     linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(255, 255, 255, 0.32)),
     linear-gradient(135deg, rgba(150, 120, 182, 0.14), rgba(17, 133, 254, 0.07)), color-mix(in srgb, var(--global-bg-color) 72%, transparent);

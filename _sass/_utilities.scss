@@ -26,6 +26,7 @@ pre {
   color: var(--global-theme-color);
   background-color: var(--global-code-bg-color);
   border-radius: 6px;
+  corner-shape: v.$corner-shape;
   padding: 6px 12px;
 
   // Responsive behavior for code blocks
@@ -48,6 +49,7 @@ code {
   color: var(--global-theme-color);
   background-color: var(--global-code-bg-color);
   border-radius: 3px;
+  corner-shape: v.$corner-shape;
   padding: 3px 3px;
 
   // Inline code should wrap
@@ -160,6 +162,7 @@ html.transition .social.about-hero__social .contact-icons a i::before {
     background: var(--global-card-bg-color);
     border-color: var(--global-bg-color);
     border-radius: 0.3rem;
+    corner-shape: v.$corner-shape;
     border-style: none;
     color: var(--global-text-color);
     font-size: medium;
@@ -372,6 +375,7 @@ nav[data-toggle="toc"] {
   box-sizing: border-box;
   box-shadow: rgba(0, 0, 0, 0.05) 0px 1px 2px;
   border-radius: 6px;
+  corner-shape: v.$corner-shape;
   padding: 8px 12px;
 }
 

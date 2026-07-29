@@ -2,6 +2,8 @@
  * Teachings/Courses styles
  *****************************/
 
+@use "variables" as v;
+
 .courses {
   margin-top: 2rem;
 }
@@ -88,6 +90,7 @@
   padding: 1.1rem;
   border: 1px solid color-mix(in srgb, #ffffff 42%, color-mix(in srgb, var(--course-accent) 24%, var(--global-divider-color)));
   border-radius: 18px;
+  corner-shape: v.$corner-shape;
   background:
     linear-gradient(135deg, color-mix(in srgb, var(--course-accent) 10%, transparent), color-mix(in srgb, var(--course-accent) 4%, transparent)),
     linear-gradient(145deg, color-mix(in srgb, #ffffff 72%, transparent), color-mix(in srgb, var(--global-card-bg-color) 56%, transparent));

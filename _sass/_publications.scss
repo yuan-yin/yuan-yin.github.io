@@ -115,6 +115,7 @@
         padding: 1.1rem;
         border: 1px solid color-mix(in srgb, #ffffff 42%, color-mix(in srgb, var(--pub-accent) 24%, var(--global-divider-color)));
         border-radius: 18px;
+        corner-shape: v.$corner-shape;
         background:
           linear-gradient(135deg, color-mix(in srgb, var(--pub-accent) 10%, transparent), color-mix(in srgb, var(--pub-accent) 4%, transparent)),
           linear-gradient(145deg, color-mix(in srgb, #ffffff 72%, transparent), color-mix(in srgb, var(--global-card-bg-color) 56%, transparent));
@@ -215,6 +216,7 @@
         object-fit: contain;
         border: 1px solid color-mix(in srgb, var(--pub-accent) 22%, var(--global-divider-color));
         border-radius: 14px;
+        corner-shape: v.$corner-shape;
         background: var(--global-bg-color);
         box-shadow: 0 10px 24px rgba(39, 48, 74, 0.1);
         cursor: zoom-in;
@@ -436,6 +438,7 @@
 
       div.abstract.hidden {
         border-radius: 14px;
+        corner-shape: v.$corner-shape;
         background: color-mix(in srgb, var(--pub-accent) 4%, transparent);
         box-shadow: inset 0 0 0 1px transparent;
       }
@@ -448,6 +451,7 @@
       --pub-prize-color: #d4a017;
 
       border-radius: 14px;
+      corner-shape: v.$corner-shape;
       background: color-mix(in srgb, var(--pub-prize-color) 8%, transparent);
       box-shadow: inset 0 0 0 1px transparent;
     }
@@ -553,6 +557,7 @@ html[data-theme="dark"] {
   max-height: 68vh;
   border: 1px solid var(--global-divider-color);
   border-radius: 14px;
+  corner-shape: v.$corner-shape;
   background: var(--global-bg-color);
   box-shadow: 0 22px 70px rgba(39, 48, 74, 0.22);
   cursor: zoom-out;

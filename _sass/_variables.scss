@@ -53,11 +53,14 @@ $back-to-top-width: $back-to-top-diameter;
 $button-pill-radius: 999px !default;
 
 // Corner shape
-// Every rounded corner in the theme is drawn as a superellipse ("squircle")
-// rather than a circular arc. Browsers without `corner-shape` support ignore
-// the property and fall back to plain circular rounding.
+// Rounded *rectangles* — cards, panels, previews, inputs — draw their corners as
+// a superellipse ("squircle") instead of a circular arc. Pair it with the
+// `border-radius` it belongs to: `border-radius: 18px; corner-shape: v.$corner-shape;`
+// Pills (`$button-pill-radius`) and circles (`50%`) are deliberately left round,
+// so never add it next to those.
 // Tune the curvature with `superellipse(<number>)`: 1 is a plain round corner,
 // `squircle` equals `superellipse(2)`, larger numbers approach a square.
+// Browsers without `corner-shape` support ignore it and keep circular rounding.
 $corner-shape: squircle !default;
 
 // Max width default

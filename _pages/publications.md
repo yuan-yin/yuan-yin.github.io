@@ -3,7 +3,6 @@ layout: page
 permalink: /publications/
 title: Publications
 description: Publications by category in reverse chronological order. <span class='equal-contribution-note'>* Equal contribution.</span>
-eyebrow: Research output
 nav: true
 nav_order: 2
 ---

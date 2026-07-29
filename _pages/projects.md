@@ -12,7 +12,6 @@ horizontal: false
 <div class="post projects-page">
   <header class="projects-hero">
     <div class="projects-hero__content">
-      <p class="projects-hero__eyebrow">Work in progress</p>
       <h1>{{ page.title }}</h1>
       <p>Selected tools, prototypes, and research-adjacent builds.</p>
     </div>

@@ -73,7 +73,7 @@ ul.task-list input[type="checkbox"] {
     margin-top: 5px;
     font-style: italic;
 
-    p:not(.projects-hero__eyebrow) {
+    p {
       display: inline-block;
       margin: 0;
     }
@@ -159,14 +159,6 @@ ul.task-list input[type="checkbox"] {
   .projects-hero__content {
     position: relative;
     z-index: 1;
-  }
-
-  .projects-hero .projects-hero__eyebrow {
-    margin-bottom: 0.2rem;
-    color: var(--global-text-color-light);
-    font-size: 0.78rem;
-    font-weight: 760;
-    text-transform: uppercase;
   }
 }
 

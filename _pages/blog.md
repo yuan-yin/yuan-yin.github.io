@@ -26,7 +26,6 @@ pagination:
 
   <div class="header-bar blog-hero">
     <div class="blog-hero__content">
-      <p class="blog-hero__eyebrow">Notes and essays</p>
       <h1>{{ site.blog_name }}</h1>
       <p>{{ site.blog_description }}</p>
     </div>

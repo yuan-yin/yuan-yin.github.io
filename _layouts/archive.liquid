@@ -4,15 +4,6 @@ layout: default
 <div class="post">
   <header class="post-header page-hero">
     <div class="page-hero__content">
-      <p class="page-hero__eyebrow">
-        {% if page.type == 'categories' %}
-          Category archive
-        {% elsif page.type == 'year' %}
-          Year archive
-        {% elsif page.type == 'tags' %}
-          Tag archive
-        {% endif %}
-      </p>
       {% if page.type == 'categories' %}
         <h1 class="post-title">
           <i class="fa-solid fa-tag fa-sm"></i>

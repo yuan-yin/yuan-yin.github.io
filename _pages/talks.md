@@ -3,7 +3,6 @@ layout: page
 title: Talks
 permalink: /talks/
 description: 
-eyebrow: Seminars and presentations
 nav: false
 ---
 

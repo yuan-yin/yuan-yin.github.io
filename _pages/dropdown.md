@@ -7,8 +7,6 @@ dropdown: true
 children:
   - title: Talks
     permalink: /talks/
-  - title: Projects
-    permalink: /projects/
   - title: Teaching
     permalink: /teaching/
   - title: Blog

@@ -14,9 +14,6 @@ layout: default
   {% if page_title_size > 0 or page_description_size > 0 %}
     <header class="post-header page-hero">
       <div class="page-hero__content">
-        {% if page.eyebrow %}
-          <p class="page-hero__eyebrow">{{ page.eyebrow }}</p>
-        {% endif %}
         {% if page_title_size > 0 %}
           <h1 class="post-title">{{ page.title }}</h1>
         {% endif %}

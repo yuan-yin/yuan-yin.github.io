@@ -72,14 +72,6 @@ body.sticky-bottom-footer {
   z-index: 1;
 }
 
-.page-hero__eyebrow {
-  margin-bottom: 0.2rem;
-  color: var(--global-text-color-light);
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-}
-
 .cv-hero {
   display: flex;
   gap: 1.25rem;
@@ -807,14 +799,6 @@ html[data-theme="dark"] {
     font-size: 1.65rem;
     line-height: 1.2;
   }
-}
-
-.home-news-section__eyebrow {
-  margin-bottom: 0.2rem;
-  font-size: 0.78rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  color: var(--global-text-color-light);
 }
 
 .home-news-section__archive {

@@ -13,7 +13,7 @@
   }
 
   h2,
-  p:not(.blog-hero__eyebrow) {
+  p {
     max-width: 42rem;
     margin-bottom: 0;
     color: var(--global-text-color-light);
@@ -22,7 +22,6 @@
   }
 }
 
-.header-bar .blog-hero__eyebrow,
 .blog-section-header p {
   margin-bottom: 0.2rem;
   color: var(--global-text-color-light);

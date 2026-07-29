@@ -52,5 +52,13 @@ $back-to-top-width: $back-to-top-diameter;
 // Button shape
 $button-pill-radius: 999px !default;
 
+// Corner shape
+// Every rounded corner in the theme is drawn as a superellipse ("squircle")
+// rather than a circular arc. Browsers without `corner-shape` support ignore
+// the property and fall back to plain circular rounding.
+// Tune the curvature with `superellipse(<number>)`: 1 is a plain round corner,
+// `squircle` equals `superellipse(2)`, larger numbers approach a square.
+$corner-shape: squircle !default;
+
 // Max width default
 $max-content-width: 930px !default;

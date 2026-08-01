@@ -539,8 +539,10 @@ layout: default
       position: relative;
       width: 100%;
       max-width: 100%;
-      min-height: min(720px, calc((100vw - 2rem) * 1.294));
-      aspect-ratio: 8.5 / 11;
+      /* A4 (210 x 297 mm) — matches the source PDFs. The stage clips overflow,
+         so a shorter ratio here crops the bottom of every rendered page. */
+      min-height: min(720px, calc((100vw - 2rem) * 1.4142));
+      aspect-ratio: 210 / 297;
       background:
         linear-gradient(90deg, transparent 0, rgba(150, 120, 182, 0.08) 50%, transparent 100%),
         linear-gradient(var(--global-bg-color), var(--global-bg-color)), var(--global-card-bg-color);

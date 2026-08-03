@@ -18,82 +18,22 @@ layout: default
       <div class="cv-toolbar-backdrop" aria-hidden="true"></div>
       <div class="header-toolbar">
         <div class="lang-toolbar">
-          <!-- English split button -->
-          <div class="lang-split" data-lang="en">
-            <a
-              id="lang-en"
-              class="lang-primary"
-              data-lang="en"
-              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-              rel="noopener"
-              aria-pressed="false"
-            >
-              English
-            </a>
-            <a
-              id="download-en"
-              class="lang-download"
-              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-              download
-              rel="noopener"
-              aria-label="Download English CV"
-            >
-              <i class="fa-solid fa-download" aria-hidden="true"></i>
-            </a>
+          <div class="lang-segment" role="radiogroup" aria-label="CV language">
+            <span class="lang-segment__thumb" aria-hidden="true"></span>
+            <button type="button" class="lang-segment__option" data-lang="en" role="radio" aria-checked="false">English</button>
+            <button type="button" class="lang-segment__option" data-lang="fr" role="radio" aria-checked="false">Français</button>
           </div>
 
-          <!-- French split button -->
-          <div class="lang-split" data-lang="fr">
-            <a
-              id="lang-fr"
-              class="lang-primary"
-              data-lang="fr"
-              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-              rel="noopener"
-              aria-pressed="false"
-            >
-              Français
-            </a>
-            <a
-              id="download-fr"
-              class="lang-download"
-              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-              download
-              rel="noopener"
-              aria-label="Download French CV"
-            >
-              <i class="fa-solid fa-download" aria-hidden="true"></i>
-            </a>
-          </div>
-        </div>
-
-        <div class="pager">
-          <button
-            id="prev"
-            class="pager-button"
-            disabled
-            aria-label="Previous page"
+          <a
+            id="cv-download"
+            class="cv-download-btn"
+            href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+            download
+            rel="noopener"
           >
-            <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
-            <span>Previous</span>
-          </button>
-          <span class="pager-status">
-            <span class="pager-status__label">Page</span>
-            <span class="pager-status__numbers">
-              <span id="page_num">...</span>
-              <span class="pager-status__separator">/</span>
-              <span id="page_count">...</span>
-            </span>
-          </span>
-          <button
-            id="next"
-            class="pager-button"
-            disabled
-            aria-label="Next page"
-          >
-            <span>Next</span>
-            <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
-          </button>
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            <span>PDF</span>
+          </a>
         </div>
       </div>
     </div>
@@ -105,7 +45,18 @@ layout: default
     >
       <div class="pdf-loading" role="status">Loading CV...</div>
       <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
-      <canvas id="the-canvas"></canvas>
+      <button class="pdf-page pdf-page--prev is-empty" type="button" aria-label="Show previous page">
+        <canvas></canvas>
+      </button>
+      <div class="pdf-page pdf-page--current">
+        <canvas id="the-canvas"></canvas>
+      </div>
+      <button class="pdf-page pdf-page--next is-empty" type="button" aria-label="Show next page">
+        <canvas></canvas>
+      </button>
+      <button class="pdf-restart" type="button" aria-label="Back to first page" hidden>
+        <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+      </button>
     </div>
   </div>
 
@@ -150,26 +101,25 @@ layout: default
       updateToolbarTop();
       window.addEventListener('resize', updateToolbarTop);
       window.addEventListener('scroll', updateStuckState, { passive: true });
-      const canvas = document.getElementById('the-canvas');
-      const ctx = canvas.getContext('2d');
-
-      const prevBtn = document.getElementById('prev');
-      const nextBtn = document.getElementById('next');
-      const nextBtnLabel = nextBtn.querySelector('span');
-      const nextBtnIcon = nextBtn.querySelector('i');
-      const pagerElement = document.querySelector('.pager');
-      const pageNumElement = document.getElementById('page_num');
-      const pageCountElement = document.getElementById('page_count');
+      // Carousel slots: previous / current / next page. Side pages peek in
+      // from the edges and are clickable to navigate.
+      const slots = ['prev', 'current', 'next'].map((key) => {
+        const el = stage.querySelector(`.pdf-page--${key}`);
+        const canvas = el.querySelector('canvas');
+        return { key, el, canvas, ctx: canvas.getContext('2d'), renderTask: null };
+      });
+      const currentSlot = slots[1];
+      const restartBtn = stage.querySelector('.pdf-restart');
 
       let pdfDoc = null; // PDFDocumentProxy
       let loadingTask = null; // PDFLoadingTask
-      let renderTask = null; // RenderTask
       let pageNum = 1;
       let pageRendering = false;
       let pageNumPending = null;
       let currentLang = 'en';
       let firstPageRendered = false;
       let hasLoadedOnce = false;
+      let pendingDirection = 0; // 1 = navigating forward, -1 = back, 0 = reload
 
       const urls = {
         en: {
@@ -183,13 +133,15 @@ layout: default
       };
 
       async function disposePdf({ clearCanvas = true } = {}) {
-        // 1) Stop rendering
-        if (renderTask && typeof renderTask.cancel === 'function') {
-          try {
-            renderTask.cancel();
-          } catch {}
-        }
-        renderTask = null;
+        // 1) Stop rendering in every slot
+        slots.forEach((slot) => {
+          if (slot.renderTask && typeof slot.renderTask.cancel === 'function') {
+            try {
+              slot.renderTask.cancel();
+            } catch {}
+          }
+          slot.renderTask = null;
+        });
         pageRendering = false;
         pageNumPending = null;
 
@@ -211,24 +163,14 @@ layout: default
         }
         pdfDoc = null;
 
-        // 4) Clear overlay links
+        // 4) Clear overlay links and hide the loop-back button
         stage.querySelectorAll('a.pdf-link.overlay').forEach((a) => a.remove());
+        restartBtn.hidden = true;
 
         if (clearCanvas) {
-          // 5) Clear and shrink canvas to release bitmap memory
-          try {
-            ctx && ctx.clearRect(0, 0, canvas.width, canvas.height);
-          } catch {}
-          canvas.classList.remove('is-rendered');
-          canvas.width = 0;
-          canvas.height = 0;
-          canvas.style.width = '0px';
-          canvas.style.height = '0px';
+          // 5) Clear and shrink canvases to release bitmap memory
+          slots.forEach(clearSlotCanvas);
         }
-
-        // 6) Disable pager while there is no active PDF document
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
       }
 
       async function loadPdf(lang, { initialPage = 1 } = {}) {
@@ -248,12 +190,6 @@ layout: default
           postElement.classList.add('cv-ready', 'cv-controls-ready');
         }
         await disposePdf({ clearCanvas: isInitialLoad });
-        if (isInitialLoad) {
-          pageNumElement.textContent = '...';
-          pageCountElement.textContent = '...';
-        }
-        prevBtn.disabled = true;
-        nextBtn.disabled = true;
 
         // Start a new loading task
         loadingTask = pdfjsLib.getDocument({
@@ -267,19 +203,15 @@ layout: default
           postElement.classList.remove('cv-loading', 'cv-ready', 'cv-controls-ready', 'cv-initial-loading');
           postElement.classList.add('cv-error');
           stage.setAttribute('aria-busy', 'false');
-          pageNumElement.textContent = '';
-          pageCountElement.textContent = '';
           return;
         } finally {
           // The loadingTask becomes less useful after we have pdfDoc
           loadingTask = null;
         }
 
-        pageCountElement.textContent = pdfDoc.numPages;
         pageNum = Math.min(initialPage, pdfDoc.numPages);
-        pagerElement.classList.toggle('pager--cycle', isCycleMode());
-        updateSplitButtons(lang);
-        updatePagerState();
+        pendingDirection = 0;
+        updateLangControls(lang);
         await renderPage(pageNum);
       }
 
@@ -287,71 +219,100 @@ layout: default
         if (!pdfDoc) return;
         pageRendering = true;
         stage.classList.add('is-rendering');
-        const page = await pdfDoc.getPage(num);
-
-        const viewport = page.getViewport({ scale: getScaleFactor(page) });
-        const renderCanvas = document.createElement('canvas');
-        const renderCtx = renderCanvas.getContext('2d');
-        adjustCanvasSize(renderCanvas, viewport);
-        const renderContext = {
-          canvasContext: renderCtx,
-          transform: getTransform(viewport),
-          viewport,
-        };
-
-        // Cancel any previous RenderTask just in case
-        if (renderTask && typeof renderTask.cancel === 'function') {
-          try {
-            renderTask.cancel();
-          } catch {}
-        }
-        renderTask = page.render(renderContext);
+        const doc = pdfDoc;
         let rendered = false;
 
         try {
-          await renderTask.promise;
-          rendered = true;
-        } catch (e) {
-          // Rendering was likely canceled; ignore
+          const results = await Promise.all(
+            slots.map((slot) => {
+              const n = slot.key === 'prev' ? num - 1 : slot.key === 'next' ? num + 1 : num;
+              return renderSlot(slot, n, doc);
+            })
+          );
+          rendered = results[1];
         } finally {
-          renderTask = null;
-          // Let PDF.js drop page-level caches
           pageRendering = false;
-          if (rendered) {
-            commitRenderedPage(renderCanvas);
-            await addAnnotationsToPage(page, viewport).catch(() => {});
-            updatePageCounter(num);
-          }
-          try {
-            page.cleanup();
-          } catch {}
           if (pageNumPending !== null) {
             const pending = pageNumPending;
             pageNumPending = null;
+            stage.classList.remove('is-rendering');
             return renderPage(pending);
           }
-          updatePagerState();
-          if (!firstPageRendered) {
+          // Loop-back button occupies the empty "next" zone on the last page
+          restartBtn.hidden = !(doc === pdfDoc && doc && doc.numPages > 1 && num >= doc.numPages);
+          if (!firstPageRendered && rendered) {
             firstPageRendered = true;
             hasLoadedOnce = true;
             postElement.classList.remove('cv-loading', 'cv-error', 'cv-initial-loading');
             postElement.classList.add('cv-ready');
             stage.setAttribute('aria-busy', 'false');
             requestAnimationFrame(() => {
-              requestAnimationFrame(() => postElement.classList.add('cv-controls-ready'));
+              requestAnimationFrame(() => {
+                postElement.classList.add('cv-controls-ready');
+                updateSegmentThumb();
+              });
             });
-          }
-          if (rendered) {
-            requestAnimationFrame(() => canvas.classList.add('is-rendered'));
           }
           stage.classList.remove('is-rendering');
         }
       }
 
-      function getScaleFactor(page) {
-        const desiredWidth = postElement.getBoundingClientRect().width;
+      // Render page n of doc into a slot; empty slots (out-of-range pages)
+      // are hidden but keep their layout box so widths stay measurable.
+      async function renderSlot(slot, n, doc) {
+        if (slot.renderTask && typeof slot.renderTask.cancel === 'function') {
+          try {
+            slot.renderTask.cancel();
+          } catch {}
+          slot.renderTask = null;
+        }
+        if (!doc || n < 1 || n > doc.numPages) {
+          slot.el.classList.add('is-empty');
+          clearSlotCanvas(slot);
+          return false;
+        }
+        slot.el.classList.remove('is-empty');
+
+        const page = await doc.getPage(n);
+        if (doc !== pdfDoc) {
+          try {
+            page.cleanup();
+          } catch {}
+          return false;
+        }
+        // Side slots are narrow clipping windows; the page inside them still
+        // renders at full stage width so all three pages share one scale.
+        const desiredWidth = stage.getBoundingClientRect().width || postElement.getBoundingClientRect().width;
         const origViewport = page.getViewport({ scale: 1 });
-        return desiredWidth / origViewport.width;
+        const viewport = page.getViewport({ scale: desiredWidth / origViewport.width });
+        const renderCanvas = document.createElement('canvas');
+        adjustCanvasSize(renderCanvas, viewport);
+        const task = page.render({
+          canvasContext: renderCanvas.getContext('2d'),
+          transform: getTransform(viewport),
+          viewport,
+        });
+        slot.renderTask = task;
+        let ok = false;
+        try {
+          await task.promise;
+          ok = true;
+        } catch (e) {
+          // Rendering was likely canceled; ignore
+        } finally {
+          if (slot.renderTask === task) slot.renderTask = null;
+          if (ok) {
+            commitRenderedPage(slot, renderCanvas);
+            if (slot.key === 'current') {
+              await addAnnotationsToPage(page, viewport).catch(() => {});
+            }
+            requestAnimationFrame(() => slot.canvas.classList.add('is-rendered'));
+          }
+          try {
+            page.cleanup();
+          } catch {}
+        }
+        return ok;
       }
 
       function adjustCanvasSize(targetCanvas, viewport) {
@@ -362,14 +323,35 @@ layout: default
         targetCanvas.style.height = `${Math.floor(viewport.height)}px`;
       }
 
-      function commitRenderedPage(renderCanvas) {
+      function commitRenderedPage(slot, renderCanvas) {
+        const canvas = slot.canvas;
+        // Reset to the hidden pre-enter state without animating the jump
+        canvas.style.transition = 'none';
         canvas.classList.remove('is-rendered');
+        if (slot === currentSlot) {
+          // Incoming page starts shifted toward the side it navigates from
+          canvas.style.setProperty('--enter-x', pendingDirection > 0 ? '7%' : pendingDirection < 0 ? '-7%' : '0px');
+          canvas.style.setProperty('--enter-y', pendingDirection ? '0px' : '6px');
+        }
         canvas.width = renderCanvas.width;
         canvas.height = renderCanvas.height;
         canvas.style.width = renderCanvas.style.width;
         canvas.style.height = renderCanvas.style.height;
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        ctx.drawImage(renderCanvas, 0, 0);
+        slot.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        slot.ctx.drawImage(renderCanvas, 0, 0);
+        void canvas.offsetWidth; // flush styles before re-enabling transitions
+        canvas.style.transition = '';
+      }
+
+      function clearSlotCanvas(slot) {
+        try {
+          slot.ctx && slot.ctx.clearRect(0, 0, slot.canvas.width, slot.canvas.height);
+        } catch {}
+        slot.canvas.classList.remove('is-rendered');
+        slot.canvas.width = 0;
+        slot.canvas.height = 0;
+        slot.canvas.style.width = '0px';
+        slot.canvas.style.height = '0px';
       }
 
       function getComputedSiteTheme() {
@@ -403,6 +385,7 @@ layout: default
       }
 
       function createLinkElement(annotation, viewport) {
+        const canvas = currentSlot.canvas;
         const [x1, y1, x2, y2] = annotation.rect;
         const t = viewport.transform;
         const devX1 = x1 * t[0] + t[4];
@@ -430,47 +413,97 @@ layout: default
           width: `${width}px`,
           height: `${height}px`,
         });
-        stage.appendChild(linkElement);
+        currentSlot.el.appendChild(linkElement);
       }
 
-      function updateSplitButtons(activeLang) {
-        document.querySelectorAll('.lang-split').forEach((group) => {
-          const lang = group.dataset.lang;
-          const primary = group.querySelector('.lang-primary');
-          const download = group.querySelector('.lang-download');
+      const segmentEl = document.querySelector('.lang-segment');
+      const segmentThumb = segmentEl.querySelector('.lang-segment__thumb');
+      const segmentOptions = Array.from(segmentEl.querySelectorAll('.lang-segment__option'));
+      const downloadBtn = document.getElementById('cv-download');
+      const LANG_STORAGE_KEY = 'cv-lang';
 
-          const isActive = lang === activeLang;
-          group.classList.toggle('active', isActive);
-          primary.classList.toggle('active', isActive);
-          primary.setAttribute('aria-pressed', String(isActive));
+      function updateSegmentThumb() {
+        const active = segmentOptions.find((btn) => btn.dataset.lang === currentLang);
+        if (!active) return;
+        segmentThumb.style.width = `${active.offsetWidth}px`;
+        segmentThumb.style.transform = `translateX(${active.offsetLeft}px)`;
+      }
 
-          const href = getPdfUrl(lang);
-          const downloadHref = urls[lang]?.light;
-          if (href) {
-            primary.setAttribute('href', href);
-          }
-          if (downloadHref) {
-            download.setAttribute('href', downloadHref);
-            try {
-              const filename = downloadHref.split('/').pop() || `cv-${lang}.pdf`;
-              download.setAttribute('download', filename);
-            } catch {
-              download.setAttribute('download', '');
-            }
-          }
-          download.setAttribute('aria-hidden', String(!isActive));
-          if (!isActive) download.setAttribute('tabindex', '-1');
-          else download.removeAttribute('tabindex');
+      function updateLangControls(activeLang) {
+        segmentOptions.forEach((btn) => {
+          const isActive = btn.dataset.lang === activeLang;
+          btn.setAttribute('aria-checked', String(isActive));
+          btn.classList.toggle('active', isActive);
         });
+        updateSegmentThumb();
+
+        // Download always refers to the active language (light variant,
+        // which is the printable one)
+        const downloadHref = urls[activeLang]?.light;
+        if (downloadHref) {
+          downloadBtn.setAttribute('href', downloadHref);
+          downloadBtn.setAttribute('download', downloadHref.split('/').pop() || `cv-${activeLang}.pdf`);
+        }
+        downloadBtn.setAttribute('aria-label', activeLang === 'fr' ? 'Download French CV (PDF)' : 'Download English CV (PDF)');
       }
 
-      function updatePageCounter(num) {
-        pageNumElement.textContent = num;
+      function switchLang(lang) {
+        if (!lang || lang === currentLang) return;
+        try {
+          localStorage.setItem(LANG_STORAGE_KEY, lang);
+        } catch {}
+        loadPdf(lang, { initialPage: pageNum });
       }
 
-      function queueRenderPage(num) {
-        if (pageRendering) pageNumPending = num;
-        else {
+      // Last chosen language wins; first visit falls back to the browser locale
+      function getInitialLang() {
+        let stored = null;
+        try {
+          stored = localStorage.getItem(LANG_STORAGE_KEY);
+        } catch {}
+        if (stored && urls[stored]) return stored;
+        return (navigator.language || '').toLowerCase().startsWith('fr') ? 'fr' : 'en';
+      }
+
+      // Snapshot the current page onto a throwaway canvas that slides out,
+      // so the real canvas is free to slide in with the next page in parallel.
+      function spawnGhost(direction) {
+        const src = currentSlot.canvas;
+        if (!src.width || !src.height) return;
+        currentSlot.el.querySelectorAll('.pdf-ghost').forEach((g) => g.remove());
+        const ghost = document.createElement('canvas');
+        ghost.className = 'pdf-ghost';
+        ghost.width = src.width;
+        ghost.height = src.height;
+        ghost.getContext('2d').drawImage(src, 0, 0);
+        ghost.style.width = src.style.width;
+        ghost.style.height = src.style.height;
+        ghost.style.setProperty('--exit-x', direction > 0 ? '-9%' : '9%');
+        currentSlot.el.appendChild(ghost);
+        requestAnimationFrame(() => ghost.classList.add('is-leaving'));
+        ghost.addEventListener('transitionend', () => ghost.remove(), { once: true });
+        setTimeout(() => ghost.remove(), 600); // safety net
+      }
+
+      function queueRenderPage(num, direction = 0) {
+        pendingDirection = direction;
+        if (pageRendering) {
+          pageNumPending = num;
+          return;
+        }
+        const canvas = currentSlot.canvas;
+        if (direction) {
+          spawnGhost(direction);
+          // Hide the real canvas instantly and park it on the incoming side;
+          // the ghost keeps showing the old frame as it slides away.
+          canvas.style.transition = 'none';
+          canvas.classList.remove('is-rendered');
+          canvas.style.setProperty('--enter-x', direction > 0 ? '9%' : '-9%');
+          canvas.style.setProperty('--enter-y', '0px');
+          void canvas.offsetWidth;
+          canvas.style.transition = '';
+          renderPage(num);
+        } else {
           canvas.classList.add('is-updating');
           renderPage(num).finally(() => canvas.classList.remove('is-updating'));
         }
@@ -479,66 +512,40 @@ layout: default
       function onPrevPage() {
         if (!pdfDoc || pageNum <= 1) return;
         pageNum--;
-        queueRenderPage(pageNum);
+        queueRenderPage(pageNum, -1);
       }
 
       function onNextPage() {
-        if (!pdfDoc) return;
-        if (isCycleMode()) {
-          if (pdfDoc.numPages <= 1) return;
-          pageNum = pageNum >= pdfDoc.numPages ? 1 : pageNum + 1;
-          queueRenderPage(pageNum);
-          return;
-        }
-        if (pageNum >= pdfDoc.numPages) return;
+        if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
         pageNum++;
-        queueRenderPage(pageNum);
+        queueRenderPage(pageNum, 1);
       }
 
-      // With only 1-2 pages, a Previous button is pointless: collapse the
-      // pager to a single button that advances and wraps back to page 1.
-      function isCycleMode() {
-        return !!pdfDoc && pdfDoc.numPages <= 2;
-      }
+      // Clicking a side page brings it to the center
+      slots[0].el.addEventListener('click', onPrevPage);
+      slots[2].el.addEventListener('click', onNextPage);
 
-      function updatePagerState() {
-        if (!pdfDoc) {
-          prevBtn.disabled = true;
-          nextBtn.disabled = true;
-          return;
-        }
-        if (isCycleMode()) {
-          prevBtn.disabled = true;
-          nextBtn.disabled = pdfDoc.numPages <= 1;
-          const atEnd = pageNum >= pdfDoc.numPages;
-          nextBtnLabel.textContent = atEnd ? 'Restart' : 'Next';
-          nextBtnIcon.className = atEnd ? 'fa-solid fa-rotate-right' : 'fa-solid fa-circle-right';
-          nextBtn.setAttribute('aria-label', atEnd ? 'Back to first page' : 'Next page');
-          return;
-        }
-        nextBtnLabel.textContent = 'Next';
-        nextBtnIcon.className = 'fa-solid fa-circle-right';
-        nextBtn.setAttribute('aria-label', 'Next page');
-        prevBtn.disabled = pageNum <= 1;
-        nextBtn.disabled = pageNum >= pdfDoc.numPages;
-      }
-
-      // Hook up pager
-      prevBtn.addEventListener('click', onPrevPage);
-      nextBtn.addEventListener('click', onNextPage);
-
-      // Intercept language button clicks to switch the viewer instead of navigating
-      document.querySelectorAll('.lang-primary').forEach((btn) => {
-        btn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          const lang = e.currentTarget.dataset.lang;
-          if (lang && lang !== currentLang) {
-            await loadPdf(lang, { initialPage: pageNum });
-          } else {
-            updateSplitButtons(lang);
-          }
-        });
+      // Loop back to the first page from the end of the document
+      restartBtn.addEventListener('click', () => {
+        if (!pdfDoc || pageNum === 1) return;
+        pageNum = 1;
+        queueRenderPage(1, 1);
       });
+
+      // Segmented language control: click or arrow keys to switch
+      segmentOptions.forEach((btn) => {
+        btn.addEventListener('click', () => switchLang(btn.dataset.lang));
+      });
+      segmentEl.addEventListener('keydown', (e) => {
+        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+        e.preventDefault();
+        const idx = segmentOptions.findIndex((btn) => btn.dataset.lang === currentLang);
+        const delta = e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 1;
+        const nextBtn = segmentOptions[(idx + delta + segmentOptions.length) % segmentOptions.length];
+        nextBtn.focus();
+        switchLang(nextBtn.dataset.lang);
+      });
+      window.addEventListener('resize', updateSegmentThumb);
 
       // Clean leftover overlay links
       stage.querySelectorAll('a.pdf-link.overlay').forEach((link) => link.remove());
@@ -556,8 +563,8 @@ layout: default
         disposePdf();
       });
 
-      // Initial load
-      loadPdf('en');
+      // Initial load: last chosen language, else browser locale
+      loadPdf(getInitialLang());
     });
   </script>
 
@@ -686,7 +693,8 @@ layout: default
       border: 1px solid var(--global-divider-color);
       border-radius: 2px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-      overflow: hidden;
+      /* Side sheets overhang the stage into the page gutters */
+      overflow: visible;
       line-height: 0;
       transition:
         background-color 180ms ease,
@@ -713,27 +721,181 @@ layout: default
       }
     }
 
-    #the-canvas {
+    /* Keep the overhanging sheets from causing horizontal page scroll.
+       (clip, not hidden: hidden would break the sticky toolbar) */
+    body {
+      overflow-x: clip;
+    }
+
+    /* Page deck: the current page fills the stage exactly as before; the
+       neighbor pages are full-size sheets stacked BEHIND it, sticking out
+       into the side gutters. Clicking one brings it to the center. */
+    .pdf-page {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      line-height: 0;
+    }
+
+    .pdf-page--current {
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Side sheets are fixed-width windows in the gutters, flush against the
+       stage edges, clipping a full-size render of their page. Like pages in
+       a row: the left window shows the previous page's RIGHT edge, the right
+       window shows the next page's LEFT edge. */
+    .pdf-page--prev,
+    .pdf-page--next {
+      position: absolute;
+      top: 50%;
+      /* Fill the whole gutter: from the stage edge to the screen edge
+         (minus a small breathing gap), so nothing gets clipped. */
+      width: calc(50vw - 50% - 0.75rem);
+      overflow: hidden;
+      z-index: 0;
+      opacity: 0.7;
+      cursor: pointer;
+      border: 1px solid var(--global-divider-color);
+      border-radius: 2px;
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
+      filter: brightness(0.96);
+      transform: translateY(-50%);
+      transition:
+        opacity 180ms ease,
+        filter 180ms ease;
+    }
+
+    .pdf-page--prev {
+      right: 100%;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .pdf-page--prev canvas {
+      flex: 0 0 auto;
+    }
+
+    .pdf-page--next {
+      left: 100%;
+    }
+
+    .pdf-page--prev:hover,
+    .pdf-page--prev:focus-visible,
+    .pdf-page--next:hover,
+    .pdf-page--next:focus-visible {
+      opacity: 1;
+      filter: none;
+    }
+
+    .pdf-page.is-empty {
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    /* Loop-back button: takes the next-page zone on the last page,
+       deliberately without page content — just the affordance. */
+    .pdf-restart {
+      position: absolute;
+      top: 0;
+      left: 100%;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      width: calc(50vw - 50% - 0.75rem);
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      border: 1px dashed var(--global-divider-color);
+      border-radius: 2px;
+      background: color-mix(in srgb, var(--global-theme-color) 4%, transparent);
+      color: var(--global-text-color-light);
+      font-size: 1.5rem;
+      cursor: pointer;
+      opacity: 0.7;
+      transition:
+        opacity 180ms ease,
+        color 180ms ease,
+        border-color 180ms ease,
+        background 180ms ease;
+    }
+
+    /* Keep the icon floating at mid-viewport within the visible part of
+       the zone (clamped to the zone's top/bottom edges) */
+    .pdf-restart i {
+      position: sticky;
+      top: calc(50vh - 0.75em);
+      margin: 0.9rem 0;
+    }
+
+    .pdf-restart i,
+    .pdf-restart i::before {
+      color: inherit;
+    }
+
+    .pdf-restart:hover,
+    .pdf-restart:focus-visible {
+      opacity: 1;
+      border-color: var(--global-theme-color);
+      background: color-mix(in srgb, var(--global-theme-color) 9%, transparent);
+      color: var(--global-theme-color);
+    }
+
+    .pdf-restart[hidden] {
+      display: none;
+    }
+
+    /* The center page needs its own shadow to visually sit on top of the deck */
+    .pdf-page--current canvas {
+      box-shadow: 0 6px 26px rgba(0, 0, 0, 0.16);
+    }
+
+    .pdf-page canvas {
       display: block;
       width: 100%;
       height: auto;
       opacity: 0;
-      transform: translateY(6px);
+      /* --enter-x is set by JS on page navigation so the incoming page
+         slides in from the side it came from */
+      transform: translate(var(--enter-x, 0px), var(--enter-y, 6px));
       transition:
         opacity 220ms ease,
         transform 220ms ease;
     } /* avoid inline baseline gap */
 
-    #the-canvas.is-rendered {
+    .pdf-page canvas.is-rendered {
       opacity: 1;
-      transform: translateY(0);
+      transform: translate(0, 0);
     }
 
-    #the-canvas.is-updating {
+    .pdf-page--current canvas.is-updating {
       opacity: 0.92;
       transition:
         opacity 120ms ease,
         transform 120ms ease;
+    }
+
+    /* Ghost: a snapshot of the outgoing page that slides away while the
+       real canvas (already reset off to the side) slides in with the new
+       page — both animate at the same time. */
+    .pdf-ghost {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 1;
+      transform: translate(0, 0);
+      transition:
+        opacity 260ms ease,
+        transform 260ms ease;
+    }
+
+    .pdf-ghost.is-leaving {
+      opacity: 0;
+      transform: translate(var(--exit-x, 0px), 0);
     }
 
     .pdf-loading,
@@ -778,15 +940,74 @@ layout: default
       font-size: 1rem;
     }
 
-    /* Split button container */
-    .lang-split {
+    /* Segmented language control with a sliding thumb */
+    .lang-segment {
+      position: relative;
       display: inline-flex;
-      gap: 0;
       align-items: center;
+      padding: 0.22rem;
       border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
       border-radius: 999px;
       background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
-      overflow: hidden;
+    }
+
+    .lang-segment__thumb {
+      position: absolute;
+      top: 0.22rem;
+      left: 0;
+      height: calc(100% - 0.44rem);
+      border-radius: 999px;
+      background: var(--global-theme-color);
+      box-shadow: 0 2px 8px color-mix(in srgb, var(--global-theme-color) 45%, transparent);
+      transition:
+        transform 240ms cubic-bezier(0.3, 0.9, 0.3, 1),
+        width 240ms cubic-bezier(0.3, 0.9, 0.3, 1);
+      will-change: transform;
+    }
+
+    .lang-segment__option {
+      position: relative;
+      z-index: 1;
+      min-height: 1.95rem;
+      padding: 0.42rem 0.85rem;
+      border: 0;
+      border-radius: 999px;
+      background: transparent;
+      color: var(--global-text-color);
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1;
+      cursor: pointer;
+      user-select: none;
+      transition: color 180ms ease;
+    }
+
+    .lang-segment__option[aria-checked='true'] {
+      color: #ffffff;
+      font-weight: 700;
+    }
+
+    .lang-segment__option:not([aria-checked='true']):hover {
+      color: var(--global-theme-color);
+    }
+
+    /* Download button for the active language */
+    .cv-download-btn {
+      display: inline-flex;
+      gap: 0.4em;
+      align-items: center;
+      min-height: 2.35rem;
+      padding: 0.5rem 0.9rem;
+      border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+      color: var(--global-text-color);
+      font-size: 0.95rem;
+      font-weight: 600;
+      line-height: 1;
+      text-decoration: none;
+      cursor: pointer;
+      user-select: none;
       transition:
         background 160ms ease,
         border-color 160ms ease,
@@ -794,138 +1015,28 @@ layout: default
         transform 160ms ease;
     }
 
-    .lang-split:not(.active):hover,
-    .lang-split:not(.active):focus-within {
+    .cv-download-btn span,
+    .cv-download-btn i,
+    .cv-download-btn i::before {
+      color: currentColor;
+      font-size: 0.9em;
+    }
+
+    .cv-download-btn:hover,
+    .cv-download-btn:focus-visible {
       border-color: var(--global-theme-color);
       background: var(--global-theme-color);
+      color: #ffffff;
+      text-decoration: none;
       transform: translateY(-1px);
     }
 
-    .lang-split.active {
-      border-color: color-mix(in srgb, var(--global-theme-color) 76%, var(--global-divider-color));
-      background:
-        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 16%, transparent), transparent 78%),
-        color-mix(in srgb, var(--global-theme-color) 13%, transparent);
-      box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--global-theme-color) 18%, transparent);
-    }
-
-    .lang-split.active:hover,
-    .lang-split.active:focus-within {
-      border-color: var(--global-theme-color);
-      background:
-        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 16%, transparent), transparent 78%),
-        color-mix(in srgb, var(--global-theme-color) 13%, transparent);
-      transform: translateY(-1px);
-    }
-
-    /* Primary (switch language) */
-    .lang-primary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35em;
-      min-height: 2.35rem;
-      padding: 0.5rem 0.9rem;
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1;
-      text-decoration: none;
-      color: var(--global-text-color);
-      cursor: pointer;
-      user-select: none;
-      transition:
-        color 160ms ease,
-        background 160ms ease;
-    }
-
-    .lang-split:not(.active):hover .lang-primary,
-    .lang-split:not(.active):hover .lang-download,
-    .lang-split:not(.active):focus-within .lang-primary,
-    .lang-split:not(.active):focus-within .lang-download {
-      color: #ffffff;
-    }
-
-    .lang-primary.active {
-      color: var(--global-theme-color);
-      font-weight: 820;
-    }
-
-    .lang-split.active:hover .lang-primary,
-    .lang-split.active:focus-within .lang-primary {
-      color: var(--global-theme-color);
-    }
-
-    .lang-primary:hover,
-    .lang-download:hover {
-      text-decoration: none;
-    }
-
-    /* Secondary (download) — collapses to zero when inactive */
-    .lang-download {
-      display: inline-flex;
-      /* stays in DOM, but collapses */
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      width: 0;
-      height: 1.62rem;
-      /* collapsed */
-      padding: 0;
-      /* collapsed */
-      border: 0 solid transparent;
-      border-radius: 999px;
-      text-decoration: none;
-      color: var(--global-text-color);
-      font-size: 0.92rem;
-      line-height: 1;
-      cursor: pointer;
-      user-select: none;
-      opacity: 0;
-      /* hidden */
-      transform: translateX(4px);
-      /* slight slide-in when opening */
-      overflow: hidden;
-      /* hide icon while collapsed */
-      transition:
-        width 200ms ease,
-        padding 200ms ease,
-        border-width 200ms ease,
-        opacity 180ms ease,
-        transform 180ms ease,
-        background 160ms ease,
-        color 160ms ease;
-    }
-
-    .lang-primary *,
-    .lang-download,
-    .lang-download * {
-      transition-property: background-color, border-color, color, opacity, transform, width, padding, border-width !important;
-    }
-
-    .lang-download:hover {
-      color: #ffffff;
-      background: color-mix(in srgb, #ffffff 12%, transparent);
-    }
-
-    /* Expanded state (when group is .active) */
-    .lang-split.active .lang-download {
-      width: 1.62rem;
-      /* visible width */
-      padding: 0;
-      /* vertical padding restored */
-      border-width: 1px;
-      border-color: color-mix(in srgb, var(--global-theme-color) 46%, transparent);
-      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
-      opacity: 1;
-      transform: translateX(0);
-      margin-right: 0.38rem;
-    }
-
-    .lang-split.active:hover .lang-download,
-    .lang-split.active:focus-within .lang-download,
-    .lang-split.active .lang-download:hover,
-    .lang-split.active .lang-download:focus-visible {
-      border-color: var(--global-theme-color);
-      background: var(--global-theme-color);
+    .cv-download-btn:hover span,
+    .cv-download-btn:hover i,
+    .cv-download-btn:hover i::before,
+    .cv-download-btn:focus-visible span,
+    .cv-download-btn:focus-visible i,
+    .cv-download-btn:focus-visible i::before {
       color: #ffffff;
     }
 
@@ -934,178 +1045,9 @@ layout: default
       border: 1px solid transparent;
     }
 
-    /* Pager: match language button style */
-    .pager {
-      display: grid;
-      grid-template-columns: minmax(7rem, 1fr) auto minmax(7rem, 1fr);
-      gap: 0.5rem;
-      align-items: center;
-      justify-content: center;
-      margin-top: 0;
-      order: 2;
-      font-size: 1rem;
-      line-height: 1;
-    }
-
-    .pager-status {
-      display: inline-flex;
-      gap: 0.45rem;
-      align-items: center;
-      justify-content: center;
-      min-height: 2.35rem;
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1;
-      white-space: nowrap;
-    }
-
-    #prev {
-      justify-self: end;
-    }
-
-    #next {
-      justify-self: start;
-    }
-
-    /* Single-button mode for short (1-2 page) documents: icon-only cycle button */
-    .pager.pager--cycle {
-      grid-template-columns: auto auto;
-    }
-
-    .pager.pager--cycle #prev {
-      display: none;
-    }
-
-    .pager.pager--cycle #next {
-      justify-content: center;
-      width: 2.35rem;
-      min-width: 2.35rem;
-      padding: 0;
-    }
-
-    .pager.pager--cycle #next span {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    .pager-status__label {
-      min-width: 2.65rem;
-      color: var(--global-text-color-light);
-      text-align: right;
-    }
-
-    .pager-status__numbers {
-      display: inline-flex;
-      gap: 0.3rem;
-      align-items: center;
-      justify-content: center;
-      min-width: 5.2rem;
-      min-height: 2.35rem;
-      padding: 0.5rem 0.85rem;
-      border: 1px solid color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
-      border-radius: 999px;
-      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
-      color: var(--global-text-color);
-      font-variant-numeric: tabular-nums;
-      box-shadow: none;
-    }
-
-    .pager-status__separator {
-      color: var(--global-text-color-light);
-    }
-
-    .pager-button {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35em;
-      min-height: 2.35rem;
-      min-width: 7rem;
-      padding: 0.5rem 0.9rem;
-      font-size: 1rem;
-      font-weight: 600;
-      line-height: 1;
-      color: var(--global-text-color);
-      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
-      border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
-      border-radius: 999px;
-      cursor: pointer;
-      user-select: none;
-      transition:
-        background 160ms ease,
-        border-color 160ms ease,
-        color 160ms ease,
-        opacity 180ms ease,
-        transform 160ms ease;
-    }
-
-    .pager-button span,
-    .pager-button i,
-    .pager-button i::before {
-      color: currentColor;
-    }
-
-    .pager-button,
-    .pager-button * {
-      transition-property: background-color, border-color, color, opacity, transform !important;
-    }
-
-    .pager-button:not(:disabled):hover,
-    .pager-button:not(:disabled):focus-visible {
-      border-color: var(--global-theme-color);
-      background: var(--global-theme-color);
-      color: #ffffff;
-      transform: translateY(-1px);
-    }
-
-    .pager-button:not(:disabled):hover span,
-    .pager-button:not(:disabled):hover i,
-    .pager-button:not(:disabled):hover i::before,
-    .pager-button:not(:disabled):focus-visible span,
-    .pager-button:not(:disabled):focus-visible i,
-    .pager-button:not(:disabled):focus-visible i::before {
-      color: #ffffff;
-    }
-
-    .pager-button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-
-    html[data-theme='dark'] .lang-split:not(.active):not(:hover):not(:focus-within),
-    html[data-theme='dark'] .pager-button:not(:hover):not(:focus-visible),
-    html[data-theme='dark'] .pager-status__numbers {
+    html[data-theme='dark'] .lang-segment,
+    html[data-theme='dark'] .cv-download-btn:not(:hover):not(:focus-visible) {
       background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
-    }
-
-    html[data-theme='dark'] .lang-split.active {
-      border-color: color-mix(in srgb, var(--global-theme-color) 82%, var(--global-divider-color));
-      background:
-        linear-gradient(135deg, color-mix(in srgb, var(--global-theme-color) 22%, transparent), transparent 78%),
-        color-mix(in srgb, var(--global-theme-color) 17%, transparent);
-      box-shadow: inset 0 0 0 1px color-mix(in srgb, #ffffff 10%, transparent);
-    }
-
-    html[data-theme='dark'] .lang-split.active:not(:hover):not(:focus-within) .lang-download {
-      border-color: color-mix(in srgb, var(--global-theme-color) 60%, var(--global-divider-color));
-      background: color-mix(in srgb, #ffffff 8%, transparent);
-    }
-
-    html[data-theme='dark'] .lang-split.active:hover .lang-download,
-    html[data-theme='dark'] .lang-split.active:focus-within .lang-download,
-    html[data-theme='dark'] .lang-split.active .lang-download:hover,
-    html[data-theme='dark'] .lang-split.active .lang-download:focus-visible {
-      border-color: var(--global-theme-color);
-      background: var(--global-theme-color);
-      color: #ffffff;
     }
 
     .post {
@@ -1118,71 +1060,22 @@ layout: default
         gap: 0.5rem 0.65rem;
       }
 
-      .lang-toolbar,
-      .pager {
+      .lang-toolbar {
         justify-content: center;
+        gap: 0.35rem;
         font-size: 0.92rem;
       }
 
-      .lang-toolbar {
-        gap: 0.35rem;
+      .lang-segment__option {
+        min-height: 1.75rem;
+        padding: 0.38rem 0.68rem;
+        font-size: 0.88rem;
       }
 
-      .lang-primary {
+      .cv-download-btn {
         min-height: 2.1rem;
         padding: 0.44rem 0.68rem;
-        font-size: 0.92rem;
-      }
-
-      .lang-download {
-        height: 1.45rem;
-        font-size: 0.82rem;
-      }
-
-      .lang-split.active .lang-download {
-        width: 1.45rem;
-        margin-right: 0.3rem;
-      }
-
-      .pager {
-        grid-template-columns: minmax(2.1rem, 1fr) auto minmax(2.1rem, 1fr);
-        gap: 0.35rem;
-      }
-
-      .pager-status {
-        gap: 0.35rem;
-        min-height: 2.1rem;
-        font-size: 0.92rem;
-      }
-
-      .pager-status__label {
-        min-width: 2.4rem;
-      }
-
-      .pager-status__numbers {
-        min-width: 4.7rem;
-        min-height: 2.1rem;
-        padding: 0.44rem 0.65rem;
-      }
-
-      .pager-button {
-        justify-content: center;
-        width: 2.1rem;
-        min-width: 2.1rem;
-        min-height: 2.1rem;
-        padding: 0;
-      }
-
-      .pager-button span {
-        position: absolute;
-        width: 1px;
-        height: 1px;
-        padding: 0;
-        margin: -1px;
-        overflow: hidden;
-        clip: rect(0, 0, 0, 0);
-        white-space: nowrap;
-        border: 0;
+        font-size: 0.88rem;
       }
     }
   </style>

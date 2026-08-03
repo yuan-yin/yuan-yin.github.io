@@ -1,4 +1,35 @@
 $(document).ready(function () {
+  // Navbar capsule: place the thumb under the active page link
+  var navCapsule = document.getElementById("nav-capsule");
+  if (navCapsule) {
+    var navThumb = navCapsule.querySelector(".nav-capsule__thumb");
+    var positionNavThumb = function () {
+      var active = navCapsule.querySelector(".nav-link.active");
+      if (!active || !active.offsetWidth) {
+        navCapsule.classList.remove("has-thumb");
+        return;
+      }
+      // Measure via rects: offsetLeft would be relative to the wrong ancestor
+      // for links nested in the dropdown wrapper
+      var capsuleRect = navCapsule.getBoundingClientRect();
+      var activeRect = active.getBoundingClientRect();
+      var x = activeRect.left - capsuleRect.left - navCapsule.clientLeft;
+      var y = activeRect.top - capsuleRect.top - navCapsule.clientTop;
+      navThumb.style.width = activeRect.width + "px";
+      navThumb.style.height = activeRect.height + "px";
+      navThumb.style.transform = "translate(" + x + "px, " + y + "px)";
+      navCapsule.classList.add("has-thumb");
+      // Enable thumb transitions only after the initial silent placement
+      window.setTimeout(function () {
+        navCapsule.classList.add("thumb-animated");
+      }, 50);
+    };
+    positionNavThumb();
+    window.addEventListener("resize", positionNavThumb);
+    // Reposition when the collapsed mobile menu opens (widths are 0 while hidden)
+    $("#navbarNav").on("shown.bs.collapse", positionNavThumb);
+  }
+
   // add toggle functionality to abstract, award and bibtex buttons
   function togglePublicationPanel(button, panelSelector) {
     var panelGroup = $(button).parent().parent();

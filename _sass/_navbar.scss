@@ -452,6 +452,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  width: 2.15rem;
+  height: 2.15rem;
   min-height: 2.15rem;
   padding: 0;
   border: 1px solid transparent;
@@ -467,6 +469,7 @@
   .nav-link {
     width: 100%;
     min-height: inherit;
+    padding: 0;
     border: 0;
     background: transparent;
     box-shadow: none;

@@ -1,1 +1,0 @@
-(()=>{const t=navigator.userAgentData?.platform||navigator.platform||"";/mac/i.test(t)&&document.documentElement.classList.add("shortcut-is-mac")})();

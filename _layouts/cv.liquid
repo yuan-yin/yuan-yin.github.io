@@ -47,12 +47,14 @@ layout: default
       <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
       <button class="pdf-page pdf-page--prev is-empty" type="button" aria-label="Show previous page">
         <canvas></canvas>
+        <span class="pdf-page__hint" aria-hidden="true"><i class="fa-solid fa-chevron-left"></i></span>
       </button>
       <div class="pdf-page pdf-page--current">
         <canvas id="the-canvas"></canvas>
       </div>
       <button class="pdf-page pdf-page--next is-empty" type="button" aria-label="Show next page">
         <canvas></canvas>
+        <span class="pdf-page__hint" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></span>
       </button>
       <button class="pdf-restart" type="button" aria-label="Back to first page" hidden>
         <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
@@ -750,49 +752,98 @@ layout: default
     .pdf-page--prev,
     .pdf-page--next {
       position: absolute;
-      top: 50%;
+      /* No top:50% + translateY: an ancestor transform shifts the painted
+         position of the sticky chevron, desyncing it from the loop-back
+         icon. Same geometry as .pdf-restart instead. */
+      top: 0;
+      height: 100%;
       /* Fill the whole gutter: from the stage edge to the screen edge
          (minus a small breathing gap), so nothing gets clipped. */
       width: calc(50vw - 50% - 0.75rem);
-      overflow: hidden;
+      /* clip, not hidden: hidden would make this a scroll container and
+         break the sticky chevron (it would stick to the zone, not the
+         viewport like the loop-back icon does) */
+      overflow: clip;
       z-index: 0;
-      opacity: 0.7;
+      display: flex;
+      align-items: center;
       cursor: pointer;
       border: 1px solid var(--global-divider-color);
       border-radius: 2px;
       box-shadow: 0 10px 28px rgba(0, 0, 0, 0.22);
-      filter: brightness(0.96);
-      transform: translateY(-50%);
-      transition:
-        opacity 180ms ease,
-        filter 180ms ease;
+      transition: border-color 180ms ease;
+    }
+
+    .pdf-page--prev canvas,
+    .pdf-page--next canvas {
+      flex: 0 0 auto;
     }
 
     .pdf-page--prev {
       right: 100%;
-      display: flex;
       justify-content: flex-end;
-    }
-
-    .pdf-page--prev canvas {
-      flex: 0 0 auto;
     }
 
     .pdf-page--next {
       left: 100%;
+      justify-content: flex-start;
     }
 
     .pdf-page--prev:hover,
     .pdf-page--prev:focus-visible,
     .pdf-page--next:hover,
     .pdf-page--next:focus-visible {
-      opacity: 1;
-      filter: none;
+      border-color: var(--global-theme-color);
     }
 
     .pdf-page.is-empty {
       visibility: hidden;
       pointer-events: none;
+    }
+
+    /* Navigation hint over the side windows: a thin color layer above the
+       PDF with a chevron floating at the same position as the loop-back
+       icon. Hover marks the zone active in the theme color rather than
+       highlighting the page content. */
+    .pdf-page__hint {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      pointer-events: none;
+      background: color-mix(in srgb, var(--global-theme-color) 4%, transparent);
+      color: var(--global-text-color-light);
+      font-size: 1.5rem;
+      transition:
+        background 180ms ease,
+        color 180ms ease;
+    }
+
+    .pdf-page__hint i {
+      position: sticky;
+      top: calc(50vh - 0.75em);
+      margin: 0.9rem 0;
+    }
+
+    .pdf-page__hint i::before {
+      color: inherit;
+    }
+
+    /* Only the main stage page is sharp; side pages read as frosted,
+       darkened previews */
+    .pdf-page--prev canvas,
+    .pdf-page--next canvas {
+      filter: blur(4px) brightness(0.62) saturate(0.85);
+    }
+
+    .pdf-page--prev:hover .pdf-page__hint,
+    .pdf-page--prev:focus-visible .pdf-page__hint,
+    .pdf-page--next:hover .pdf-page__hint,
+    .pdf-page--next:focus-visible .pdf-page__hint {
+      background: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
+      color: var(--global-theme-color);
     }
 
     /* Loop-back button: takes the next-page zone on the last page,

@@ -479,14 +479,6 @@
     transition: none;
   }
 
-  .shortcut-key-mac {
-    display: none;
-  }
-
-  .shortcut-key-default {
-    display: inline;
-  }
-
   &:hover {
     border-color: color-mix(in srgb, var(--global-theme-color) 28%, var(--global-divider-color));
     background-color: color-mix(in srgb, var(--global-theme-color) 10%, transparent);
@@ -499,16 +491,6 @@
       color: inherit;
       transform: none;
     }
-  }
-}
-
-html.shortcut-is-mac #search-toggle {
-  .shortcut-key-mac {
-    display: inline;
-  }
-
-  .shortcut-key-default {
-    display: none;
   }
 }
 
@@ -619,10 +601,6 @@ html[data-theme="dark"] {
     min-width: 2.15rem;
     padding-right: 0;
     padding-left: 0;
-  }
-
-  .navbar.navbar-light .navbar-nav .nav-item--search #search-toggle .shortcut-key {
-    display: none !important;
   }
 
   .toggle-container {

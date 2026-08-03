@@ -28,10 +28,16 @@ let applyTheme = () => {
   // Crossfade two page snapshots on the GPU instead of transitioning every
   // element's colors individually (transTheme), which repaints the whole
   // page per frame and janks — especially with backdrop-filter layers.
-  if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+  // NEVER on the initial head-time run: startViewTransition defers the DOM
+  // change until after first paint, which would flash the wrong theme.
+  const isInteractiveChange = document.readyState !== "loading";
+  if (isInteractiveChange && document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
     document.startViewTransition(() => applyThemeChanges(theme));
-  } else {
+  } else if (isInteractiveChange) {
     transTheme();
+    applyThemeChanges(theme);
+  } else {
+    // Initial load: apply synchronously, before anything is painted
     applyThemeChanges(theme);
   }
 };

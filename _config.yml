@@ -150,7 +150,7 @@ collections:
   projects:
     output: true
   talks:
-    output: true
+    output: false # listed on /talks/ only; no individual pages
   teachings:
     output: true
 

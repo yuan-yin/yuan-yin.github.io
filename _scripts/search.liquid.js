@@ -79,24 +79,22 @@ ninja.data = [
     {%- endfor -%}
   {%- endif -%}
   {%- for collection in site.collections -%}
-    {%- if collection.label != 'posts' -%}
+    {%- comment -%} Only collections that output individual pages (skips e.g. talks) {%- endcomment -%}
+    {%- if collection.label != 'posts' and collection.output -%}
       {%- for item in collection.docs -%}
-        {
-          {%- if item.inline -%}
-            {%- assign title = item.content | newline_to_br | replace: "<br />", " " | replace: "<br/>", " " | strip_html | strip_newlines | escape | strip -%}
-          {%- else -%}
+        {%- unless item.inline -%}
+          {
             {%- assign title = item.title | newline_to_br | replace: "<br />", " " | replace: "<br/>", " " | strip_html | strip_newlines | escape | strip -%}
-          {%- endif -%}
-          id: "{{ collection.label }}-{{ title | slugify }}",
-          title: '{{ title | escape | emojify | truncatewords: 13 }}',
-          description: "{{ item.description | strip_html | strip_newlines | escape | strip }}",
-          section: "{{ collection.label | capitalize }}",
-          {%- unless item.inline -%}
+            {%- comment -%} forloop.index keeps ids unique when titles repeat across years {%- endcomment -%}
+            id: "{{ collection.label }}-{{ title | slugify }}-{{ forloop.index }}",
+            title: '{{ title | escape | emojify | truncatewords: 13 }}{% if item.year %} ({{ item.year }}){% endif %}',
+            description: "{{ item.description | strip_html | strip_newlines | escape | strip }}",
+            section: "{{ collection.label | capitalize }}",
             handler: () => {
               window.location.href = "{{ item.url | relative_url }}";
             },
-          {%- endunless -%}
-        },
+          },
+        {%- endunless -%}
       {%- endfor -%}
     {%- endif -%}
   {%- endfor -%}

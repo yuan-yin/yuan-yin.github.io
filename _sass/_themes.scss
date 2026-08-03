@@ -58,25 +58,27 @@
     display: none;
   }
 
+  /* Liquid glass: near-clear saturated backdrop with specular rim */
   #back-to-top {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
+    border: 1px solid transparent;
     border-radius: v.$button-pill-radius;
     color: var(--global-text-color);
-    background:
-      linear-gradient(145deg, color-mix(in srgb, var(--global-theme-color) 16%, transparent), transparent),
-      color-mix(in srgb, var(--global-bg-color) 68%, transparent);
-    -webkit-backdrop-filter: blur(14px) saturate(1.5);
-    backdrop-filter: blur(14px) saturate(1.5);
+    background: color-mix(in srgb, #ffffff 7%, transparent);
+    -webkit-backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
+    backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
     bottom: v.$back-to-top-bottom;
     right: v.$back-to-top-right;
     height: v.$back-to-top-height;
     width: v.$back-to-top-width;
     box-shadow:
-      0 8px 24px rgba(39, 48, 74, 0.16),
-      inset 0 1px 0 rgba(255, 255, 255, 0.45);
+      0 0.35rem 1.3rem rgba(39, 48, 74, 0.14),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+      inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.95),
+      inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.7),
+      inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.16);
     z-index: v.$back-to-top-z-index;
     transition:
       background 160ms ease,
@@ -171,14 +173,18 @@ html[data-theme-setting="dark"] {
     display: none;
   }
 
+  /* Smoked-glass variant, matching the other dark-mode glass elements */
   #back-to-top:not(:hover):not(:focus-visible) {
     color: var(--global-text-color);
-    background:
-      linear-gradient(145deg, color-mix(in srgb, var(--global-theme-color) 22%, transparent), transparent),
-      color-mix(in srgb, var(--global-bg-color) 62%, transparent);
+    background: rgba(16, 19, 26, 0.42);
     box-shadow:
-      0 10px 26px rgba(0, 0, 0, 0.32),
-      inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
+      0 0.4rem 1.4rem rgba(0, 0, 0, 0.35),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+      inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.5),
+      inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.26),
+      inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.07);
+    -webkit-backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
+    backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
   }
 }
 

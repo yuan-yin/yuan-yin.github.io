@@ -35,6 +35,16 @@ layout: default
             <span>PDF</span>
           </a>
         </div>
+
+        <!-- Mobile-only pager: replaces the side page zones on small screens -->
+        <div class="pager-mobile" aria-label="CV pages">
+          <button type="button" id="pager-mobile-prev" class="pager-mobile__btn" disabled aria-label="Previous page">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button type="button" id="pager-mobile-next" class="pager-mobile__btn" disabled aria-label="Next page">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
 
@@ -112,6 +122,9 @@ layout: default
       });
       const currentSlot = slots[1];
       const restartBtn = stage.querySelector('.pdf-restart');
+      const mobilePrevBtn = document.getElementById('pager-mobile-prev');
+      const mobileNextBtn = document.getElementById('pager-mobile-next');
+      const mobileNextIcon = mobileNextBtn.querySelector('i');
 
       let pdfDoc = null; // PDFDocumentProxy
       let loadingTask = null; // PDFLoadingTask
@@ -242,6 +255,7 @@ layout: default
           }
           // Loop-back button occupies the empty "next" zone on the last page
           restartBtn.hidden = !(doc === pdfDoc && doc && doc.numPages > 1 && num >= doc.numPages);
+          updateMobilePager();
           if (!firstPageRendered && rendered) {
             firstPageRendered = true;
             hasLoadedOnce = true;
@@ -534,6 +548,31 @@ layout: default
         queueRenderPage(1, 1);
       });
 
+      // Mobile pager: prev, and next-or-restart at the end of the document
+      function updateMobilePager() {
+        if (!pdfDoc) {
+          mobilePrevBtn.disabled = true;
+          mobileNextBtn.disabled = true;
+          return;
+        }
+        mobilePrevBtn.disabled = pageNum <= 1;
+        mobileNextBtn.disabled = pdfDoc.numPages <= 1;
+        const atEnd = pageNum >= pdfDoc.numPages;
+        mobileNextIcon.className = atEnd ? 'fa-solid fa-rotate-right' : 'fa-solid fa-chevron-right';
+        mobileNextBtn.setAttribute('aria-label', atEnd ? 'Back to first page' : 'Next page');
+      }
+
+      mobilePrevBtn.addEventListener('click', onPrevPage);
+      mobileNextBtn.addEventListener('click', () => {
+        if (!pdfDoc || pdfDoc.numPages <= 1) return;
+        if (pageNum >= pdfDoc.numPages) {
+          pageNum = 1;
+          queueRenderPage(1, 1);
+        } else {
+          onNextPage();
+        }
+      });
+
       // Segmented language control: click or arrow keys to switch
       segmentOptions.forEach((btn) => {
         btn.addEventListener('click', () => switchLang(btn.dataset.lang));
@@ -821,21 +860,60 @@ layout: default
         color 180ms ease;
     }
 
-    .pdf-page__hint i {
+    /* All three zone icons (prev / next / loop-back) sit on a circular
+       liquid-glass pill: near-clear saturated backdrop + specular rim,
+       floating at mid-viewport like before. */
+    .pdf-page__hint i,
+    .pdf-restart i {
       position: sticky;
-      top: calc(50vh - 0.75em);
+      top: calc(50vh - 1.4rem);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.8rem;
+      height: 2.8rem;
       margin: 0.9rem 0;
+      border-radius: 999px;
+      background: color-mix(in srgb, #ffffff 7%, transparent);
+      box-shadow:
+        0 0.35rem 1.3rem rgba(39, 48, 74, 0.14),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.95),
+        inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.7),
+        inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.16);
+      -webkit-backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
+      backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
+      font-size: 1.1rem;
+    }
+
+    html[data-theme='dark'] .pdf-page__hint i,
+    html[data-theme='dark'] .pdf-restart i {
+      background: rgba(16, 19, 26, 0.42);
+      box-shadow:
+        0 0.4rem 1.4rem rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+        inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.5),
+        inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.26),
+        inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.07);
+      -webkit-backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
+      backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
     }
 
     .pdf-page__hint i::before {
       color: inherit;
     }
 
-    /* Only the main stage page is sharp; side pages read as frosted,
-       darkened previews */
+    /* Only the main stage page is sharp; side pages are frosted and
+       semi-transparent so they recede into the page background */
     .pdf-page--prev canvas,
     .pdf-page--next canvas {
-      filter: blur(4px) brightness(0.62) saturate(0.85);
+      filter: blur(4px);
+    }
+
+    /* Overrides the .is-rendered fade-in target (opacity: 1) */
+    .pdf-page--prev canvas.is-rendered,
+    .pdf-page--next canvas.is-rendered {
+      opacity: 0.25;
     }
 
     .pdf-page--prev:hover .pdf-page__hint,
@@ -873,14 +951,6 @@ layout: default
         background 180ms ease;
     }
 
-    /* Keep the icon floating at mid-viewport within the visible part of
-       the zone (clamped to the zone's top/bottom edges) */
-    .pdf-restart i {
-      position: sticky;
-      top: calc(50vh - 0.75em);
-      margin: 0.9rem 0;
-    }
-
     .pdf-restart i,
     .pdf-restart i::before {
       color: inherit;
@@ -896,6 +966,56 @@ layout: default
 
     .pdf-restart[hidden] {
       display: none;
+    }
+
+    /* Mobile pager: hidden on desktop where the side zones handle paging */
+    .pager-mobile {
+      display: none;
+      gap: 0.5rem;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      order: 3;
+    }
+
+    .pager-mobile__btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.1rem;
+      height: 2.1rem;
+      padding: 0;
+      border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+      color: var(--global-text-color);
+      cursor: pointer;
+      transition:
+        background 160ms ease,
+        border-color 160ms ease,
+        color 160ms ease,
+        opacity 160ms ease;
+    }
+
+    .pager-mobile__btn i,
+    .pager-mobile__btn i::before {
+      color: inherit;
+    }
+
+    .pager-mobile__btn:not(:disabled):hover,
+    .pager-mobile__btn:not(:disabled):focus-visible {
+      border-color: var(--global-theme-color);
+      background: var(--global-theme-color);
+      color: #ffffff;
+    }
+
+    .pager-mobile__btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    html[data-theme='dark'] .pager-mobile__btn:not(:hover):not(:disabled) {
+      background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
     }
 
     /* The center page needs its own shadow to visually sit on top of the deck */
@@ -1109,6 +1229,17 @@ layout: default
       .header-toolbar {
         justify-content: center;
         gap: 0.5rem 0.65rem;
+      }
+
+      /* On small screens the gutter zones give way to the button pager */
+      .pdf-page--prev,
+      .pdf-page--next,
+      .pdf-restart {
+        display: none;
+      }
+
+      .pager-mobile {
+        display: inline-flex;
       }
 
       .lang-toolbar {

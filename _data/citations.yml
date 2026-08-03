@@ -1,0 +1,103 @@
+metadata:
+  last_updated: '2026-08-03'
+papers:
+  ynep174AAAAJ:0EnyYjriUFMC:
+    citations: 29
+    title: Improving trust and confidence in medical skin lesion diagnosis through explainable deep learning
+    year: '2025'
+  ynep174AAAAJ:4TOpqqG69KYC:
+    citations: 16
+    title: 'GEPS: Boosting Generalization in Parametric PDE Neural Solvers through Adaptive Conditioning'
+    year: '2024'
+  ynep174AAAAJ:5nxA0vEk-isC:
+    citations: 5
+    title: 'Physics-aware deep learning and dynamical systems: Hybrid modeling and generalization'
+    year: '2023'
+  ynep174AAAAJ:7PzlFSSx8tAC:
+    citations: 0
+    title: 'Pictura: Perspective-View Self-Play at Scale for Driving'
+    year: '2026'
+  ynep174AAAAJ:8k81kl-MbHgC:
+    citations: 13
+    title: 'INFINITY: Neural Field Modeling for Reynolds-Averaged Navier-Stokes Equations'
+    year: '2023'
+  ynep174AAAAJ:9ZlFYXVOiuMC:
+    citations: 0
+    title: 'IPA: An Information-Reconstructive Input Projection Frame-work for Efficient Foundation Model Adaptation'
+    year: '2025'
+  ynep174AAAAJ:KlAtU1dfN6UC:
+    citations: 36
+    title: 'Advancing dermatological diagnostics: Interpretable AI for enhanced skin lesion classification'
+    year: '2024'
+  ynep174AAAAJ:LkGwnXOMwfcC:
+    citations: 6
+    title: Exemplars and counterexemplars explanations for skin lesion classifiers
+    year: '2022'
+  ynep174AAAAJ:QIV2ME_5wuYC:
+    citations: 16
+    title: Driving on Registers
+    year: '2026'
+  ynep174AAAAJ:ULOm3_A8WrAC:
+    citations: 15
+    title: Learning a Neural Solver for Parametric PDE to Enhance Physics-Informed Methods
+    year: '2024'
+  ynep174AAAAJ:UeHWp8X0CEIC:
+    citations: 49
+    title: Local Feature Approach to Dorsal Hand Vein Recognition by Centroid-based Circular Key-point Grid and Fine-grained Matching
+    year: '2017'
+  ynep174AAAAJ:UebtZRa9Y70C:
+    citations: 18
+    title: Time Series Continuous Modeling for Imputation and Forecasting with Implicit Neural Representations
+    year: '2023'
+  ynep174AAAAJ:WF5omc3nYNoC:
+    citations: 84
+    title: Generalizing to New Physical Systems via Context-Informed Dynamics Model
+    year: '2022'
+  ynep174AAAAJ:Y0pCki6q_DkC:
+    citations: 73
+    title: 'LEADS: Learning Dynamical Systems That Generalize Across Environments'
+    year: '2021'
+  ynep174AAAAJ:YOwf2qJgpHMC:
+    citations: 11
+    title: 'ReGentS: Real-World Safety-Critical Driving Scenario Generation Made Stable'
+    year: '2024'
+  ynep174AAAAJ:YsMSGLbcyi4C:
+    citations: 14
+    title: Explainable deep image classifiers for skin lesion diagnosis
+    year: '2021'
+  ynep174AAAAJ:_FxGoFyzp5QC:
+    citations: 15
+    title: Multi-Scale Physical Representations for Approximating PDE Solutions with Graph Neural Operators
+    year: '2022'
+  ynep174AAAAJ:dhFuZR0502QC:
+    citations: 0
+    title: Test-Time Trajectory Optimization for Autonomous Driving
+    year: '2026'
+  ynep174AAAAJ:eQOLeE2rZwMC:
+    citations: 26
+    title: Exemplars and counterexemplars explanations for image classifiers, targeting skin lesion labeling
+    year: '2021'
+  ynep174AAAAJ:hqOjcs7Dif8C:
+    citations: 116
+    title: 'Operator Learning with Neural Fields: Tackling PDEs on General Geometries'
+    year: '2023'
+  ynep174AAAAJ:kNdYIx-mwKoC:
+    citations: 6
+    title: Unsupervised Inpainting for Occluded Sea Surface Temperature Sequences
+    year: '2019'
+  ynep174AAAAJ:qxL8FJ1GzNcC:
+    citations: 3
+    title: 'PPT: Pretraining with Pseudo-Labeled Trajectories for Motion Forecasting'
+    year: '2024'
+  ynep174AAAAJ:roLk4NBRz8UC:
+    citations: 129
+    title: Continuous PDE Dynamics Forecasting with Implicit Neural Representations
+    year: '2022'
+  ynep174AAAAJ:ufrVoPGSRksC:
+    citations: 263
+    title: Augmenting Physical Models with Deep Networks for Complex Dynamics Forecasting
+    year: '2021'
+  ynep174AAAAJ:zYLM7Y9cAGgC:
+    citations: 0
+    title: Unsupervised Spatiotemporal Data Inpainting
+    year: Unknown Year

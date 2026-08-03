@@ -11,88 +11,103 @@ layout: default
         <p class="post-description">{{ page.description }}</p>
       {% endif %}
     </div>
+  </header>
 
-    <div class="header-toolbar">
-      <div class="lang-toolbar">
-        <!-- English split button -->
-        <div class="lang-split" data-lang="en">
-          <a
-            id="lang-en"
-            class="lang-primary"
-            data-lang="en"
-            href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-            rel="noopener"
-            aria-pressed="false"
-          >
-            English
-          </a>
-          <a
-            id="download-en"
-            class="lang-download"
-            href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-            download
-            rel="noopener"
-            aria-label="Download English CV"
-          >
-            <i class="fa-solid fa-download" aria-hidden="true"></i>
-          </a>
+  <div class="cv-stage-wrap">
+    <div class="cv-toolbar-anchor">
+      <div class="cv-toolbar-backdrop" aria-hidden="true"></div>
+      <div class="header-toolbar">
+        <div class="lang-toolbar">
+          <!-- English split button -->
+          <div class="lang-split" data-lang="en">
+            <a
+              id="lang-en"
+              class="lang-primary"
+              data-lang="en"
+              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+              rel="noopener"
+              aria-pressed="false"
+            >
+              English
+            </a>
+            <a
+              id="download-en"
+              class="lang-download"
+              href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+              download
+              rel="noopener"
+              aria-label="Download English CV"
+            >
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+            </a>
+          </div>
+
+          <!-- French split button -->
+          <div class="lang-split" data-lang="fr">
+            <a
+              id="lang-fr"
+              class="lang-primary"
+              data-lang="fr"
+              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+              rel="noopener"
+              aria-pressed="false"
+            >
+              Français
+            </a>
+            <a
+              id="download-fr"
+              class="lang-download"
+              href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
+              download
+              rel="noopener"
+              aria-label="Download French CV"
+            >
+              <i class="fa-solid fa-download" aria-hidden="true"></i>
+            </a>
+          </div>
         </div>
 
-        <!-- French split button -->
-        <div class="lang-split" data-lang="fr">
-          <a
-            id="lang-fr"
-            class="lang-primary"
-            data-lang="fr"
-            href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-            rel="noopener"
-            aria-pressed="false"
+        <div class="pager">
+          <button
+            id="prev"
+            class="pager-button"
+            disabled
+            aria-label="Previous page"
           >
-            Français
-          </a>
-          <a
-            id="download-fr"
-            class="lang-download"
-            href="{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}"
-            download
-            rel="noopener"
-            aria-label="Download French CV"
-          >
-            <i class="fa-solid fa-download" aria-hidden="true"></i>
-          </a>
-        </div>
-      </div>
-
-      <div class="pager">
-        <button
-          id="prev"
-          class="pager-button"
-          disabled
-          aria-label="Previous page"
-        >
-          <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
-          <span>Previous</span>
-        </button>
-        <span class="pager-status">
-          <span class="pager-status__label">Page</span>
-          <span class="pager-status__numbers">
-            <span id="page_num">...</span>
-            <span class="pager-status__separator">/</span>
-            <span id="page_count">...</span>
+            <i class="fa-solid fa-circle-left" aria-hidden="true"></i>
+            <span>Previous</span>
+          </button>
+          <span class="pager-status">
+            <span class="pager-status__label">Page</span>
+            <span class="pager-status__numbers">
+              <span id="page_num">...</span>
+              <span class="pager-status__separator">/</span>
+              <span id="page_count">...</span>
+            </span>
           </span>
-        </span>
-        <button
-          id="next"
-          class="pager-button"
-          disabled
-          aria-label="Next page"
-        >
-          <span>Next</span>
-          <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
-        </button>
+          <button
+            id="next"
+            class="pager-button"
+            disabled
+            aria-label="Next page"
+          >
+            <span>Next</span>
+            <i class="fa-solid fa-circle-right" aria-hidden="true"></i>
+          </button>
+        </div>
       </div>
     </div>
-  </header>
+
+    <div
+      class="pdf-stage"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div class="pdf-loading" role="status">Loading CV...</div>
+      <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
+      <canvas id="the-canvas"></canvas>
+    </div>
+  </div>
 
   <link
     rel="modulepreload"
@@ -113,11 +128,34 @@ layout: default
     document.addEventListener('DOMContentLoaded', () => {
       const postElement = document.querySelector('.post');
       const stage = document.querySelector('.pdf-stage');
+
+      // Keep the floating toolbar below the fixed site navbar, and only show
+      // the header blur once CV content actually scrolls under the controls.
+      const navbarEl = document.getElementById('navbar');
+      const toolbarAnchor = document.querySelector('.cv-toolbar-anchor');
+      let toolbarTopOffset = 0;
+      const updateStuckState = () => {
+        // Blur only once the PDF top passes under the pinned toolbar's bottom edge
+        const pinnedBottom = toolbarTopOffset + toolbarAnchor.offsetHeight;
+        const stuck = stage.getBoundingClientRect().top < pinnedBottom - 0.5;
+        postElement.classList.toggle('cv-toolbar-stuck', stuck);
+      };
+      const updateToolbarTop = () => {
+        toolbarTopOffset = navbarEl && getComputedStyle(navbarEl).position === 'fixed' ? navbarEl.offsetHeight : 0;
+        postElement.style.setProperty('--cv-toolbar-top', `${toolbarTopOffset}px`);
+        updateStuckState();
+      };
+      updateToolbarTop();
+      window.addEventListener('resize', updateToolbarTop);
+      window.addEventListener('scroll', updateStuckState, { passive: true });
       const canvas = document.getElementById('the-canvas');
       const ctx = canvas.getContext('2d');
 
       const prevBtn = document.getElementById('prev');
       const nextBtn = document.getElementById('next');
+      const nextBtnLabel = nextBtn.querySelector('span');
+      const nextBtnIcon = nextBtn.querySelector('i');
+      const pagerElement = document.querySelector('.pager');
       const pageNumElement = document.getElementById('page_num');
       const pageCountElement = document.getElementById('page_count');
 
@@ -237,6 +275,7 @@ layout: default
 
         pageCountElement.textContent = pdfDoc.numPages;
         pageNum = Math.min(initialPage, pdfDoc.numPages);
+        pagerElement.classList.toggle('pager--cycle', isCycleMode());
         updateSplitButtons(lang);
         updatePagerState();
         await renderPage(pageNum);
@@ -442,9 +481,22 @@ layout: default
       }
 
       function onNextPage() {
-        if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+        if (!pdfDoc) return;
+        if (isCycleMode()) {
+          if (pdfDoc.numPages <= 1) return;
+          pageNum = pageNum >= pdfDoc.numPages ? 1 : pageNum + 1;
+          queueRenderPage(pageNum);
+          return;
+        }
+        if (pageNum >= pdfDoc.numPages) return;
         pageNum++;
         queueRenderPage(pageNum);
+      }
+
+      // With only 1-2 pages, a Previous button is pointless: collapse the
+      // pager to a single button that advances and wraps back to page 1.
+      function isCycleMode() {
+        return !!pdfDoc && pdfDoc.numPages <= 2;
       }
 
       function updatePagerState() {
@@ -453,6 +505,18 @@ layout: default
           nextBtn.disabled = true;
           return;
         }
+        if (isCycleMode()) {
+          prevBtn.disabled = true;
+          nextBtn.disabled = pdfDoc.numPages <= 1;
+          const atEnd = pageNum >= pdfDoc.numPages;
+          nextBtnLabel.textContent = atEnd ? 'Restart' : 'Next';
+          nextBtnIcon.className = atEnd ? 'fa-solid fa-rotate-right' : 'fa-solid fa-circle-right';
+          nextBtn.setAttribute('aria-label', atEnd ? 'Back to first page' : 'Next page');
+          return;
+        }
+        nextBtnLabel.textContent = 'Next';
+        nextBtnIcon.className = 'fa-solid fa-circle-right';
+        nextBtn.setAttribute('aria-label', 'Next page');
         prevBtn.disabled = pageNum <= 1;
         nextBtn.disabled = pageNum >= pdfDoc.numPages;
       }
@@ -467,7 +531,7 @@ layout: default
           e.preventDefault();
           const lang = e.currentTarget.dataset.lang;
           if (lang && lang !== currentLang) {
-            await loadPdf(lang);
+            await loadPdf(lang, { initialPage: pageNum });
           } else {
             updateSplitButtons(lang);
           }
@@ -495,27 +559,81 @@ layout: default
     });
   </script>
 
-  <div
-    class="pdf-stage"
-    aria-live="polite"
-    aria-busy="true"
-  >
-    <div class="pdf-loading" role="status">Loading CV...</div>
-    <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
-    <canvas id="the-canvas"></canvas>
-  </div>
-
   <style>
+    .cv-stage-wrap {
+      position: relative;
+    }
+
+    /* Sticky anchor: at rest the toolbar sits above the PDF with breathing
+       room; once pinned below the navbar it floats over the scrolling CV. */
+    .cv-toolbar-anchor {
+      position: sticky;
+      top: var(--cv-toolbar-top, 57px);
+      z-index: 10;
+      line-height: normal;
+    }
+
+    /* iOS-style progressive header blur: two stacked backdrop-filter layers,
+       each faded out downward with a gradient mask, so the CV melts into
+       the blur with no hard edge or container around the controls. */
+    .cv-toolbar-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 7.5rem;
+      pointer-events: none;
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--global-bg-color) 55%, transparent),
+        color-mix(in srgb, var(--global-bg-color) 22%, transparent) 45%,
+        transparent 82%
+      );
+      opacity: 0;
+      visibility: hidden;
+      transition:
+        opacity 160ms ease,
+        visibility 0s linear 160ms;
+    }
+
+    .cv-toolbar-backdrop::before,
+    .cv-toolbar-backdrop::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+    }
+
+    .cv-toolbar-backdrop::before {
+      -webkit-backdrop-filter: blur(16px) saturate(1.3);
+      backdrop-filter: blur(16px) saturate(1.3);
+      -webkit-mask-image: linear-gradient(to bottom, black 28%, transparent 68%);
+      mask-image: linear-gradient(to bottom, black 28%, transparent 68%);
+    }
+
+    .cv-toolbar-backdrop::after {
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      -webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 95%);
+      mask-image: linear-gradient(to bottom, black 45%, transparent 95%);
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      .cv-toolbar-backdrop {
+        background: linear-gradient(to bottom, var(--global-bg-color) 45%, transparent);
+      }
+    }
+
     .header-toolbar {
+      position: relative;
       display: flex;
-      flex-direction: column;
-      gap: 0.85rem 1rem;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
       align-items: center;
       justify-content: center;
-      margin-left: auto;
-      margin-top: 0.5rem;
-      margin-bottom: 0.5rem;
-      min-height: 44px;
+      width: fit-content;
+      max-width: calc(100% - 1.5rem);
+      margin: 0.35rem auto 0.85rem;
       opacity: 0;
       visibility: hidden;
       transform: translateY(-4px);
@@ -533,6 +651,13 @@ layout: default
       transition:
         opacity 240ms ease,
         transform 240ms ease;
+    }
+
+    .cv-toolbar-stuck.cv-controls-ready .cv-toolbar-backdrop,
+    .cv-toolbar-stuck.cv-error .cv-toolbar-backdrop {
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 240ms ease;
     }
 
     .pdf-stage {
@@ -839,6 +964,34 @@ layout: default
       justify-self: start;
     }
 
+    /* Single-button mode for short (1-2 page) documents: icon-only cycle button */
+    .pager.pager--cycle {
+      grid-template-columns: auto auto;
+    }
+
+    .pager.pager--cycle #prev {
+      display: none;
+    }
+
+    .pager.pager--cycle #next {
+      justify-content: center;
+      width: 2.35rem;
+      min-width: 2.35rem;
+      padding: 0;
+    }
+
+    .pager.pager--cycle #next span {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
     .pager-status__label {
       min-width: 2.65rem;
       color: var(--global-text-color-light);
@@ -958,26 +1111,13 @@ layout: default
 
     @media (max-width: 767.98px) {
       .header-toolbar {
-        align-items: center;
-        width: 100%;
+        justify-content: center;
+        gap: 0.5rem 0.65rem;
       }
 
       .lang-toolbar,
       .pager {
         justify-content: center;
-      }
-    }
-
-    @media (max-width: 575.98px) {
-      .header-toolbar {
-        justify-content: center;
-        gap: 0.65rem;
-      }
-
-      .lang-toolbar,
-      .pager {
-        justify-content: center;
-        width: 100%;
         font-size: 0.92rem;
       }
 

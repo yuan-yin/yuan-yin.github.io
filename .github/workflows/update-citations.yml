@@ -2,6 +2,13 @@ name: Update Google Scholar Citations
 
 on:
   workflow_dispatch:
+  schedule:
+    # Daily at 04:30 UTC
+    - cron: "30 4 * * *"
+
+permissions:
+  contents: write
+  actions: write
 
 jobs:
   update-citations:
@@ -88,10 +95,23 @@ jobs:
           echo "🔧 Git configured."
 
       - name: Commit and push if changed
+        id: push
         run: |
           git add _data/citations.yml
-          git diff --staged --quiet || (
+          if git diff --staged --quiet; then
+            echo "ℹ️ Nothing to commit."
+            echo "pushed=false" >> $GITHUB_OUTPUT
+          else
             echo "📤 Committing and pushing changes..."
             git commit -m "Update Google Scholar citations"
             git push
-          )
+            echo "pushed=true" >> $GITHUB_OUTPUT
+          fi
+
+      # Pushes made with GITHUB_TOKEN do not trigger the deploy workflow's
+      # push event, so dispatch it explicitly when the data changed.
+      - name: Trigger site deploy
+        if: steps.push.outputs.pushed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref ${{ github.ref_name }}

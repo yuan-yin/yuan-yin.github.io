@@ -141,7 +141,9 @@ layout: default
         postElement.classList.toggle('cv-toolbar-stuck', stuck);
       };
       const updateToolbarTop = () => {
-        toolbarTopOffset = navbarEl && getComputedStyle(navbarEl).position === 'fixed' ? navbarEl.offsetHeight : 0;
+        const navbarHeight = navbarEl && getComputedStyle(navbarEl).position === 'fixed' ? navbarEl.offsetHeight : 0;
+        // Pin 12px below the navbar so the toolbar clears the page progress bar
+        toolbarTopOffset = navbarHeight + 12;
         postElement.style.setProperty('--cv-toolbar-top', `${toolbarTopOffset}px`);
         updateStuckState();
       };
@@ -578,7 +580,8 @@ layout: default
        the blur with no hard edge or container around the controls. */
     .cv-toolbar-backdrop {
       position: absolute;
-      top: 0;
+      /* Reaches up over the 12px pin gap so the blur meets the navbar edge */
+      top: -12px;
       left: 0;
       right: 0;
       height: 7.5rem;

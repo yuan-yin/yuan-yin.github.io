@@ -25,7 +25,18 @@ let setThemeSetting = (themeSetting) => {
 let applyTheme = () => {
   let theme = determineComputedTheme();
 
-  transTheme();
+  // Crossfade two page snapshots on the GPU instead of transitioning every
+  // element's colors individually (transTheme), which repaints the whole
+  // page per frame and janks — especially with backdrop-filter layers.
+  if (document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    document.startViewTransition(() => applyThemeChanges(theme));
+  } else {
+    transTheme();
+    applyThemeChanges(theme);
+  }
+};
+
+let applyThemeChanges = (theme) => {
   setHighlight(theme);
   setGiscusTheme(theme);
   setSearchTheme(theme);

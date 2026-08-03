@@ -24,7 +24,7 @@
 
 "zablocki":
   - firstname: ["Éloi"]
-    url: https://scholar.google.fr/citations?user=dOkbUmEAAAAJ
+    url: https://eloiz.github.io
 
 "huang":
   - firstname: ["Di"]
@@ -79,6 +79,26 @@
 "bursuc":
   - firstname: ["Andrei"]
     url: https://abursuc.github.io
+
+"ramzi":
+  - firstname: ["Elias"]
+    url: https://elias-ramzi.github.io
+
+"lafon":
+  - firstname: ["Marc"]
+    url: https://marclafon.github.io
+
+"charraut":
+  - firstname: ["Valentin"]
+    url: https://www.linkedin.com/in/valentin-charraut-6b3018214/
+
+"bares":
+  - firstname: ["Victor"]
+    url: https://fr.linkedin.com/in/victor-bares-2a4425180
+
+"buhet":
+  - firstname: ["Thibault"]
+    url: https://www.linkedin.com/in/thibault-buhet/
 
 "venkataramanan":
   - firstname: ["Shashanka"]

@@ -58,21 +58,23 @@
       visibility 0s linear 0s;
     visibility: visible;
 
+    /* Liquid-glass pill: nearly clear, saturated backdrop with specular
+       rim highlights standing in for edge refraction. */
     &::before {
       position: absolute;
-      inset: -0.18em -0.38em;
+      inset: -0.2em -0.45em;
       z-index: -1;
       content: "";
-      border: 1px solid color-mix(in srgb, #ffffff 58%, transparent);
       border-radius: 999px;
-      background:
-        linear-gradient(135deg, color-mix(in srgb, #ffffff 58%, transparent), color-mix(in srgb, #ffffff 28%, transparent)),
-        color-mix(in srgb, var(--global-bg-color) 38%, transparent);
+      background: color-mix(in srgb, #ffffff 7%, transparent);
       box-shadow:
-        0 0.28rem 1.2rem rgba(39, 48, 74, 0.1),
-        inset 0 1px 0 color-mix(in srgb, #ffffff 64%, transparent);
-      -webkit-backdrop-filter: blur(14px) saturate(1.08);
-      backdrop-filter: blur(14px) saturate(1.08);
+        0 0.35rem 1.3rem rgba(39, 48, 74, 0.14),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.95),
+        inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.7),
+        inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.16);
+      -webkit-backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
+      backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
     }
   }
 
@@ -387,9 +389,22 @@
         }
       }
 
+      /* Sits inside the .links flex row, after the buttons */
       .badges {
-        margin-top: 0.75rem;
-        padding-bottom: 0.5rem;
+        display: inline-flex;
+        gap: 0.45rem;
+        align-items: center;
+
+        /* Vertical separator between the link buttons and the badges */
+        &::before {
+          content: "";
+          align-self: center;
+          width: 1px;
+          height: 1.3rem;
+          margin: 0 0.2rem;
+          background: var(--global-divider-color);
+        }
+
         span {
           display: inline-block;
           color: v.$black-color;
@@ -399,6 +414,54 @@
 
           &:hover {
             text-decoration: underline;
+          }
+        }
+
+        a.scholar-citations {
+          text-decoration: none;
+        }
+
+        /* Same pill recipe as .links a.btn so all chips read as one family */
+        .scholar-badge {
+          display: inline-flex;
+          gap: 0.4em;
+          align-items: center;
+          justify-content: center;
+          height: auto;
+          min-height: 2rem;
+          color: var(--global-text-color);
+          border: 1px solid color-mix(in srgb, var(--pub-accent) 42%, var(--global-divider-color));
+          border-radius: v.$button-pill-radius;
+          background: color-mix(in srgb, var(--pub-accent) 7%, transparent);
+          padding: 0.36rem 0.72rem;
+          font-size: 0.8rem;
+          font-weight: 700;
+          line-height: 1;
+          transition:
+            background 160ms ease,
+            border-color 160ms ease,
+            color 160ms ease,
+            transform 160ms ease;
+
+          i,
+          span {
+            height: auto;
+            padding-right: 0;
+            color: inherit;
+            font-size: 0.78rem;
+          }
+
+          &:hover,
+          &:focus-visible {
+            color: #ffffff;
+            background: var(--pub-accent);
+            border-color: var(--pub-accent);
+            text-decoration: none;
+            transform: translateY(-1px);
+
+            span {
+              text-decoration: none;
+            }
           }
         }
       }
@@ -470,13 +533,18 @@
 
 html[data-theme="dark"] {
   .publications h2.bibliography {
+    /* Smoked glass: tint + dim the backdrop so white digits stay readable
+       even when the pill floats over bright content. */
     &::before {
-      border-color: color-mix(in srgb, #ffffff 12%, transparent);
-      background:
-        linear-gradient(135deg, rgba(44, 48, 58, 0.72), rgba(20, 22, 28, 0.46)), color-mix(in srgb, var(--global-bg-color) 42%, transparent);
+      background: rgba(16, 19, 26, 0.42);
       box-shadow:
-        0 0.34rem 1.35rem rgba(0, 0, 0, 0.26),
-        inset 0 1px 0 color-mix(in srgb, #ffffff 10%, transparent);
+        0 0.4rem 1.4rem rgba(0, 0, 0, 0.35),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+        inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.5),
+        inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.26),
+        inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.07);
+      -webkit-backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
+      backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
     }
   }
 

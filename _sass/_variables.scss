@@ -24,6 +24,8 @@ $pink-color: #f92080 !default;
 $pink-color-light: #ffdddd !default;
 $yellow-color: #efcc00 !default;
 $lavander-color: #9678b6 !default;
+/* Brighter variant for dark backgrounds: same hue, ~7:1 contrast on $grey-color-dark */
+$lavander-color-bright: #b6a0d6 !default;
 
 $grey-color: #828282 !default;
 $grey-color-light: color.adjust($grey-color, $lightness: 40%);

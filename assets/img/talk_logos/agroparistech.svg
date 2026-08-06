@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50">
+  <g id="logo-responsive" transform="translate(-20)">
+    <circle id="Oval" cx="25" cy="25" r="25" transform="translate(20)" fill="#00b57b"/>
+    <path id="Fill_1" data-name="Fill 1" d="M0,30H4.626l3.783-8.774H22.088l-1.964-4.554H10.372L15.248,5.364,12.935,0Z" transform="translate(33 9)" fill="#fff"/>
+  </g>
+</svg>

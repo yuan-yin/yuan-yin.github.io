@@ -5,15 +5,41 @@
       <span class="talk-card__type">{{ talk.type }}</span>
       <span class="talk-card__dot" aria-hidden="true"></span>
       <span class="talk-card__date">{{ talk.date | date: '%b %-d, %Y' }}</span>
+      {%- if talk.logo %}
+        <img class="talk-card__logo" src="{{ talk.logo | prepend: '/assets/img/talk_logos/' | relative_url }}" alt="" loading="lazy">
+      {%- endif %}
     </div>
 
     <h3 class="talk-card__title">{{ talk.title }}</h3>
 
-    {% if talk.description %}
+    {%- if talk.description and talk.papers == null %}
       <p class="talk-card__description">{{ talk.description }}</p>
-    {% endif %}
+    {%- endif %}
+
+    {%- if talk.location %}
+      <p class="talk-card__venue">
+        {%- if talk.location == 'Online' -%}
+          <i class="fa-solid fa-wifi" aria-hidden="true"></i>
+        {%- else -%}
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+        {%- endif %}
+        {% if talk.venue %}{{ talk.venue }} &middot; {% endif -%}
+        {{- talk.location -}}
+      </p>
+    {%- endif %}
 
     <div class="links">
+      {%- if talk.papers %}
+        {%- for paper in talk.papers %}
+          <a href="{{ '/publications/' | relative_url }}#{{ paper.key }}" class="btn btn-sm z-depth-0 talk-card__paper" role="button">
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            <span>{{ paper.label | default: 'Paper' }}</span>
+          </a>
+        {%- endfor %}
+        {%- if talk.site or talk.slides or talk.video %}
+          <span class="talk-card__links-divider" aria-hidden="true"></span>
+        {%- endif %}
+      {%- endif %}
       {%- if talk.site %}
         <a href="{{ talk.site }}" class="btn btn-sm z-depth-0" role="button">
           <i class="fa-solid fa-link" aria-hidden="true"></i>

@@ -2,6 +2,13 @@ import { highlightSearchTerm } from "./highlight-search-term.js";
 
 document.addEventListener("DOMContentLoaded", function () {
   // actual bibsearch logic
+  // Entries can also be found by their bib key (the id on .publication-card__body)
+  const matchesBibKey = (element, searchTerm) => {
+    if (!searchTerm) return false;
+    const body = element.querySelector(".publication-card__body[id]");
+    return body != null && body.id.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
+  };
+
   const filterItems = (searchTerm) => {
     document.querySelectorAll(".bibliography, .unloaded").forEach((element) => element.classList.remove("unloaded"));
 
@@ -12,13 +19,16 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
       }
       nonMatchingElements.forEach((element) => {
+        if (matchesBibKey(element, searchTerm)) {
+          return;
+        }
         element.classList.add("unloaded");
       });
     } else {
       // Simply add unloaded class to all non-matching items if Browser does not support CSS highlights
       document.querySelectorAll(".bibliography > li").forEach((element, index) => {
         const text = element.innerText.toLowerCase();
-        if (text.indexOf(searchTerm) == -1) {
+        if (text.indexOf(searchTerm) == -1 && !matchesBibKey(element, searchTerm)) {
           element.classList.add("unloaded");
         }
       });
@@ -53,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const updateInputField = () => {
     const hashValue = decodeURIComponent(window.location.hash.substring(1)); // Remove the '#' character
     document.getElementById("bibsearch").value = hashValue;
-    filterItems(hashValue);
+    filterItems(hashValue.toLowerCase());
   };
 
   // Sensitive search. Only start searching if there's been no input for 300 ms

@@ -751,8 +751,15 @@ html[data-theme-setting="dark"] {
     margin-top: 0;
 
     &.list-group {
-      display: block;
+      /* Two-column card grid (single column on small screens) */
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 1.15rem;
       background-color: transparent;
+
+      @media (max-width: 767.98px) {
+        grid-template-columns: 1fr;
+      }
     }
   }
 
@@ -760,10 +767,11 @@ html[data-theme-setting="dark"] {
     --talk-accent: #0891b2;
 
     position: relative;
-    display: block;
+    display: flex;
+    flex-direction: column;
     overflow: hidden;
     padding: 1.1rem;
-    margin-bottom: 1.15rem;
+    margin-bottom: 0;
     border: 1px solid color-mix(in srgb, #ffffff 42%, color-mix(in srgb, var(--talk-accent) 24%, var(--global-divider-color)));
     border-radius: 18px;
     corner-shape: v.$corner-shape;
@@ -789,7 +797,7 @@ html[data-theme-setting="dark"] {
     }
   }
 
-  .talk-card--conference-presentation {
+  .talk-card--presentation {
     --talk-accent: #c2410c;
   }
 
@@ -802,7 +810,10 @@ html[data-theme-setting="dark"] {
   }
 
   .talk-card__body {
+    display: flex;
     min-width: 0;
+    flex: 1;
+    flex-direction: column;
   }
 
   .talk-card__meta {
@@ -832,6 +843,29 @@ html[data-theme-setting="dark"] {
     color: var(--global-text-color-light);
   }
 
+  .talk-card__venue {
+    display: flex;
+    gap: 0.34rem;
+    align-items: baseline;
+    margin: 0.55rem 0 0;
+    color: var(--global-text-color-light);
+    font-size: 0.84rem;
+    line-height: 1.4;
+
+    i {
+      font-size: 0.74rem;
+      color: color-mix(in srgb, var(--talk-accent) 72%, var(--global-text-color-light));
+    }
+  }
+
+  .talk-card__logo {
+    height: 1.7rem;
+    max-width: 6.5rem;
+    margin-left: auto;
+    object-fit: contain;
+    object-position: right center;
+  }
+
   .talk-card__title {
     margin: 0;
     color: var(--global-text-color);
@@ -852,7 +886,9 @@ html[data-theme-setting="dark"] {
     display: flex;
     flex-wrap: wrap;
     gap: 0.45rem;
-    margin-top: 0.85rem;
+    // Pin to the card bottom when the grid row is taller than this card's content
+    margin-top: auto;
+    padding-top: 0.85rem;
 
     a.btn {
       display: inline-flex;
@@ -861,7 +897,7 @@ html[data-theme-setting="dark"] {
       justify-content: center;
       min-height: 2rem;
       padding: 0.36rem 0.72rem;
-      margin-left: 0;
+      margin: 0;
       color: var(--global-text-color);
       border: 1px solid color-mix(in srgb, var(--talk-accent) 42%, var(--global-divider-color));
       border-radius: v.$button-pill-radius;
@@ -898,6 +934,20 @@ html[data-theme-setting="dark"] {
         transform: translateY(-1px);
       }
     }
+
+    // Presented-paper pills: tinted fill + accent text, vs the outline resource pills
+    a.btn.talk-card__paper:not(:hover):not(:focus-visible) {
+      color: color-mix(in srgb, var(--talk-accent) 78%, var(--global-text-color));
+      border-color: color-mix(in srgb, var(--talk-accent) 62%, var(--global-divider-color));
+      background: color-mix(in srgb, var(--talk-accent) 15%, transparent);
+    }
+
+    .talk-card__links-divider {
+      align-self: center;
+      width: 1px;
+      height: 1.3rem;
+      background: color-mix(in srgb, var(--talk-accent) 32%, var(--global-divider-color));
+    }
   }
 }
 
@@ -915,6 +965,18 @@ html[data-theme="dark"] {
 
     .links a.btn:not(:hover):not(:focus-visible) {
       background: color-mix(in srgb, var(--talk-accent) 12%, transparent);
+    }
+
+    .links a.btn.talk-card__paper:not(:hover):not(:focus-visible) {
+      color: color-mix(in srgb, var(--talk-accent) 80%, #ffffff);
+      background: color-mix(in srgb, var(--talk-accent) 24%, transparent);
+    }
+
+    // Most logos are drawn for light backgrounds — seat them on a light chip
+    .talk-card__logo {
+      padding: 0.2rem 0.32rem;
+      background: rgba(255, 255, 255, 0.92);
+      border-radius: 0.5rem;
     }
 
     .links a.btn:hover,

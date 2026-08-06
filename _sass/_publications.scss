@@ -7,10 +7,11 @@
 .equal-contribution-note {
   display: inline-flex;
   align-items: center;
-  padding: 0.12rem 0.45rem;
+  padding: 0.3rem 0.75rem;
   border-radius: 999px;
   background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
   color: var(--global-theme-color);
+  font-size: 1.05rem;
   font-weight: 700;
 }
 
@@ -138,6 +139,15 @@
             0 22px 54px rgba(39, 48, 74, 0.14),
             inset 0 1px 0 color-mix(in srgb, #ffffff 72%, transparent);
         }
+
+        // Entry targeted via its bib-key anchor (e.g. Paper button on a talk card)
+        &:has(> .publication-card__body:target) {
+          border-color: color-mix(in srgb, var(--pub-accent) 60%, var(--global-divider-color));
+          box-shadow:
+            0 0 0 3px color-mix(in srgb, var(--pub-accent) 28%, transparent),
+            0 16px 42px rgba(39, 48, 74, 0.09),
+            inset 0 1px 0 color-mix(in srgb, #ffffff 62%, transparent);
+        }
       }
 
       .publication-card--no-media {
@@ -154,6 +164,8 @@
 
       .publication-card__body {
         min-width: 0;
+        // Keep anchored entries (linked from talk cards) clear of the fixed navbar
+        scroll-margin-top: 5rem;
       }
 
       .publication-card__actions {
@@ -692,4 +704,74 @@ html[data-theme="dark"] {
     transform: none;
     transition: none;
   }
+}
+
+// Header line under the title: equal-contribution note on the left,
+// Google Scholar pointer on the right
+.publications-toplines {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1rem;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.1rem;
+
+  .post-description {
+    margin: 0;
+  }
+}
+
+// Pointer to the full publication list on Google Scholar
+.scholar-profile-cta {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.4rem 0.7rem;
+  align-items: center;
+  margin: 0;
+
+  p {
+    margin: 0;
+    color: var(--global-text-color-light);
+    font-size: 0.95rem;
+  }
+}
+
+.scholar-profile-cta__btn {
+  display: inline-flex;
+  gap: 0.45em;
+  align-items: center;
+  min-height: 2.35rem;
+  padding: 0.5rem 1.1rem;
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
+  color: var(--global-text-color);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  text-decoration: none;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
+
+  i,
+  i::before,
+  span {
+    color: inherit;
+  }
+
+  &:hover,
+  &:focus-visible {
+    border-color: var(--global-theme-color);
+    background: var(--global-theme-color);
+    color: #ffffff;
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+}
+
+html[data-theme="dark"] .scholar-profile-cta__btn:not(:hover):not(:focus-visible) {
+  background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
 }

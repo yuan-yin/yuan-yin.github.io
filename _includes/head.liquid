@@ -84,7 +84,8 @@
     })();
   </script>
 {% endif %}
-<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url | bust_css_cache }}">
+{% comment %} bust_css_cache hashes a file it can't resolve (constant md5 of ""), so version by build time instead — otherwise browsers keep stale CSS across deploys {% endcomment %}
+<link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}?v={{ site.time | date: '%s' }}">
 <link rel="canonical" href="{{ page.url | replace:'index.html','' | absolute_url }}">
 
 {% if site.enable_darkmode %}

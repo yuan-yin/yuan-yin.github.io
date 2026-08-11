@@ -136,14 +136,15 @@ html.transition #search-toggle *::before,
 html.transition #back-to-top,
 html.transition .social.about-hero__social .contact-icons a,
 html.transition .navbar .dropdown-toggle::after,
-html.transition .cv-viewer .lang-primary,
-html.transition .cv-viewer .lang-primary *,
-html.transition .cv-viewer .lang-download,
-html.transition .cv-viewer .lang-download *,
-html.transition .cv-viewer .lang-download *::before,
-html.transition .cv-viewer .pager-button,
-html.transition .cv-viewer .pager-button *,
-html.transition .cv-viewer .pager-button *::before {
+html.transition .cv-viewer .lang-segment,
+html.transition .cv-viewer .lang-segment__thumb,
+html.transition .cv-viewer .lang-segment__option,
+html.transition .cv-viewer .cv-download-btn,
+html.transition .cv-viewer .cv-download-btn *,
+html.transition .cv-viewer .cv-download-btn *::before,
+html.transition .cv-viewer .pager-mobile__btn,
+html.transition .cv-viewer .pager-mobile__btn *,
+html.transition .cv-viewer .pager-mobile__btn *::before {
   transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
 }
 
@@ -151,6 +152,22 @@ html.transition #back-to-top i,
 html.transition #back-to-top i::before,
 html.transition .social.about-hero__social .contact-icons a i,
 html.transition .social.about-hero__social .contact-icons a i::before {
+  transition: none !important;
+}
+
+/* Glass layers and PDF canvases: their gradient backgrounds can't animate
+   via background-color transitions anyway, and invalidating large
+   backdrop-filter layers per frame is what makes theme switches jank */
+html.transition .pdf-stage,
+html.transition .pdf-stage *,
+html.transition .cv-toolbar-backdrop,
+html.transition .cv-toolbar-backdrop::before,
+html.transition .cv-toolbar-backdrop::after,
+html.transition .navbar::before,
+html.transition .navbar::after,
+html.transition .pub-controls__backdrop,
+html.transition .pub-controls__backdrop::before,
+html.transition .pub-controls__backdrop::after {
   transition: none !important;
 }
 
@@ -380,11 +397,12 @@ nav[data-toggle="toc"] {
   padding: 8px 12px;
 }
 
-/* Unified with the site's pill controls: capsule shape, theme-tint fill */
+/* Capsule like the site's pill controls; rests as a quiet grey pill and
+   takes the theme color only once focused */
 .bibsearch-form-input {
   color: var(--global-text-color);
-  background: color-mix(in srgb, var(--global-theme-color) 7%, transparent);
-  border-color: color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
+  background: color-mix(in srgb, var(--global-text-color) 7%, transparent);
+  border-color: transparent;
   border-radius: 999px;
   padding: 0.5rem 1.1rem;
   box-shadow: none;
@@ -395,10 +413,10 @@ nav[data-toggle="toc"] {
   &::placeholder {
     color: var(--global-text-color-light);
   }
-}
 
-html[data-theme="dark"] .bibsearch-form-input:not(:focus) {
-  background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
+  &:hover:not(:focus) {
+    background: color-mix(in srgb, var(--global-text-color) 10%, transparent);
+  }
 }
 
 .newsletter-form-input:focus,

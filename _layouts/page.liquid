@@ -11,7 +11,7 @@ layout: default
 <div class="post">
   {% assign page_title_size = page.title | size %}
   {% assign page_description_size = page.description | size %}
-  {% if page_title_size > 0 or page_description_size > 0 %}
+  {% if page.hide_hero != true and page_title_size > 0 or page_description_size > 0 %}
     <header class="post-header page-hero">
       <div class="page-hero__content">
         {% if page_title_size > 0 %}

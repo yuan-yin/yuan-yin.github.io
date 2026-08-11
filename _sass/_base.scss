@@ -1123,14 +1123,15 @@ html.transition #search-toggle,
 html.transition #search-toggle *,
 html.transition #search-toggle *::before,
 html.transition .navbar .dropdown-toggle::after,
-html.transition .cv-viewer .lang-primary,
-html.transition .cv-viewer .lang-primary *,
-html.transition .cv-viewer .lang-download,
-html.transition .cv-viewer .lang-download *,
-html.transition .cv-viewer .lang-download *::before,
-html.transition .cv-viewer .pager-button,
-html.transition .cv-viewer .pager-button *,
-html.transition .cv-viewer .pager-button *::before {
+html.transition .cv-viewer .lang-segment,
+html.transition .cv-viewer .lang-segment__thumb,
+html.transition .cv-viewer .lang-segment__option,
+html.transition .cv-viewer .cv-download-btn,
+html.transition .cv-viewer .cv-download-btn *,
+html.transition .cv-viewer .cv-download-btn *::before,
+html.transition .cv-viewer .pager-mobile__btn,
+html.transition .cv-viewer .pager-mobile__btn *,
+html.transition .cv-viewer .pager-mobile__btn *::before {
   transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
 }
 

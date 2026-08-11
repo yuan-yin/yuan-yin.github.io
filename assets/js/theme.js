@@ -25,21 +25,16 @@ let setThemeSetting = (themeSetting) => {
 let applyTheme = () => {
   let theme = determineComputedTheme();
 
-  // Crossfade two page snapshots on the GPU instead of transitioning every
-  // element's colors individually (transTheme), which repaints the whole
-  // page per frame and janks — especially with backdrop-filter layers.
-  // NEVER on the initial head-time run: startViewTransition defers the DOM
-  // change until after first paint, which would flash the wrong theme.
+  // Class-based color transition (transTheme), NOT startViewTransition:
+  // view-transition snapshots are static images, so every backdrop-filter
+  // glass layer goes flat for the duration of the crossfade and pops back
+  // when it ends. transTheme keeps the blur live the whole time.
+  // On the initial head-time run, apply synchronously before first paint.
   const isInteractiveChange = document.readyState !== "loading";
-  if (isInteractiveChange && document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    document.startViewTransition(() => applyThemeChanges(theme));
-  } else if (isInteractiveChange) {
+  if (isInteractiveChange) {
     transTheme();
-    applyThemeChanges(theme);
-  } else {
-    // Initial load: apply synchronously, before anything is painted
-    applyThemeChanges(theme);
   }
+  applyThemeChanges(theme);
 };
 
 let applyThemeChanges = (theme) => {

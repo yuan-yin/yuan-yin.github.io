@@ -2,6 +2,30 @@
 layout: default
 ---
 <div class="post">
+  <script>
+    // Large-title handoff: hide the navbar name while the hero name is on
+    // screen; the class lands before first paint so the brand never flashes
+    (() => {
+      const root = document.documentElement;
+      root.classList.add('about-brand-handoff');
+      document.addEventListener('DOMContentLoaded', () => {
+        const heroName = document.querySelector('.about-hero .post-title');
+        const navbar = document.getElementById('navbar');
+        if (!heroName || !('IntersectionObserver' in window)) {
+          root.classList.add('about-brand-shown');
+          return;
+        }
+        const navHeight = navbar ? navbar.offsetHeight : 60;
+        const observer = new IntersectionObserver(
+          (entries) => {
+            root.classList.toggle('about-brand-shown', !entries[0].isIntersecting);
+          },
+          { rootMargin: `-${navHeight}px 0px 0px 0px` }
+        );
+        observer.observe(heroName);
+      });
+    })();
+  </script>
   <article>
     <section class="about-hero">
       <div class="about-hero__inner">

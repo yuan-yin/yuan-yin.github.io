@@ -2,613 +2,6 @@
 layout: default
 ---
 <div class="post cv-viewer cv-loading cv-initial-loading">
-  <header class="post-header page-hero cv-hero">
-    <div class="page-hero__content">
-      <h1 class="post-title">
-        {{ page.title }}
-      </h1>
-      {% if page.description %}
-        <p class="post-description">{{ page.description }}</p>
-      {% endif %}
-    </div>
-  </header>
-
-  <div class="cv-stage-wrap">
-    <div class="cv-toolbar-anchor">
-      <div class="cv-toolbar-backdrop" aria-hidden="true"></div>
-      <div class="header-toolbar">
-        <div class="lang-toolbar">
-          <div class="lang-segment" role="radiogroup" aria-label="CV language">
-            <span class="lang-segment__thumb" aria-hidden="true"></span>
-            <button type="button" class="lang-segment__option" data-lang="en" role="radio" aria-checked="false">English</button>
-            <button type="button" class="lang-segment__option" data-lang="fr" role="radio" aria-checked="false">Français</button>
-          </div>
-
-          <a
-            id="cv-download"
-            class="cv-download-btn"
-            href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
-            download
-            rel="noopener"
-          >
-            <i class="fa-solid fa-download" aria-hidden="true"></i>
-            <span>PDF</span>
-          </a>
-        </div>
-
-        <!-- Mobile-only pager: replaces the side page zones on small screens -->
-        <div class="pager-mobile" aria-label="CV pages">
-          <button type="button" id="pager-mobile-prev" class="pager-mobile__btn" disabled aria-label="Previous page">
-            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-          </button>
-          <button type="button" id="pager-mobile-next" class="pager-mobile__btn" disabled aria-label="Next page">
-            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div
-      class="pdf-stage"
-      aria-live="polite"
-      aria-busy="true"
-    >
-      <div class="pdf-loading" role="status">Loading CV...</div>
-      <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
-      <button class="pdf-page pdf-page--prev is-empty" type="button" aria-label="Show previous page">
-        <canvas></canvas>
-        <span class="pdf-page__hint" aria-hidden="true"><i class="fa-solid fa-chevron-left"></i></span>
-      </button>
-      <div class="pdf-page pdf-page--current">
-        <canvas id="the-canvas"></canvas>
-      </div>
-      <button class="pdf-page pdf-page--next is-empty" type="button" aria-label="Show next page">
-        <canvas></canvas>
-        <span class="pdf-page__hint" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></span>
-      </button>
-      <button class="pdf-restart" type="button" aria-label="Back to first page" hidden>
-        <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
-      </button>
-    </div>
-  </div>
-
-  <link
-    rel="modulepreload"
-    href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs"
-    crossorigin="anonymous"
-  >
-  <link
-    rel="modulepreload"
-    href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs"
-    crossorigin="anonymous"
-  >
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
-
-  <script type="module">
-    const { pdfjsLib } = globalThis;
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs';
-
-    document.addEventListener('DOMContentLoaded', () => {
-      const postElement = document.querySelector('.post');
-      const stage = document.querySelector('.pdf-stage');
-
-      // Keep the floating toolbar below the fixed site navbar, and only show
-      // the header blur once CV content actually scrolls under the controls.
-      const navbarEl = document.getElementById('navbar');
-      const toolbarAnchor = document.querySelector('.cv-toolbar-anchor');
-      let toolbarTopOffset = 0;
-      const updateStuckState = () => {
-        // Blur only once the PDF top passes under the pinned toolbar's bottom edge
-        const pinnedBottom = toolbarTopOffset + toolbarAnchor.offsetHeight;
-        const stuck = stage.getBoundingClientRect().top < pinnedBottom - 0.5;
-        postElement.classList.toggle('cv-toolbar-stuck', stuck);
-      };
-      const updateToolbarTop = () => {
-        const navbarHeight = navbarEl && getComputedStyle(navbarEl).position === 'fixed' ? navbarEl.offsetHeight : 0;
-        // Pin 12px below the navbar so the toolbar clears the page progress bar
-        toolbarTopOffset = navbarHeight + 12;
-        postElement.style.setProperty('--cv-toolbar-top', `${toolbarTopOffset}px`);
-        updateStuckState();
-      };
-      updateToolbarTop();
-      window.addEventListener('resize', updateToolbarTop);
-      window.addEventListener('scroll', updateStuckState, { passive: true });
-      // Carousel slots: previous / current / next page. Side pages peek in
-      // from the edges and are clickable to navigate.
-      const slots = ['prev', 'current', 'next'].map((key) => {
-        const el = stage.querySelector(`.pdf-page--${key}`);
-        const canvas = el.querySelector('canvas');
-        return { key, el, canvas, ctx: canvas.getContext('2d'), renderTask: null };
-      });
-      const currentSlot = slots[1];
-      const restartBtn = stage.querySelector('.pdf-restart');
-      const mobilePrevBtn = document.getElementById('pager-mobile-prev');
-      const mobileNextBtn = document.getElementById('pager-mobile-next');
-      const mobileNextIcon = mobileNextBtn.querySelector('i');
-
-      let pdfDoc = null; // PDFDocumentProxy
-      let loadingTask = null; // PDFLoadingTask
-      let pageNum = 1;
-      let pageRendering = false;
-      let pageNumPending = null;
-      let currentLang = 'en';
-      let firstPageRendered = false;
-      let hasLoadedOnce = false;
-      let pendingDirection = 0; // 1 = navigating forward, -1 = back, 0 = reload
-
-      const urls = {
-        en: {
-          light: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
-          dark: "{{ page.cv_pdf_en_dark | default: page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
-        },
-        fr: {
-          light: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
-          dark: "{{ page.cv_pdf_fr_dark | default: page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
-        },
-      };
-
-      async function disposePdf({ clearCanvas = true } = {}) {
-        // 1) Stop rendering in every slot
-        slots.forEach((slot) => {
-          if (slot.renderTask && typeof slot.renderTask.cancel === 'function') {
-            try {
-              slot.renderTask.cancel();
-            } catch {}
-          }
-          slot.renderTask = null;
-        });
-        pageRendering = false;
-        pageNumPending = null;
-
-        // 2) Kill any in-flight document load
-        if (loadingTask && typeof loadingTask.destroy === 'function') {
-          try {
-            await loadingTask.destroy();
-          } catch {}
-        }
-        loadingTask = null;
-
-        // 3) Destroy current document (frees XRef, fonts, images, etc.)
-        if (pdfDoc) {
-          try {
-            // cleanup() is optional; destroy() is enough, but both is fine.
-            if (typeof pdfDoc.cleanup === 'function') await pdfDoc.cleanup();
-            await pdfDoc.destroy();
-          } catch {}
-        }
-        pdfDoc = null;
-
-        // 4) Clear overlay links and hide the loop-back button
-        stage.querySelectorAll('a.pdf-link.overlay').forEach((a) => a.remove());
-        restartBtn.hidden = true;
-
-        if (clearCanvas) {
-          // 5) Clear and shrink canvases to release bitmap memory
-          slots.forEach(clearSlotCanvas);
-        }
-      }
-
-      async function loadPdf(lang, { initialPage = 1 } = {}) {
-        const url = getPdfUrl(lang);
-        currentLang = lang;
-        const isInitialLoad = !hasLoadedOnce;
-
-        // Fully tear down previous resources before starting a new load
-        firstPageRendered = false;
-        postElement.classList.add('cv-loading');
-        postElement.classList.remove('cv-error');
-        postElement.classList.toggle('cv-initial-loading', isInitialLoad);
-        stage.setAttribute('aria-busy', 'true');
-        if (isInitialLoad) {
-          postElement.classList.remove('cv-ready', 'cv-controls-ready');
-        } else {
-          postElement.classList.add('cv-ready', 'cv-controls-ready');
-        }
-        await disposePdf({ clearCanvas: isInitialLoad });
-
-        // Start a new loading task
-        loadingTask = pdfjsLib.getDocument({
-          url,
-          disableAutoFetch: true,
-        });
-        try {
-          pdfDoc = await loadingTask.promise;
-        } catch (err) {
-          console.error('PDF load failed:', err);
-          postElement.classList.remove('cv-loading', 'cv-ready', 'cv-controls-ready', 'cv-initial-loading');
-          postElement.classList.add('cv-error');
-          stage.setAttribute('aria-busy', 'false');
-          return;
-        } finally {
-          // The loadingTask becomes less useful after we have pdfDoc
-          loadingTask = null;
-        }
-
-        pageNum = Math.min(initialPage, pdfDoc.numPages);
-        pendingDirection = 0;
-        updateLangControls(lang);
-        await renderPage(pageNum);
-      }
-
-      async function renderPage(num) {
-        if (!pdfDoc) return;
-        pageRendering = true;
-        stage.classList.add('is-rendering');
-        const doc = pdfDoc;
-        let rendered = false;
-
-        try {
-          const results = await Promise.all(
-            slots.map((slot) => {
-              const n = slot.key === 'prev' ? num - 1 : slot.key === 'next' ? num + 1 : num;
-              return renderSlot(slot, n, doc);
-            })
-          );
-          rendered = results[1];
-        } finally {
-          pageRendering = false;
-          if (pageNumPending !== null) {
-            const pending = pageNumPending;
-            pageNumPending = null;
-            stage.classList.remove('is-rendering');
-            return renderPage(pending);
-          }
-          // Loop-back button occupies the empty "next" zone on the last page
-          restartBtn.hidden = !(doc === pdfDoc && doc && doc.numPages > 1 && num >= doc.numPages);
-          updateMobilePager();
-          if (!firstPageRendered && rendered) {
-            firstPageRendered = true;
-            hasLoadedOnce = true;
-            postElement.classList.remove('cv-loading', 'cv-error', 'cv-initial-loading');
-            postElement.classList.add('cv-ready');
-            stage.setAttribute('aria-busy', 'false');
-            requestAnimationFrame(() => {
-              requestAnimationFrame(() => {
-                postElement.classList.add('cv-controls-ready');
-                updateSegmentThumb();
-              });
-            });
-          }
-          stage.classList.remove('is-rendering');
-        }
-      }
-
-      // Render page n of doc into a slot; empty slots (out-of-range pages)
-      // are hidden but keep their layout box so widths stay measurable.
-      async function renderSlot(slot, n, doc) {
-        if (slot.renderTask && typeof slot.renderTask.cancel === 'function') {
-          try {
-            slot.renderTask.cancel();
-          } catch {}
-          slot.renderTask = null;
-        }
-        if (!doc || n < 1 || n > doc.numPages) {
-          slot.el.classList.add('is-empty');
-          clearSlotCanvas(slot);
-          return false;
-        }
-        slot.el.classList.remove('is-empty');
-
-        const page = await doc.getPage(n);
-        if (doc !== pdfDoc) {
-          try {
-            page.cleanup();
-          } catch {}
-          return false;
-        }
-        // Side slots are narrow clipping windows; the page inside them still
-        // renders at full stage width so all three pages share one scale.
-        const desiredWidth = stage.getBoundingClientRect().width || postElement.getBoundingClientRect().width;
-        const origViewport = page.getViewport({ scale: 1 });
-        const viewport = page.getViewport({ scale: desiredWidth / origViewport.width });
-        const renderCanvas = document.createElement('canvas');
-        adjustCanvasSize(renderCanvas, viewport);
-        const task = page.render({
-          canvasContext: renderCanvas.getContext('2d'),
-          transform: getTransform(viewport),
-          viewport,
-        });
-        slot.renderTask = task;
-        let ok = false;
-        try {
-          await task.promise;
-          ok = true;
-        } catch (e) {
-          // Rendering was likely canceled; ignore
-        } finally {
-          if (slot.renderTask === task) slot.renderTask = null;
-          if (ok) {
-            commitRenderedPage(slot, renderCanvas);
-            if (slot.key === 'current') {
-              await addAnnotationsToPage(page, viewport).catch(() => {});
-            }
-            requestAnimationFrame(() => slot.canvas.classList.add('is-rendered'));
-          }
-          try {
-            page.cleanup();
-          } catch {}
-        }
-        return ok;
-      }
-
-      function adjustCanvasSize(targetCanvas, viewport) {
-        const outputScale = getOutputScale();
-        targetCanvas.width = Math.floor(viewport.width * outputScale);
-        targetCanvas.height = Math.floor(viewport.height * outputScale);
-        targetCanvas.style.width = `${Math.floor(viewport.width)}px`;
-        targetCanvas.style.height = `${Math.floor(viewport.height)}px`;
-      }
-
-      function commitRenderedPage(slot, renderCanvas) {
-        const canvas = slot.canvas;
-        // Reset to the hidden pre-enter state without animating the jump
-        canvas.style.transition = 'none';
-        canvas.classList.remove('is-rendered');
-        if (slot === currentSlot) {
-          // Incoming page starts shifted toward the side it navigates from
-          canvas.style.setProperty('--enter-x', pendingDirection > 0 ? '7%' : pendingDirection < 0 ? '-7%' : '0px');
-          canvas.style.setProperty('--enter-y', pendingDirection ? '0px' : '6px');
-        }
-        canvas.width = renderCanvas.width;
-        canvas.height = renderCanvas.height;
-        canvas.style.width = renderCanvas.style.width;
-        canvas.style.height = renderCanvas.style.height;
-        slot.ctx.clearRect(0, 0, canvas.width, canvas.height);
-        slot.ctx.drawImage(renderCanvas, 0, 0);
-        void canvas.offsetWidth; // flush styles before re-enabling transitions
-        canvas.style.transition = '';
-      }
-
-      function clearSlotCanvas(slot) {
-        try {
-          slot.ctx && slot.ctx.clearRect(0, 0, slot.canvas.width, slot.canvas.height);
-        } catch {}
-        slot.canvas.classList.remove('is-rendered');
-        slot.canvas.width = 0;
-        slot.canvas.height = 0;
-        slot.canvas.style.width = '0px';
-        slot.canvas.style.height = '0px';
-      }
-
-      function getComputedSiteTheme() {
-        const theme = document.documentElement.getAttribute('data-theme');
-        if (theme) return theme;
-        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-      }
-
-      function getPdfUrl(lang = currentLang) {
-        const theme = getComputedSiteTheme();
-        return urls[lang]?.[theme] || urls[lang]?.light;
-      }
-
-      function getTransform(viewport) {
-        const outputScale = getOutputScale();
-        return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
-      }
-
-      function getOutputScale() {
-        return Math.min(window.devicePixelRatio || 1, 2);
-      }
-
-      async function addAnnotationsToPage(page, viewport) {
-        stage.querySelectorAll('a.pdf-link.overlay').forEach((a) => a.remove());
-        const annotations = await page.getAnnotations();
-        annotations.forEach((annotation) => {
-          if (annotation.subtype === 'Link' && annotation.url) {
-            createLinkElement(annotation, viewport);
-          }
-        });
-      }
-
-      function createLinkElement(annotation, viewport) {
-        const canvas = currentSlot.canvas;
-        const [x1, y1, x2, y2] = annotation.rect;
-        const t = viewport.transform;
-        const devX1 = x1 * t[0] + t[4];
-        const devY2 = y2 * t[3] + t[5];
-        const devW = (x2 - x1) * t[0];
-        const devH = (y2 - y1) * t[3];
-
-        const cssScaleX = canvas.clientWidth / canvas.width;
-        const cssScaleY = canvas.clientHeight / canvas.height;
-
-        const left = devX1 * cssScaleX;
-        const top = (canvas.height - devY2) * cssScaleY;
-        const width = devW * cssScaleX;
-        const height = devH * cssScaleY;
-
-        const linkElement = document.createElement('a');
-        linkElement.href = annotation.url;
-        linkElement.target = '_blank';
-        linkElement.rel = 'noopener';
-        linkElement.className = 'pdf-link overlay';
-        Object.assign(linkElement.style, {
-          position: 'absolute',
-          left: `${left}px`,
-          top: `${top}px`,
-          width: `${width}px`,
-          height: `${height}px`,
-        });
-        currentSlot.el.appendChild(linkElement);
-      }
-
-      const segmentEl = document.querySelector('.lang-segment');
-      const segmentThumb = segmentEl.querySelector('.lang-segment__thumb');
-      const segmentOptions = Array.from(segmentEl.querySelectorAll('.lang-segment__option'));
-      const downloadBtn = document.getElementById('cv-download');
-      const LANG_STORAGE_KEY = 'cv-lang';
-
-      function updateSegmentThumb() {
-        const active = segmentOptions.find((btn) => btn.dataset.lang === currentLang);
-        if (!active) return;
-        segmentThumb.style.width = `${active.offsetWidth}px`;
-        segmentThumb.style.transform = `translateX(${active.offsetLeft}px)`;
-      }
-
-      function updateLangControls(activeLang) {
-        segmentOptions.forEach((btn) => {
-          const isActive = btn.dataset.lang === activeLang;
-          btn.setAttribute('aria-checked', String(isActive));
-          btn.classList.toggle('active', isActive);
-        });
-        updateSegmentThumb();
-
-        // Download always refers to the active language (light variant,
-        // which is the printable one)
-        const downloadHref = urls[activeLang]?.light;
-        if (downloadHref) {
-          downloadBtn.setAttribute('href', downloadHref);
-          downloadBtn.setAttribute('download', downloadHref.split('/').pop() || `cv-${activeLang}.pdf`);
-        }
-        downloadBtn.setAttribute('aria-label', activeLang === 'fr' ? 'Download French CV (PDF)' : 'Download English CV (PDF)');
-      }
-
-      function switchLang(lang) {
-        if (!lang || lang === currentLang) return;
-        try {
-          localStorage.setItem(LANG_STORAGE_KEY, lang);
-        } catch {}
-        loadPdf(lang, { initialPage: pageNum });
-      }
-
-      // Last chosen language wins; first visit falls back to the browser locale
-      function getInitialLang() {
-        let stored = null;
-        try {
-          stored = localStorage.getItem(LANG_STORAGE_KEY);
-        } catch {}
-        if (stored && urls[stored]) return stored;
-        return (navigator.language || '').toLowerCase().startsWith('fr') ? 'fr' : 'en';
-      }
-
-      // Snapshot the current page onto a throwaway canvas that slides out,
-      // so the real canvas is free to slide in with the next page in parallel.
-      function spawnGhost(direction) {
-        const src = currentSlot.canvas;
-        if (!src.width || !src.height) return;
-        currentSlot.el.querySelectorAll('.pdf-ghost').forEach((g) => g.remove());
-        const ghost = document.createElement('canvas');
-        ghost.className = 'pdf-ghost';
-        ghost.width = src.width;
-        ghost.height = src.height;
-        ghost.getContext('2d').drawImage(src, 0, 0);
-        ghost.style.width = src.style.width;
-        ghost.style.height = src.style.height;
-        ghost.style.setProperty('--exit-x', direction > 0 ? '-9%' : '9%');
-        currentSlot.el.appendChild(ghost);
-        requestAnimationFrame(() => ghost.classList.add('is-leaving'));
-        ghost.addEventListener('transitionend', () => ghost.remove(), { once: true });
-        setTimeout(() => ghost.remove(), 600); // safety net
-      }
-
-      function queueRenderPage(num, direction = 0) {
-        pendingDirection = direction;
-        if (pageRendering) {
-          pageNumPending = num;
-          return;
-        }
-        const canvas = currentSlot.canvas;
-        if (direction) {
-          spawnGhost(direction);
-          // Hide the real canvas instantly and park it on the incoming side;
-          // the ghost keeps showing the old frame as it slides away.
-          canvas.style.transition = 'none';
-          canvas.classList.remove('is-rendered');
-          canvas.style.setProperty('--enter-x', direction > 0 ? '9%' : '-9%');
-          canvas.style.setProperty('--enter-y', '0px');
-          void canvas.offsetWidth;
-          canvas.style.transition = '';
-          renderPage(num);
-        } else {
-          canvas.classList.add('is-updating');
-          renderPage(num).finally(() => canvas.classList.remove('is-updating'));
-        }
-      }
-
-      function onPrevPage() {
-        if (!pdfDoc || pageNum <= 1) return;
-        pageNum--;
-        queueRenderPage(pageNum, -1);
-      }
-
-      function onNextPage() {
-        if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
-        pageNum++;
-        queueRenderPage(pageNum, 1);
-      }
-
-      // Clicking a side page brings it to the center
-      slots[0].el.addEventListener('click', onPrevPage);
-      slots[2].el.addEventListener('click', onNextPage);
-
-      // Loop back to the first page from the end of the document
-      restartBtn.addEventListener('click', () => {
-        if (!pdfDoc || pageNum === 1) return;
-        pageNum = 1;
-        queueRenderPage(1, 1);
-      });
-
-      // Mobile pager: prev, and next-or-restart at the end of the document
-      function updateMobilePager() {
-        if (!pdfDoc) {
-          mobilePrevBtn.disabled = true;
-          mobileNextBtn.disabled = true;
-          return;
-        }
-        mobilePrevBtn.disabled = pageNum <= 1;
-        mobileNextBtn.disabled = pdfDoc.numPages <= 1;
-        const atEnd = pageNum >= pdfDoc.numPages;
-        mobileNextIcon.className = atEnd ? 'fa-solid fa-rotate-right' : 'fa-solid fa-chevron-right';
-        mobileNextBtn.setAttribute('aria-label', atEnd ? 'Back to first page' : 'Next page');
-      }
-
-      mobilePrevBtn.addEventListener('click', onPrevPage);
-      mobileNextBtn.addEventListener('click', () => {
-        if (!pdfDoc || pdfDoc.numPages <= 1) return;
-        if (pageNum >= pdfDoc.numPages) {
-          pageNum = 1;
-          queueRenderPage(1, 1);
-        } else {
-          onNextPage();
-        }
-      });
-
-      // Segmented language control: click or arrow keys to switch
-      segmentOptions.forEach((btn) => {
-        btn.addEventListener('click', () => switchLang(btn.dataset.lang));
-      });
-      segmentEl.addEventListener('keydown', (e) => {
-        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
-        e.preventDefault();
-        const idx = segmentOptions.findIndex((btn) => btn.dataset.lang === currentLang);
-        const delta = e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 1;
-        const nextBtn = segmentOptions[(idx + delta + segmentOptions.length) % segmentOptions.length];
-        nextBtn.focus();
-        switchLang(nextBtn.dataset.lang);
-      });
-      window.addEventListener('resize', updateSegmentThumb);
-
-      // Clean leftover overlay links
-      stage.querySelectorAll('a.pdf-link.overlay').forEach((link) => link.remove());
-
-      const themeObserver = new MutationObserver((records) => {
-        if (pdfDoc && firstPageRendered && records.some((record) => record.attributeName === 'data-theme')) {
-          loadPdf(currentLang, { initialPage: pageNum });
-        }
-      });
-      themeObserver.observe(document.documentElement, { attributes: true });
-
-      // Dispose on page unload to be extra safe
-      window.addEventListener('beforeunload', () => {
-        themeObserver.disconnect();
-        disposePdf();
-      });
-
-      // Initial load: last chosen language, else browser locale
-      loadPdf(getInitialLang());
-    });
-  </script>
-
   <style>
     .cv-stage-wrap {
       position: relative;
@@ -623,28 +16,38 @@ layout: default
       line-height: normal;
     }
 
-    /* iOS-style progressive header blur: two stacked backdrop-filter layers,
-       each faded out downward with a gradient mask, so the CV melts into
-       the blur with no hard edge or container around the controls. */
+    /* iOS-style progressive header blur: one glass sheet spanning from the
+       viewport top (behind the navbar) down through the pinned language
+       controls, built from two stacked backdrop-filter layers each faded
+       out downward with a gradient mask. The sheet stays at full strength
+       until the toolbar's bottom edge (calc(100% - 5.5rem), since it
+       extends 5.5rem past the anchor) and melts into the CV below it. */
     .cv-toolbar-backdrop {
       position: absolute;
-      /* Reaches up over the 12px pin gap so the blur meets the navbar edge */
-      top: -12px;
-      left: 0;
-      right: 0;
-      height: 7.5rem;
+      top: calc(-1 * var(--cv-toolbar-top, 57px));
+      bottom: -9rem;
+      left: calc(50% - 50vw);
+      right: calc(50% - 50vw);
       pointer-events: none;
       background: linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--global-bg-color) 55%, transparent),
-        color-mix(in srgb, var(--global-bg-color) 22%, transparent) 45%,
-        transparent 82%
+        color-mix(in srgb, var(--global-bg-color) 72%, transparent),
+        color-mix(in srgb, var(--global-bg-color) 42%, transparent) calc(100% - 9rem),
+        transparent calc(100% - 1.5rem)
       );
+      /* The sheet itself is the lightest blur stage; its mask also caps the
+         heavier pseudo layers, whose own ramps end higher up. Blur strength
+         steps down 16 -> 8 -> 3 -> 0 through overlapping fades over the
+         9rem tail, so the melt has no sharp end. */
+      -webkit-backdrop-filter: blur(3px);
+      backdrop-filter: blur(3px);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 4rem), transparent 100%);
+      mask-image: linear-gradient(to bottom, black calc(100% - 4rem), transparent 100%);
       opacity: 0;
       visibility: hidden;
       transition:
-        opacity 160ms ease,
-        visibility 0s linear 160ms;
+        opacity 280ms ease,
+        visibility 0s linear 280ms;
     }
 
     .cv-toolbar-backdrop::before,
@@ -655,23 +58,33 @@ layout: default
     }
 
     .cv-toolbar-backdrop::before {
-      -webkit-backdrop-filter: blur(16px) saturate(1.3);
-      backdrop-filter: blur(16px) saturate(1.3);
-      -webkit-mask-image: linear-gradient(to bottom, black 28%, transparent 68%);
-      mask-image: linear-gradient(to bottom, black 28%, transparent 68%);
+      -webkit-backdrop-filter: blur(14px) saturate(1.3);
+      backdrop-filter: blur(14px) saturate(1.3);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 9rem), transparent calc(100% - 5rem));
+      mask-image: linear-gradient(to bottom, black calc(100% - 9rem), transparent calc(100% - 5rem));
     }
 
     .cv-toolbar-backdrop::after {
-      -webkit-backdrop-filter: blur(4px);
-      backdrop-filter: blur(4px);
-      -webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 95%);
-      mask-image: linear-gradient(to bottom, black 45%, transparent 95%);
+      -webkit-backdrop-filter: blur(7px);
+      backdrop-filter: blur(7px);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 7rem), transparent calc(100% - 2.5rem));
+      mask-image: linear-gradient(to bottom, black calc(100% - 7rem), transparent calc(100% - 2.5rem));
     }
 
     @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
       .cv-toolbar-backdrop {
-        background: linear-gradient(to bottom, var(--global-bg-color) 45%, transparent);
+        background: linear-gradient(to bottom, var(--global-bg-color) calc(100% - 9rem), transparent);
       }
+    }
+
+    /* While the sheet is up it covers the navbar region too, so the
+       navbar's own blur layers switch off — stacking the two systems is
+       what produced the banding artifacts. Before the toolbar pins, the
+       navbar keeps its site-wide glass so the page heading still melts
+       under it; the swap happens with only whitespace behind the bar. */
+    html.cv-glass-extended #navbar::before,
+    html.cv-glass-extended #navbar::after {
+      content: none;
     }
 
     .header-toolbar {
@@ -1162,11 +575,13 @@ layout: default
       color: var(--global-theme-color);
     }
 
-    /* Download button for the active language */
+    /* Download button for the active language; stretches to match the
+       language segment's height exactly */
     .cv-download-btn {
       display: inline-flex;
       gap: 0.4em;
       align-items: center;
+      align-self: stretch;
       min-height: 2.35rem;
       padding: 0.5rem 0.9rem;
       border: 1px solid color-mix(in srgb, var(--global-theme-color) 42%, var(--global-divider-color));
@@ -1261,4 +676,614 @@ layout: default
       }
     }
   </style>
+  <header class="post-header page-hero cv-hero">
+    <div class="page-hero__content">
+      <h1 class="post-title">
+        {{ page.title }}
+      </h1>
+      {% if page.description %}
+        <p class="post-description">{{ page.description }}</p>
+      {% endif %}
+    </div>
+  </header>
+
+  <div class="cv-stage-wrap">
+    <div class="cv-toolbar-anchor">
+      <div class="cv-toolbar-backdrop" aria-hidden="true"></div>
+      <div class="header-toolbar">
+        <div class="lang-toolbar">
+          <div class="lang-segment" role="radiogroup" aria-label="CV language">
+            <span class="lang-segment__thumb" aria-hidden="true"></span>
+            <button type="button" class="lang-segment__option" data-lang="en" role="radio" aria-checked="false">English</button>
+            <button type="button" class="lang-segment__option" data-lang="fr" role="radio" aria-checked="false">Français</button>
+          </div>
+
+          <a
+            id="cv-download"
+            class="cv-download-btn"
+            href="{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}"
+            download
+            rel="noopener"
+          >
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            <span>PDF</span>
+          </a>
+        </div>
+
+        <!-- Mobile-only pager: replaces the side page zones on small screens -->
+        <div class="pager-mobile" aria-label="CV pages">
+          <button type="button" id="pager-mobile-prev" class="pager-mobile__btn" disabled aria-label="Previous page">
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button type="button" id="pager-mobile-next" class="pager-mobile__btn" disabled aria-label="Next page">
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div
+      class="pdf-stage"
+      aria-live="polite"
+      aria-busy="true"
+    >
+      <div class="pdf-loading" role="status">Loading CV...</div>
+      <div class="pdf-error" role="status">The CV PDF could not be loaded.</div>
+      <button class="pdf-page pdf-page--prev is-empty" type="button" aria-label="Show previous page">
+        <canvas></canvas>
+        <span class="pdf-page__hint" aria-hidden="true"><i class="fa-solid fa-chevron-left"></i></span>
+      </button>
+      <div class="pdf-page pdf-page--current">
+        <canvas id="the-canvas"></canvas>
+      </div>
+      <button class="pdf-page pdf-page--next is-empty" type="button" aria-label="Show next page">
+        <canvas></canvas>
+        <span class="pdf-page__hint" aria-hidden="true"><i class="fa-solid fa-chevron-right"></i></span>
+      </button>
+      <button class="pdf-restart" type="button" aria-label="Back to first page" hidden>
+        <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <link
+    rel="modulepreload"
+    href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs"
+    crossorigin="anonymous"
+  >
+  <link
+    rel="modulepreload"
+    href="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs"
+    crossorigin="anonymous"
+  >
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.mjs" type="module"></script>
+
+  <script type="module">
+    const { pdfjsLib } = globalThis;
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.5.136/pdf.worker.mjs';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const postElement = document.querySelector('.post');
+      const stage = document.querySelector('.pdf-stage');
+
+      // Keep the floating toolbar below the fixed site navbar, and only show
+      // the header blur once CV content actually scrolls under the controls.
+      const navbarEl = document.getElementById('navbar');
+      const toolbarAnchor = document.querySelector('.cv-toolbar-anchor');
+      let toolbarTopOffset = 0;
+      const updateStuckState = () => {
+        // Blur only once the PDF top passes under the pinned toolbar's bottom edge
+        const pinnedBottom = toolbarTopOffset + toolbarAnchor.offsetHeight;
+        const stuck = stage.getBoundingClientRect().top < pinnedBottom - 0.5;
+        postElement.classList.toggle('cv-toolbar-stuck', stuck);
+        // The navbar swaps its own glass for the extended sheet (html-level
+        // class since the navbar lives outside this layout's tree)
+        document.documentElement.classList.toggle('cv-glass-extended', stuck);
+      };
+      const updateToolbarTop = () => {
+        const navbarHeight = navbarEl && getComputedStyle(navbarEl).position === 'fixed' ? navbarEl.offsetHeight : 0;
+        // Pin 12px below the navbar so the toolbar clears the page progress bar
+        toolbarTopOffset = navbarHeight + 12;
+        postElement.style.setProperty('--cv-toolbar-top', `${toolbarTopOffset}px`);
+        updateStuckState();
+      };
+      updateToolbarTop();
+      window.addEventListener('resize', updateToolbarTop);
+      window.addEventListener('scroll', updateStuckState, { passive: true });
+      // Carousel slots: previous / current / next page. Side pages peek in
+      // from the edges and are clickable to navigate.
+      const slots = ['prev', 'current', 'next'].map((key) => {
+        const el = stage.querySelector(`.pdf-page--${key}`);
+        const canvas = el.querySelector('canvas');
+        return { key, el, canvas, ctx: canvas.getContext('2d'), renderTask: null };
+      });
+      const currentSlot = slots[1];
+      const restartBtn = stage.querySelector('.pdf-restart');
+      const mobilePrevBtn = document.getElementById('pager-mobile-prev');
+      const mobileNextBtn = document.getElementById('pager-mobile-next');
+      const mobileNextIcon = mobileNextBtn.querySelector('i');
+
+      let pdfDoc = null; // PDFDocumentProxy
+      let loadingTask = null; // PDFLoadingTask
+      let pageNum = 1;
+      let pageRendering = false;
+      let pageNumPending = null;
+      let currentLang = 'en';
+      let firstPageRendered = false;
+      let hasLoadedOnce = false;
+      let pendingDirection = 0; // 1 = navigating forward, -1 = back, 0 = reload
+
+      const urls = {
+        en: {
+          light: "{{ page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
+          dark: "{{ page.cv_pdf_en_dark | default: page.cv_pdf_en | prepend: 'assets/pdf/' | relative_url }}",
+        },
+        fr: {
+          light: "{{ page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
+          dark: "{{ page.cv_pdf_fr_dark | default: page.cv_pdf_fr | prepend: 'assets/pdf/' | relative_url }}",
+        },
+      };
+
+      async function disposePdf({ clearCanvas = true } = {}) {
+        // 1) Stop rendering in every slot
+        slots.forEach((slot) => {
+          if (slot.renderTask && typeof slot.renderTask.cancel === 'function') {
+            try {
+              slot.renderTask.cancel();
+            } catch {}
+          }
+          slot.renderTask = null;
+        });
+        pageRendering = false;
+        pageNumPending = null;
+
+        // 2) Kill any in-flight document load
+        if (loadingTask && typeof loadingTask.destroy === 'function') {
+          try {
+            await loadingTask.destroy();
+          } catch {}
+        }
+        loadingTask = null;
+
+        // 3) Destroy current document (frees XRef, fonts, images, etc.)
+        if (pdfDoc) {
+          try {
+            // cleanup() is optional; destroy() is enough, but both is fine.
+            if (typeof pdfDoc.cleanup === 'function') await pdfDoc.cleanup();
+            await pdfDoc.destroy();
+          } catch {}
+        }
+        pdfDoc = null;
+
+        // 4) Clear overlay links and hide the loop-back button
+        stage.querySelectorAll('a.pdf-link.overlay').forEach((a) => a.remove());
+        restartBtn.hidden = true;
+
+        if (clearCanvas) {
+          // 5) Clear and shrink canvases to release bitmap memory
+          slots.forEach(clearSlotCanvas);
+        }
+      }
+
+      async function loadPdf(lang, { initialPage = 1 } = {}) {
+        const url = getPdfUrl(lang);
+        currentLang = lang;
+        const isInitialLoad = !hasLoadedOnce;
+
+        // Fully tear down previous resources before starting a new load
+        firstPageRendered = false;
+        postElement.classList.add('cv-loading');
+        postElement.classList.remove('cv-error');
+        postElement.classList.toggle('cv-initial-loading', isInitialLoad);
+        stage.setAttribute('aria-busy', 'true');
+        if (isInitialLoad) {
+          postElement.classList.remove('cv-ready', 'cv-controls-ready');
+        } else {
+          postElement.classList.add('cv-ready', 'cv-controls-ready');
+        }
+        await disposePdf({ clearCanvas: isInitialLoad });
+
+        // Start a new loading task
+        loadingTask = pdfjsLib.getDocument({
+          url,
+          disableAutoFetch: true,
+        });
+        try {
+          pdfDoc = await loadingTask.promise;
+        } catch (err) {
+          console.error('PDF load failed:', err);
+          postElement.classList.remove('cv-loading', 'cv-ready', 'cv-controls-ready', 'cv-initial-loading');
+          postElement.classList.add('cv-error');
+          stage.setAttribute('aria-busy', 'false');
+          return;
+        } finally {
+          // The loadingTask becomes less useful after we have pdfDoc
+          loadingTask = null;
+        }
+
+        pageNum = Math.min(initialPage, pdfDoc.numPages);
+        pendingDirection = 0;
+        updateLangControls(lang);
+        await renderPage(pageNum);
+      }
+
+      async function renderPage(num) {
+        if (!pdfDoc) return;
+        pageRendering = true;
+        stage.classList.add('is-rendering');
+        const doc = pdfDoc;
+        let rendered = false;
+
+        try {
+          const results = await Promise.all(
+            slots.map((slot) => {
+              const n = slot.key === 'prev' ? num - 1 : slot.key === 'next' ? num + 1 : num;
+              return renderSlot(slot, n, doc);
+            })
+          );
+          rendered = results[1];
+        } finally {
+          pageRendering = false;
+          if (pageNumPending !== null) {
+            const pending = pageNumPending;
+            pageNumPending = null;
+            stage.classList.remove('is-rendering');
+            return renderPage(pending);
+          }
+          // Loop-back button occupies the empty "next" zone on the last page
+          restartBtn.hidden = !(doc === pdfDoc && doc && doc.numPages > 1 && num >= doc.numPages);
+          updateMobilePager();
+          if (!firstPageRendered && rendered) {
+            firstPageRendered = true;
+            hasLoadedOnce = true;
+            postElement.classList.remove('cv-loading', 'cv-error', 'cv-initial-loading');
+            postElement.classList.add('cv-ready');
+            stage.setAttribute('aria-busy', 'false');
+            requestAnimationFrame(() => {
+              requestAnimationFrame(() => {
+                postElement.classList.add('cv-controls-ready');
+                updateSegmentThumb();
+              });
+            });
+          }
+          stage.classList.remove('is-rendering');
+        }
+      }
+
+      // Render page n of doc into a slot; empty slots (out-of-range pages)
+      // are hidden but keep their layout box so widths stay measurable.
+      async function renderSlot(slot, n, doc) {
+        if (slot.renderTask && typeof slot.renderTask.cancel === 'function') {
+          try {
+            slot.renderTask.cancel();
+          } catch {}
+          slot.renderTask = null;
+        }
+        if (!doc || n < 1 || n > doc.numPages) {
+          slot.el.classList.add('is-empty');
+          clearSlotCanvas(slot);
+          return false;
+        }
+        slot.el.classList.remove('is-empty');
+
+        const page = await doc.getPage(n);
+        if (doc !== pdfDoc) {
+          try {
+            page.cleanup();
+          } catch {}
+          return false;
+        }
+        // Side slots are narrow clipping windows; the page inside them still
+        // renders at full stage width so all three pages share one scale.
+        const desiredWidth = stage.getBoundingClientRect().width || postElement.getBoundingClientRect().width;
+        const origViewport = page.getViewport({ scale: 1 });
+        const viewport = page.getViewport({ scale: desiredWidth / origViewport.width });
+        // Side slots only peek in from the edges, so render them at 1x —
+        // halves their canvas memory; the current page keeps full DPI
+        const outputScale = slot === currentSlot ? getOutputScale() : Math.min(getOutputScale(), 1);
+        const renderCanvas = document.createElement('canvas');
+        adjustCanvasSize(renderCanvas, viewport, outputScale);
+        const task = page.render({
+          canvasContext: renderCanvas.getContext('2d'),
+          transform: getTransform(outputScale),
+          viewport,
+        });
+        slot.renderTask = task;
+        let ok = false;
+        try {
+          await task.promise;
+          ok = true;
+        } catch (e) {
+          // Rendering was likely canceled; ignore
+        } finally {
+          if (slot.renderTask === task) slot.renderTask = null;
+          if (ok) {
+            commitRenderedPage(slot, renderCanvas);
+            if (slot.key === 'current') {
+              await addAnnotationsToPage(page, viewport).catch(() => {});
+            }
+            requestAnimationFrame(() => slot.canvas.classList.add('is-rendered'));
+          }
+          try {
+            page.cleanup();
+          } catch {}
+        }
+        return ok;
+      }
+
+      function adjustCanvasSize(targetCanvas, viewport, outputScale) {
+        targetCanvas.width = Math.floor(viewport.width * outputScale);
+        targetCanvas.height = Math.floor(viewport.height * outputScale);
+        targetCanvas.style.width = `${Math.floor(viewport.width)}px`;
+        targetCanvas.style.height = `${Math.floor(viewport.height)}px`;
+      }
+
+      function commitRenderedPage(slot, renderCanvas) {
+        const canvas = slot.canvas;
+        // Reset to the hidden pre-enter state without animating the jump
+        canvas.style.transition = 'none';
+        canvas.classList.remove('is-rendered');
+        if (slot === currentSlot) {
+          // Incoming page starts shifted toward the side it navigates from
+          canvas.style.setProperty('--enter-x', pendingDirection > 0 ? '7%' : pendingDirection < 0 ? '-7%' : '0px');
+          canvas.style.setProperty('--enter-y', pendingDirection ? '0px' : '6px');
+        }
+        canvas.width = renderCanvas.width;
+        canvas.height = renderCanvas.height;
+        canvas.style.width = renderCanvas.style.width;
+        canvas.style.height = renderCanvas.style.height;
+        slot.ctx.clearRect(0, 0, canvas.width, canvas.height);
+        slot.ctx.drawImage(renderCanvas, 0, 0);
+        void canvas.offsetWidth; // flush styles before re-enabling transitions
+        canvas.style.transition = '';
+      }
+
+      function clearSlotCanvas(slot) {
+        try {
+          slot.ctx && slot.ctx.clearRect(0, 0, slot.canvas.width, slot.canvas.height);
+        } catch {}
+        slot.canvas.classList.remove('is-rendered');
+        slot.canvas.width = 0;
+        slot.canvas.height = 0;
+        slot.canvas.style.width = '0px';
+        slot.canvas.style.height = '0px';
+      }
+
+      function getComputedSiteTheme() {
+        const theme = document.documentElement.getAttribute('data-theme');
+        if (theme) return theme;
+        return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function getPdfUrl(lang = currentLang) {
+        const theme = getComputedSiteTheme();
+        return urls[lang]?.[theme] || urls[lang]?.light;
+      }
+
+      function getTransform(outputScale) {
+        return outputScale !== 1 ? [outputScale, 0, 0, outputScale, 0, 0] : null;
+      }
+
+      function getOutputScale() {
+        return Math.min(window.devicePixelRatio || 1, 2);
+      }
+
+      async function addAnnotationsToPage(page, viewport) {
+        stage.querySelectorAll('a.pdf-link.overlay').forEach((a) => a.remove());
+        const annotations = await page.getAnnotations();
+        annotations.forEach((annotation) => {
+          if (annotation.subtype === 'Link' && annotation.url) {
+            createLinkElement(annotation, viewport);
+          }
+        });
+      }
+
+      function createLinkElement(annotation, viewport) {
+        const canvas = currentSlot.canvas;
+        const [x1, y1, x2, y2] = annotation.rect;
+        const t = viewport.transform;
+        const devX1 = x1 * t[0] + t[4];
+        const devY2 = y2 * t[3] + t[5];
+        const devW = (x2 - x1) * t[0];
+        const devH = (y2 - y1) * t[3];
+
+        const cssScaleX = canvas.clientWidth / canvas.width;
+        const cssScaleY = canvas.clientHeight / canvas.height;
+
+        const left = devX1 * cssScaleX;
+        const top = (canvas.height - devY2) * cssScaleY;
+        const width = devW * cssScaleX;
+        const height = devH * cssScaleY;
+
+        const linkElement = document.createElement('a');
+        linkElement.href = annotation.url;
+        linkElement.target = '_blank';
+        linkElement.rel = 'noopener';
+        linkElement.className = 'pdf-link overlay';
+        Object.assign(linkElement.style, {
+          position: 'absolute',
+          left: `${left}px`,
+          top: `${top}px`,
+          width: `${width}px`,
+          height: `${height}px`,
+        });
+        currentSlot.el.appendChild(linkElement);
+      }
+
+      const segmentEl = document.querySelector('.lang-segment');
+      const segmentThumb = segmentEl.querySelector('.lang-segment__thumb');
+      const segmentOptions = Array.from(segmentEl.querySelectorAll('.lang-segment__option'));
+      const downloadBtn = document.getElementById('cv-download');
+      const LANG_STORAGE_KEY = 'cv-lang';
+
+      function updateSegmentThumb() {
+        const active = segmentOptions.find((btn) => btn.dataset.lang === currentLang);
+        if (!active) return;
+        segmentThumb.style.width = `${active.offsetWidth}px`;
+        segmentThumb.style.transform = `translateX(${active.offsetLeft}px)`;
+      }
+
+      function updateLangControls(activeLang) {
+        segmentOptions.forEach((btn) => {
+          const isActive = btn.dataset.lang === activeLang;
+          btn.setAttribute('aria-checked', String(isActive));
+          btn.classList.toggle('active', isActive);
+        });
+        updateSegmentThumb();
+
+        // Download always refers to the active language (light variant,
+        // which is the printable one)
+        const downloadHref = urls[activeLang]?.light;
+        if (downloadHref) {
+          downloadBtn.setAttribute('href', downloadHref);
+          downloadBtn.setAttribute('download', downloadHref.split('/').pop() || `cv-${activeLang}.pdf`);
+        }
+        downloadBtn.setAttribute('aria-label', activeLang === 'fr' ? 'Download French CV (PDF)' : 'Download English CV (PDF)');
+      }
+
+      function switchLang(lang) {
+        if (!lang || lang === currentLang) return;
+        try {
+          localStorage.setItem(LANG_STORAGE_KEY, lang);
+        } catch {}
+        loadPdf(lang, { initialPage: pageNum });
+      }
+
+      // Last chosen language wins; first visit falls back to the browser locale
+      function getInitialLang() {
+        let stored = null;
+        try {
+          stored = localStorage.getItem(LANG_STORAGE_KEY);
+        } catch {}
+        if (stored && urls[stored]) return stored;
+        return (navigator.language || '').toLowerCase().startsWith('fr') ? 'fr' : 'en';
+      }
+
+      // Snapshot the current page onto a throwaway canvas that slides out,
+      // so the real canvas is free to slide in with the next page in parallel.
+      function spawnGhost(direction) {
+        const src = currentSlot.canvas;
+        if (!src.width || !src.height) return;
+        currentSlot.el.querySelectorAll('.pdf-ghost').forEach((g) => g.remove());
+        const ghost = document.createElement('canvas');
+        ghost.className = 'pdf-ghost';
+        ghost.width = src.width;
+        ghost.height = src.height;
+        ghost.getContext('2d').drawImage(src, 0, 0);
+        ghost.style.width = src.style.width;
+        ghost.style.height = src.style.height;
+        ghost.style.setProperty('--exit-x', direction > 0 ? '-9%' : '9%');
+        currentSlot.el.appendChild(ghost);
+        requestAnimationFrame(() => ghost.classList.add('is-leaving'));
+        ghost.addEventListener('transitionend', () => ghost.remove(), { once: true });
+        setTimeout(() => ghost.remove(), 600); // safety net
+      }
+
+      function queueRenderPage(num, direction = 0) {
+        pendingDirection = direction;
+        if (pageRendering) {
+          pageNumPending = num;
+          return;
+        }
+        const canvas = currentSlot.canvas;
+        if (direction) {
+          spawnGhost(direction);
+          // Hide the real canvas instantly and park it on the incoming side;
+          // the ghost keeps showing the old frame as it slides away.
+          canvas.style.transition = 'none';
+          canvas.classList.remove('is-rendered');
+          canvas.style.setProperty('--enter-x', direction > 0 ? '9%' : '-9%');
+          canvas.style.setProperty('--enter-y', '0px');
+          void canvas.offsetWidth;
+          canvas.style.transition = '';
+          renderPage(num);
+        } else {
+          canvas.classList.add('is-updating');
+          renderPage(num).finally(() => canvas.classList.remove('is-updating'));
+        }
+      }
+
+      function onPrevPage() {
+        if (!pdfDoc || pageNum <= 1) return;
+        pageNum--;
+        queueRenderPage(pageNum, -1);
+      }
+
+      function onNextPage() {
+        if (!pdfDoc || pageNum >= pdfDoc.numPages) return;
+        pageNum++;
+        queueRenderPage(pageNum, 1);
+      }
+
+      // Clicking a side page brings it to the center
+      slots[0].el.addEventListener('click', onPrevPage);
+      slots[2].el.addEventListener('click', onNextPage);
+
+      // Loop back to the first page from the end of the document
+      restartBtn.addEventListener('click', () => {
+        if (!pdfDoc || pageNum === 1) return;
+        pageNum = 1;
+        queueRenderPage(1, 1);
+      });
+
+      // Mobile pager: prev, and next-or-restart at the end of the document
+      function updateMobilePager() {
+        if (!pdfDoc) {
+          mobilePrevBtn.disabled = true;
+          mobileNextBtn.disabled = true;
+          return;
+        }
+        mobilePrevBtn.disabled = pageNum <= 1;
+        mobileNextBtn.disabled = pdfDoc.numPages <= 1;
+        const atEnd = pageNum >= pdfDoc.numPages;
+        mobileNextIcon.className = atEnd ? 'fa-solid fa-rotate-right' : 'fa-solid fa-chevron-right';
+        mobileNextBtn.setAttribute('aria-label', atEnd ? 'Back to first page' : 'Next page');
+      }
+
+      mobilePrevBtn.addEventListener('click', onPrevPage);
+      mobileNextBtn.addEventListener('click', () => {
+        if (!pdfDoc || pdfDoc.numPages <= 1) return;
+        if (pageNum >= pdfDoc.numPages) {
+          pageNum = 1;
+          queueRenderPage(1, 1);
+        } else {
+          onNextPage();
+        }
+      });
+
+      // Segmented language control: click or arrow keys to switch
+      segmentOptions.forEach((btn) => {
+        btn.addEventListener('click', () => switchLang(btn.dataset.lang));
+      });
+      segmentEl.addEventListener('keydown', (e) => {
+        if (!['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown'].includes(e.key)) return;
+        e.preventDefault();
+        const idx = segmentOptions.findIndex((btn) => btn.dataset.lang === currentLang);
+        const delta = e.key === 'ArrowLeft' || e.key === 'ArrowUp' ? -1 : 1;
+        const nextBtn = segmentOptions[(idx + delta + segmentOptions.length) % segmentOptions.length];
+        nextBtn.focus();
+        switchLang(nextBtn.dataset.lang);
+      });
+      window.addEventListener('resize', updateSegmentThumb);
+
+      // Clean leftover overlay links
+      stage.querySelectorAll('a.pdf-link.overlay').forEach((link) => link.remove());
+
+      const themeObserver = new MutationObserver((records) => {
+        if (pdfDoc && firstPageRendered && records.some((record) => record.attributeName === 'data-theme')) {
+          loadPdf(currentLang, { initialPage: pageNum });
+        }
+      });
+      themeObserver.observe(document.documentElement, { attributes: true });
+
+      // Dispose on page unload to be extra safe
+      window.addEventListener('beforeunload', () => {
+        themeObserver.disconnect();
+        disposePdf();
+      });
+
+      // Initial load: last chosen language, else browser locale
+      loadPdf(getInitialLang());
+    });
+  </script>
 </div>

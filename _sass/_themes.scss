@@ -69,10 +69,17 @@
     background: color-mix(in srgb, #ffffff 7%, transparent);
     -webkit-backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
     backdrop-filter: blur(7px) saturate(1.6) brightness(1.04);
+    gap: 0.4rem;
     bottom: v.$back-to-top-bottom;
     right: v.$back-to-top-right;
     height: v.$back-to-top-height;
-    width: v.$back-to-top-width;
+    width: auto;
+    min-width: v.$back-to-top-width;
+    padding: 0 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1;
+    white-space: nowrap;
     box-shadow:
       0 0.35rem 1.3rem rgba(39, 48, 74, 0.14),
       inset 0 0 0 1px rgba(255, 255, 255, 0.3),
@@ -93,6 +100,13 @@
       color: currentColor;
       font-size: 0.95rem;
       line-height: 1;
+      transition: none;
+    }
+
+    /* The global base rule pins bare spans to the page text color; the
+       label must follow the button color like the icon does */
+    span {
+      color: currentColor;
       transition: none;
     }
 

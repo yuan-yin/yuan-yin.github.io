@@ -432,8 +432,15 @@
   <script src="{{ '/assets/js/vanilla-back-to-top.min.js' | relative_url | bust_file_cache }}"></script>
   <script>
     addBackToTop({
-      innerHTML: '<i class="fa-solid fa-angle-up" aria-hidden="true"></i>',
+      innerHTML: '<i class="fa-solid fa-angle-up" aria-hidden="true"></i><span>Top</span>',
     });
+    // The library renders a bare icon-only div; label it for assistive tech
+    (() => {
+      const btn = document.getElementById('back-to-top');
+      btn.setAttribute('role', 'button');
+      btn.setAttribute('aria-label', 'Back to top');
+      btn.setAttribute('title', 'Back to top');
+    })();
   </script>
 {% endif %}
 

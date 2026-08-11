@@ -706,18 +706,95 @@ html[data-theme="dark"] {
   }
 }
 
-// Header line under the title: equal-contribution note on the left,
-// Google Scholar pointer on the right
-.publications-toplines {
+// Hero row: page title on the left, equal-contribution note pill on the
+// right, bottom-aligned with the title
+.publications-hero {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.6rem 1rem;
-  align-items: center;
+  gap: 0.6rem 1.25rem;
+  align-items: flex-end;
   justify-content: space-between;
-  margin-bottom: 1.1rem;
 
   .post-description {
+    margin: 0 0 0.7rem;
+  }
+}
+
+// One-line controls row (filter input + Scholar pointer) riding the bottom
+// of the viewport: sticky within the page flow, so at the end of the list
+// it settles into place and never covers the footer.
+.pub-controls-anchor {
+  position: sticky;
+  bottom: 0;
+  z-index: 9; /* under the back-to-top button */
+  margin-top: 2rem;
+}
+
+.pub-controls {
+  position: relative;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.5rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem 0 calc(0.95rem + env(safe-area-inset-bottom));
+
+  .bibsearch-form-input {
+    flex: 0 1 350px;
+    width: auto;
     margin: 0;
+  }
+}
+
+/* Bottom-anchored progressive blur, mirroring the navbar treatment: two
+   stacked backdrop-filter layers reaching above the bar, each faded out
+   upward with a gradient mask, so content melts into the blur. */
+.pub-controls__backdrop {
+  position: absolute;
+  top: -2.5rem;
+  right: calc(50% - 50vw);
+  bottom: 0;
+  left: calc(50% - 50vw);
+  z-index: -1;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    color-mix(in srgb, var(--global-bg-color) 78%, transparent),
+    color-mix(in srgb, var(--global-bg-color) 32%, transparent) 55%,
+    transparent 85%
+  );
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+
+  &::before {
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-mask-image: linear-gradient(to top, black 45%, transparent 80%);
+    mask-image: linear-gradient(to top, black 45%, transparent 80%);
+  }
+
+  &::after {
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    -webkit-mask-image: linear-gradient(to top, black 58%, transparent 100%);
+    mask-image: linear-gradient(to top, black 58%, transparent 100%);
+  }
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .pub-controls__backdrop {
+    background: linear-gradient(to top, var(--global-bg-color) 55%, transparent);
+  }
+}
+
+@media (max-width: 575.98px) {
+  .pub-controls .scholar-profile-cta p {
+    display: none; /* keep the bottom bar clear of the back-to-top button */
   }
 }
 

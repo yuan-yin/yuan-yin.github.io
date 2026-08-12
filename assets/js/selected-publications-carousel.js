@@ -20,10 +20,32 @@
     let paused = false;
     let isVisible = true;
 
+    let measuringHeight = false;
     const setHeight = () => {
-      const activeItem = items[activeIndex];
-      if (!activeItem) return;
-      viewport.style.height = `${activeItem.offsetHeight}px`;
+      // Uniform height: every slide reserves the tallest card's height, so
+      // nothing reflows when switching
+      if (measuringHeight) return; // our own style writes re-trigger observers
+      measuringHeight = true;
+      const cards = items.map((item) => item.querySelector(".publication-card") || item);
+      cards.forEach((card) => {
+        card.style.height = "";
+      });
+      let max = 0;
+      items.forEach((item) => {
+        max = Math.max(max, item.offsetHeight);
+      });
+      if (max) {
+        const px = `${max}px`;
+        // Explicit height, not min-height: Safari doesn't stretch grid rows
+        // into min-height space, which left the button row un-pinned
+        cards.forEach((card) => {
+          card.style.height = px;
+        });
+        viewport.style.height = px;
+      }
+      window.requestAnimationFrame(() => {
+        measuringHeight = false;
+      });
     };
 
     const setActive = (nextIndex, shouldResetTimer = true) => {

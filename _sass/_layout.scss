@@ -1162,10 +1162,14 @@ html[data-theme="dark"] {
       visibility: hidden;
       opacity: 0;
       transform: translateY(0.35rem);
+      /* Sequential fade: outgoing card clears fully before the incoming one
+         starts, so no text-over-text overlap — overlapping crossfades made
+         low-contrast bits (the venue chip) resolve visibly later than the
+         dark text */
       transition:
-        opacity 180ms ease,
-        transform 180ms ease,
-        visibility 0s linear 180ms;
+        opacity 120ms ease,
+        transform 120ms ease,
+        visibility 0s linear 120ms;
     }
 
     > li.is-active {
@@ -1175,9 +1179,34 @@ html[data-theme="dark"] {
       opacity: 1;
       transform: translateY(0);
       transition:
-        opacity 180ms ease,
-        transform 180ms ease,
-        visibility 0s;
+        opacity 170ms ease 130ms,
+        transform 170ms ease 130ms,
+        visibility 0s linear 130ms;
+    }
+
+    /* Two fixes for the slide fade: backdrop-filter can't composite while
+       the slide's opacity animates (the glass popped in after the fade),
+       and a translucent tint at 18% strength stays invisible for most of
+       the fade — its contrast ramps far behind the card's dark text. An
+       opaque card-colored base under the tint makes the chip fade in sync. */
+    .publication-card__venue {
+      -webkit-backdrop-filter: none;
+      backdrop-filter: none;
+      background-color: var(--global-card-bg-color);
+    }
+
+    /* With uniform card heights, pin the action buttons to the bottom-left
+       corner: the card grid is [body+media / actions]; giving row 1 the
+       slack keeps the actions row at the bottom on shorter entries */
+    .publication-card {
+      grid-template-rows: 1fr auto;
+    }
+
+    /* MDB gives every anchor transition: all .2s — during the slide's
+       visibility flip that puts linked text (venue names, authors) on its
+       own timeline instead of the card's fade; make links snap with it */
+    a {
+      transition: none;
     }
   }
 }

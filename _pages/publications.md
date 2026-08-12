@@ -27,7 +27,6 @@ hide_hero: true
     <div class="pub-controls__backdrop" aria-hidden="true"></div>
     {% include bib_search.liquid %}
     <div class="scholar-profile-cta">
-      <p>Looking for the complete list?</p>
       <a
         class="scholar-profile-cta__btn"
         href="https://scholar.google.com/citations?user={{ site.data.socials.scholar_userid }}"

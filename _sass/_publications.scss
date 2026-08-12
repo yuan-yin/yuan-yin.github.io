@@ -198,7 +198,7 @@
         width: 0.34rem;
         height: 0.34rem;
         border-radius: 50%;
-        background: #ffffff;
+        background: color-mix(in srgb, var(--venue-item-accent, var(--pub-accent)) 55%, var(--global-text-color-light));
       }
 
       .publication-card__venue-item {
@@ -208,15 +208,29 @@
         gap: 0.3rem;
         align-items: center;
         min-width: 0;
-        color: #ffffff;
+        /* Each venue keeps its own accent in merged multi-venue chips */
+        color: color-mix(in srgb, var(--venue-item-accent) 72%, var(--global-text-color)) !important;
+
+        a,
+        span {
+          color: inherit !important;
+        }
       }
 
       .publication-card__venue-name {
         max-width: 100%;
         overflow: hidden;
-        color: #ffffff;
+        color: inherit;
+        line-height: 1.3; /* room for descenders, which overflow:hidden would clip */
         text-overflow: ellipsis;
+        text-transform: none; /* venue names keep their original casing */
         white-space: nowrap;
+
+        /* The Preprint label renders alone (no kind + dot before it) and
+           stays uppercase like the kind labels */
+        &:only-child {
+          text-transform: uppercase;
+        }
       }
 
       .preview {
@@ -236,32 +250,45 @@
         cursor: zoom-in;
       }
 
+      /* Liquid glass venue chip: translucent venue tint with a specular
+         highlight, matching the height of the card's other button pills.
+         The tint lives on a faded pseudo-element so merged chips keep
+         their full multi-color gradient (--venue-gradient). */
       .publication-card__venue {
         --venue-accent: var(--pub-accent);
-        --venue-gradient: linear-gradient(
-          135deg,
-          color-mix(in srgb, var(--venue-accent) 92%, #ffffff),
-          color-mix(in srgb, var(--venue-accent) 72%, #111111)
-        );
 
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
         display: inline-flex;
         flex-wrap: wrap;
         gap: 0.18rem 0.35rem;
         align-items: center;
         justify-content: center;
-        min-height: 2.15rem;
-        padding: 0.45rem 0.65rem;
-        border: 1px solid color-mix(in srgb, var(--venue-accent) 60%, transparent);
-        background: var(--venue-gradient), var(--venue-accent);
-        color: #ffffff !important;
+        min-height: 2rem;
+        padding: 0.36rem 0.72rem;
+        /* Borderless and unelevated so it reads as a badge, not a button */
+        border: 1px solid transparent;
+        background: linear-gradient(135deg, color-mix(in srgb, #ffffff 30%, transparent), transparent 62%);
+        color: color-mix(in srgb, var(--venue-accent) 72%, var(--global-text-color)) !important;
         font-size: 0.82rem;
         font-weight: 760;
-        box-shadow: 0 10px 22px color-mix(in srgb, var(--venue-accent) 22%, transparent);
+        box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 45%, transparent);
+        -webkit-backdrop-filter: blur(12px) saturate(1.3);
+        backdrop-filter: blur(12px) saturate(1.3);
+
+        &::before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          z-index: -1;
+          background: var(--venue-gradient, linear-gradient(135deg, var(--venue-accent), var(--venue-accent)));
+          opacity: 0.18;
+        }
 
         a,
         span {
-          color: #ffffff !important;
-          text-shadow: 0 1px 1px rgba(0, 0, 0, 0.24);
+          text-shadow: none;
         }
 
         a {
@@ -272,7 +299,7 @@
       }
 
       .publication-card__venue-chip-separator {
-        color: rgba(255, 255, 255, 0.72);
+        color: color-mix(in srgb, var(--venue-accent) 45%, var(--global-text-color-light));
         font-weight: 700;
       }
 
@@ -485,7 +512,9 @@
         max-height: 0;
         opacity: 0;
         overflow: hidden;
-        text-align: justify;
+        text-align: left;
+        -webkit-hyphens: auto;
+        hyphens: auto;
         transition:
           max-height 150ms ease,
           margin-top 150ms ease,
@@ -569,6 +598,16 @@ html[data-theme="dark"] {
       box-shadow:
         0 18px 45px rgba(0, 0, 0, 0.24),
         inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
+    }
+
+    .publication-card__venue {
+      border-color: transparent;
+      background: linear-gradient(135deg, color-mix(in srgb, #ffffff 9%, transparent), transparent 62%);
+      box-shadow: inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
+
+      &::before {
+        opacity: 0.26;
+      }
     }
 
     .publication-card__preview {
@@ -792,25 +831,11 @@ html[data-theme="dark"] {
   }
 }
 
-@media (max-width: 575.98px) {
-  .pub-controls .scholar-profile-cta p {
-    display: none; /* keep the bottom bar clear of the back-to-top button */
-  }
-}
-
 // Pointer to the full publication list on Google Scholar
 .scholar-profile-cta {
   display: inline-flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.7rem;
   align-items: center;
   margin: 0;
-
-  p {
-    margin: 0;
-    color: var(--global-text-color-light);
-    font-size: 0.95rem;
-  }
 }
 
 .scholar-profile-cta__btn {

@@ -144,7 +144,16 @@ html.transition .cv-viewer .cv-download-btn *,
 html.transition .cv-viewer .cv-download-btn *::before,
 html.transition .cv-viewer .pager-mobile__btn,
 html.transition .cv-viewer .pager-mobile__btn *,
-html.transition .cv-viewer .pager-mobile__btn *::before {
+html.transition .cv-viewer .pager-mobile__btn *::before,
+html.transition .scholar-badge,
+html.transition .scholar-badge *,
+html.transition .scholar-badge *::before,
+html.transition .scholar-profile-cta__btn,
+html.transition .scholar-profile-cta__btn *,
+html.transition .scholar-profile-cta__btn *::before,
+html.transition .publication-card__venue,
+html.transition .publication-card__venue *,
+html.transition .publication-card__venue *::before {
   transition-property: background-color, border-color, opacity, transform, width, padding, border-left-width !important;
 }
 

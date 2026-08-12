@@ -1051,8 +1051,8 @@ html[data-theme="dark"] {
 }
 
 .about-selected-publications__dots.about-news-card__dots {
-  margin-top: 0.15rem;
-  padding: 0 1rem 0.9rem;
+  margin: -0.65rem 0 0;
+  padding: 0.8rem 1rem 0.9rem;
 }
 
 .news-list {
@@ -1187,7 +1187,14 @@ html[data-theme="dark"] {
   gap: 0.5rem;
   align-items: center;
   justify-content: center;
-  margin-top: 0.9rem;
+  /* Tall touch band: the whole row is clickable (nearest dot wins), with
+     margins compensating the padding so the dots stay visually in place.
+     Positioned so the band paints above the absolutely-positioned slides. */
+  position: relative;
+  z-index: 1;
+  margin: 0.1rem 0 -0.8rem;
+  padding: 0.8rem 1rem;
+  cursor: pointer;
 }
 
 .about-selected-publications__dot {

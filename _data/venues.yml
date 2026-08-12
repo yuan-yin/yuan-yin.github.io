@@ -1,46 +1,63 @@
 "CI":
   kind: workshop
+  url: https://www.climateinformatics.org
 
 "CVPR":
   color: "#2563eb"
   kind: conference
+  url: https://cvpr.thecvf.com
+
+"ECCV EmergingAD":
+  kind: workshop
+  url: https://emerging-ad.github.io
 
 "ECCV W-CODA":
   kind: workshop
+  url: https://coda-dataset.github.io/w-coda2024/
 
 "ICLR":
   color: "#dc2626"
   kind: conference
+  url: https://iclr.cc
 
 "ICLR WS":
   kind: workshop
+  url: https://iclr.cc
 
 "ICML":
   color: "#9333ea"
   kind: conference
+  url: https://icml.cc
 
 "ICML SynS&ML":
   kind: workshop
+  url: https://sites.google.com/view/syns-ml-2023
 
 "ICRA":
   color: "#0891b2"
   kind: conference
+  url: https://www.ieee-icra.org
 
 "IVC":
   kind: journal
+  url: https://www.sciencedirect.com/journal/image-and-vision-computing
 
 "JDSA":
   kind: journal
+  url: https://link.springer.com/journal/41060
 
 "JSTAT":
   kind: journal
+  url: https://iopscience.iop.org/journal/1742-5468
 
 "NeurIPS":
   color: "#b45309"
   kind: conference
+  url: https://neurips.cc
 
 "NeurIPS CCFM":
   kind: workshop
+  url: https://sites.google.com/view/ccfm-neurips2025
 
 "PhD":
   color: "#475569"
@@ -49,6 +66,7 @@
 "TMLR":
   color: "#0f766e"
   kind: journal
+  url: https://jmlr.org/tmlr/
 
 "Preprint":
   color: "#64748b"

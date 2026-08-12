@@ -60,6 +60,11 @@
   flex-wrap: nowrap;
 }
 
+/* Flattened dropdown links for the phone menu; desktop keeps the dropdown */
+.nav-mobile-expanded {
+  display: none;
+}
+
 /* About-page large-title handoff (classes set from the about layout):
    the brand name stays hidden while the hero name is on screen and fades
    in once it scrolls under the navbar. Opacity only, so the navbar layout
@@ -692,9 +697,24 @@ html[data-theme="dark"] {
     justify-content: center;
   }
 
-  .nav-capsule {
-    flex-wrap: wrap;
-    justify-content: center;
+  /* Phone menu: the capsule unwraps into a plain vertical list — no pill
+     container, no sliding thumb; the active page is a solid pill instead */
+  .navbar.navbar-light .nav-capsule {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+  }
+
+  .navbar.navbar-light .nav-capsule__thumb {
+    display: none;
+  }
+
+  .navbar.navbar-light .nav-capsule .nav-link.active {
+    background: var(--global-theme-color);
+    color: #ffffff;
   }
 
   .navbar-nav > .nav-item--tail {
@@ -703,6 +723,28 @@ html[data-theme="dark"] {
 
   .navbar-nav > .nav-item--more {
     position: relative;
+  }
+
+  /* Phone menu: no secondary dropdown — its links stack vertically below
+     the main buttons behind a separator */
+  .nav-capsule__more {
+    display: none;
+  }
+
+  .navbar-nav > .nav-mobile-expanded {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.45rem;
+    margin-top: 0.3rem;
+    padding-top: 0.8rem;
+    border-top: 1px solid var(--global-divider-color);
+  }
+
+  .navbar.navbar-light .nav-mobile-expanded .nav-link.active {
+    border-color: transparent;
+    background: var(--global-theme-color);
+    color: #ffffff;
   }
 
   .navbar .navbar-nav .nav-item--more .dropdown-menu {

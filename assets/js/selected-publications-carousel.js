@@ -83,6 +83,26 @@
       dots.hidden = true;
     }
 
+    // Whole-row interaction: the dots are tiny, so clicks anywhere on the
+    // row (gaps and padding included) jump to the nearest dot's slide.
+    // Direct dot clicks and keyboard activation are handled by the buttons.
+    dots.addEventListener("click", (event) => {
+      if (event.target !== dots) return;
+      const buttons = Array.from(dots.querySelectorAll("button"));
+      if (buttons.length === 0) return;
+      let nearestIndex = 0;
+      let nearestDistance = Infinity;
+      buttons.forEach((button, index) => {
+        const rect = button.getBoundingClientRect();
+        const distance = Math.abs(event.clientX - (rect.left + rect.width / 2));
+        if (distance < nearestDistance) {
+          nearestDistance = distance;
+          nearestIndex = index;
+        }
+      });
+      setActive(nearestIndex);
+    });
+
     root.addEventListener("mouseenter", () => {
       paused = true;
     });

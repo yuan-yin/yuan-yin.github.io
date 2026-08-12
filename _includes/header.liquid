@@ -105,6 +105,25 @@
               {% endfor %}
             </div>
           </li>
+
+          <!-- Mobile only: dropdown children flattened below the main buttons -->
+          <li class="nav-item nav-mobile-expanded">
+            {% assign sorted_pages = site.pages | sort: 'nav_order' %}
+            {% for p in sorted_pages %}
+              {% if p.nav and p.autogen == null and p.dropdown %}
+                {% for child in p.children %}
+                  {% unless child.title == 'divider' %}
+                    <a
+                      class="nav-link{% if page.title == child.title %} active{% endif %}"
+                      href="{% if child.permalink contains '://' %}{{ child.permalink }}{% else %}{{ child.permalink | relative_url }}{% endif %}"
+                    >
+                      {{- child.title -}}
+                    </a>
+                  {% endunless %}
+                {% endfor %}
+              {% endif %}
+            {% endfor %}
+          </li>
           {% if site.search_enabled %}
             <!-- Search -->
             <li class="nav-item nav-item--tail nav-item--search">

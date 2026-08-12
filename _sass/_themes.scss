@@ -162,15 +162,19 @@ html[data-theme="dark"] {
     display: block;
   }
 
-  #back-to-top {
-    &:not(:hover):not(:focus-visible) {
-      background:
-        linear-gradient(145deg, color-mix(in srgb, var(--global-theme-color) 22%, transparent), transparent),
-        color-mix(in srgb, var(--global-bg-color) 62%, transparent);
-      box-shadow:
-        0 10px 26px rgba(0, 0, 0, 0.32),
-        inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
-    }
+  /* Smoked-glass variant, matching the other dark-mode glass elements.
+     Keyed to the computed theme so automatic mode matches explicit dark. */
+  #back-to-top:not(:hover):not(:focus-visible) {
+    color: var(--global-text-color);
+    background: rgba(16, 19, 26, 0.42);
+    box-shadow:
+      0 0.4rem 1.4rem rgba(0, 0, 0, 0.35),
+      inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+      inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.5),
+      inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.26),
+      inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.07);
+    -webkit-backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
+    backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
   }
 }
 
@@ -185,20 +189,6 @@ html[data-theme-setting="dark"] {
 
   #light-toggle-light {
     display: none;
-  }
-
-  /* Smoked-glass variant, matching the other dark-mode glass elements */
-  #back-to-top:not(:hover):not(:focus-visible) {
-    color: var(--global-text-color);
-    background: rgba(16, 19, 26, 0.42);
-    box-shadow:
-      0 0.4rem 1.4rem rgba(0, 0, 0, 0.35),
-      inset 0 0 0 1px rgba(255, 255, 255, 0.16),
-      inset 0.14rem 0.22rem 0.4rem -0.15rem rgba(255, 255, 255, 0.5),
-      inset -0.12rem -0.2rem 0.35rem -0.15rem rgba(255, 255, 255, 0.26),
-      inset 0 0 0.65rem 0.05rem rgba(255, 255, 255, 0.07);
-    -webkit-backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
-    backdrop-filter: blur(7px) saturate(1.4) brightness(0.82);
   }
 }
 

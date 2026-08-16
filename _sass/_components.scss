@@ -742,6 +742,16 @@ html[data-theme-setting="dark"] {
   }
 }
 
+// Carrier for the logo halo filter (see _pages/talks.md). It only exists to be
+// referenced by id, so keep it out of flow — left inline it still generates a
+// line box and pushes the page down.
+.talk-logo-halo-def {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
 .talks {
   margin-top: 2rem;
 
@@ -858,12 +868,86 @@ html[data-theme-setting="dark"] {
     }
   }
 
-  .talk-card__logo {
-    height: 1.7rem;
-    max-width: 6.5rem;
+  // Logos are trimmed to their ink, so fitting them all to one height would
+  // leave a wide wordmark carrying several times the visual weight of a square
+  // logomark. Size each by equal ink area instead: height = 1.7rem / sqrt(w/h),
+  // which leaves a square mark at 1.7rem and shortens wider ones to match.
+  // Untuned logos fall back to 1.7rem, with max-width letterboxing the extremes.
+  // Shrink-wraps the logo so the halo layer can mask itself to exactly the same
+  // box. z-index roots a stacking context for that layer to sit behind in.
+  .talk-card__logo-wrap {
+    position: relative;
+    z-index: 0;
+    display: inline-flex;
     margin-left: auto;
+  }
+
+  // Sits behind the logo, matching its box so it can mask itself to the same
+  // artwork. Only painted in dark mode; see the halo rule below.
+  .talk-card__logo-halo {
+    position: absolute;
+    z-index: -1;
+    inset: 0;
+  }
+
+  .talk-card__logo {
+    display: block;
+    height: 1.7rem;
+    max-width: 4rem;
     object-fit: contain;
     object-position: right center;
+
+    &[src$="criteo.svg"] {
+      height: 0.77rem;
+    }
+
+    &[src$="aphp.svg"] {
+      height: 0.83rem;
+    }
+
+    &[src$="epfl.png"] {
+      height: 0.93rem;
+    }
+
+    &[src$="sorbonne.svg"] {
+      height: 1.08rem;
+    }
+
+    &[src$="eccv.svg"] {
+      height: 1.14rem;
+    }
+
+    &[src$="extrality.png"] {
+      height: 1.16rem;
+    }
+
+    &[src$="ecmlpkdd.png"] {
+      height: 1.34rem;
+    }
+
+    &[src$="neurips.png"] {
+      height: 1.45rem;
+    }
+
+    &[src$="iclr.png"] {
+      height: 1.57rem;
+    }
+
+    &[src$="cerfacs.png"] {
+      height: 1.62rem;
+    }
+
+    &[src$="aaai.svg"] {
+      height: 1.63rem;
+    }
+
+    &[src$="valeo.png"] {
+      height: 1.81rem;
+    }
+
+    &[src$="dataia.png"] {
+      height: 1.97rem;
+    }
   }
 
   .talk-card__title {
@@ -972,11 +1056,31 @@ html[data-theme="dark"] {
       background: color-mix(in srgb, var(--talk-accent) 24%, transparent);
     }
 
-    // Most logos are drawn for light backgrounds — seat them on a light chip
-    .talk-card__logo {
-      padding: 0.2rem 0.32rem;
-      background: rgba(255, 255, 255, 0.92);
-      border-radius: 0.5rem;
+    // Most logos are drawn for light backgrounds, so they need something light
+    // behind them here — but a chip reads as a sticker and a blurred glow
+    // smears the fine wordmarks. Instead mask a white layer to the logo's own
+    // silhouette and dilate it (filter in _pages/talks.md), so the light field
+    // follows the outer contour and strokes sitting close together merge into
+    // one field, which is what keeps small wordmarks readable. The filter runs
+    // on this copy alone: Chrome rasterizes SVG-referenced filters at 1x, which
+    // no one can see on a diffuse halo but would visibly soften the logo. The
+    // image itself stays unfiltered and pixel-sharp, and since the layer is
+    // absolutely positioned it takes no part in layout.
+    // Split across two elements on purpose: a filter is applied before the mask
+    // on any one element, so masking here would cut the halo back off. The
+    // inner layer masks white to the logo's silhouette; the outer one takes
+    // that finished shape as its source and dilates it.
+    .talk-card__logo-halo {
+      filter: url("#talk-logo-halo");
+
+      &::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: #ffffff;
+        -webkit-mask: var(--talk-logo) right center / contain no-repeat;
+        mask: var(--talk-logo) right center / contain no-repeat;
+      }
     }
 
     .links a.btn:hover,

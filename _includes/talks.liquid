@@ -6,7 +6,11 @@
       <span class="talk-card__dot" aria-hidden="true"></span>
       <span class="talk-card__date">{{ talk.date | date: '%b %-d, %Y' }}</span>
       {%- if talk.logo %}
-        <img class="talk-card__logo" src="{{ talk.logo | prepend: '/assets/img/talk_logos/' | relative_url }}" alt="" loading="lazy">
+        {%- assign talk_logo_url = talk.logo | prepend: '/assets/img/talk_logos/' | relative_url %}
+        <span class="talk-card__logo-wrap" style="--talk-logo: url('{{ talk_logo_url }}')">
+          <span class="talk-card__logo-halo" aria-hidden="true"></span>
+          <img class="talk-card__logo" src="{{ talk_logo_url }}" alt="" loading="lazy">
+        </span>
       {%- endif %}
     </div>
 

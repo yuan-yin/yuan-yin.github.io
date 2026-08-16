@@ -796,6 +796,7 @@ html[data-theme="dark"] {
   left: calc(50% - 50vw);
   z-index: -1;
   pointer-events: none;
+  transition: opacity 220ms ease;
   background: linear-gradient(
     to top,
     color-mix(in srgb, var(--global-bg-color) 78%, transparent),
@@ -823,6 +824,14 @@ html[data-theme="dark"] {
     -webkit-mask-image: linear-gradient(to top, black 58%, transparent 100%);
     mask-image: linear-gradient(to top, black 58%, transparent 100%);
   }
+}
+
+/* Once the bar reaches the end of the list it settles into the flow and
+   nothing scrolls under it any more, so the blur has nothing to soften and the
+   tint reads as a flat band laid over the ambient page background. Fade it out
+   while the bar rests; JS toggles the class, so without it the blur stays on. */
+.pub-controls-anchor--resting .pub-controls__backdrop {
+  opacity: 0;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

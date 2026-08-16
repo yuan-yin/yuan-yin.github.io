@@ -41,3 +41,4 @@ hide_hero: true
 </div>
 
 <script defer src="{{ '/assets/js/sticky-year-groups.js' | relative_url | bust_file_cache }}"></script>
+<script defer src="{{ '/assets/js/pub-controls-backdrop.js' | relative_url | bust_file_cache }}"></script>

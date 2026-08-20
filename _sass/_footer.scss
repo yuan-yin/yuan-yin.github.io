@@ -9,7 +9,8 @@ footer.fixed-bottom {
   .container {
     color: var(--global-footer-text-color);
     padding-top: 9px;
-    padding-bottom: 8px;
+    /* Edge-to-edge layout: clear the iOS home indicator. */
+    padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
     text-align: center;
   }
 
@@ -26,7 +27,8 @@ footer.fixed-bottom {
 footer.sticky-bottom {
   border-top: 1px solid var(--global-divider-color);
   padding-top: 40px;
-  padding-bottom: 40px;
+  /* Edge-to-edge layout: clear the iOS home indicator. */
+  padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
   font-size: 0.9rem;
 
   .container {

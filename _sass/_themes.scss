@@ -5,6 +5,14 @@
 
 :root {
   color-scheme: light;
+
+  /* Safari 26+ on iOS lays every page out edge to edge, so the viewport now
+     reaches up behind the status bar. Everything pinned to the top has to add
+     this inset, or its background stops at the status bar and leaves a hard
+     seam across the screen. Falls back to 0px everywhere else. */
+  --safe-area-top: env(safe-area-inset-top, 0px);
+  --navbar-height: 57px;
+  --navbar-offset: calc(var(--navbar-height) + var(--safe-area-top));
   --global-bg-color: #{v.$white-color};
   --global-code-bg-color: #{v.$code-bg-color-light};
   --global-text-color: #{v.$black-color};

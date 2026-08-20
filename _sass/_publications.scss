@@ -165,7 +165,7 @@
       .publication-card__body {
         min-width: 0;
         // Keep anchored entries (linked from talk cards) clear of the fixed navbar
-        scroll-margin-top: 5rem;
+        scroll-margin-top: calc(5rem + var(--safe-area-top));
       }
 
       .publication-card__actions {
@@ -826,6 +826,36 @@ html[data-theme="dark"] {
   }
 }
 
+/* Safari's floating bottom toolbar is translucent, and the strip of screen
+   behind it renders live page pixels, so a sheet that stops at the bottom of
+   the layout viewport leaves raw, unblurred list content showing under the
+   pill with a hard line above it. This continues the sheet's bottom edge --
+   same tint mix, same blur -- down through that strip. It is a separate flat
+   element rather than extra length on the sheet above so that the sheet keeps
+   its tuned ramp exactly as authored.
+
+   Zero height unless the bar is actually pinned: at rest it sits in the flow
+   just above the footer, where an overhang would only add empty scroll height
+   past the end of the page. */
+.pub-controls__bleed {
+  position: absolute;
+  top: 100%;
+  right: calc(50% - 50vw);
+  left: calc(50% - 50vw);
+  z-index: -1;
+  height: 0;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--global-bg-color) 78%, transparent);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+}
+
+/* Generous enough to clear Safari's bottom toolbar in both its collapsed and
+   expanded states; anything past the screen edge simply never paints. */
+.pub-controls-anchor:not(.pub-controls-anchor--resting) .pub-controls__bleed {
+  height: 10rem;
+}
+
 /* Once the bar reaches the end of the list it settles into the flow and
    nothing scrolls under it any more, so the blur has nothing to soften and the
    tint reads as a flat band laid over the ambient page background. Fade it out
@@ -837,6 +867,10 @@ html[data-theme="dark"] {
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .pub-controls__backdrop {
     background: linear-gradient(to top, var(--global-bg-color) 55%, transparent);
+  }
+
+  .pub-controls__bleed {
+    background: var(--global-bg-color);
   }
 }
 

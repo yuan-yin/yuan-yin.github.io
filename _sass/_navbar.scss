@@ -11,6 +11,15 @@
   opacity: 1;
 }
 
+/* iOS edge-to-edge (Safari 26+): grow the bar upward by the status-bar inset
+   so its glass runs all the way to the top of the screen while the brand and
+   links still sit below the clock. */
+.navbar.fixed-top {
+  padding-top: calc(0.5rem + var(--safe-area-top));
+  padding-right: calc(1rem + env(safe-area-inset-right, 0px));
+  padding-left: calc(1rem + env(safe-area-inset-left, 0px));
+}
+
 /* iOS-style progressive navbar blur: two stacked backdrop-filter layers
    reaching below the bar, each faded out downward with a gradient mask,
    so scrolling content melts into the blur with no hard edge. */
@@ -27,9 +36,16 @@
 }
 
 .navbar::before {
+  /* The first stop is the opaque page background, not 78%: iOS Safari paints
+     the status bar as a flat rectangle of the root background-color and gives
+     us no way to draw or blur under it, so the only way to hide the join is
+     for the bar's own top edge to be that same flat color. It reaches the
+     normal glass mix 1.25rem down, which reads as a soft vignette rather than
+     the hard seam a translucent first stop produces. */
   background: linear-gradient(
     to bottom,
-    color-mix(in srgb, var(--global-bg-color) 78%, transparent),
+    var(--global-bg-color) 0,
+    color-mix(in srgb, var(--global-bg-color) 78%, transparent) 1.25rem,
     color-mix(in srgb, var(--global-bg-color) 32%, transparent) 55%,
     transparent 85%
   );
@@ -593,7 +609,7 @@ html[data-theme="dark"] {
     right: 0;
     left: 0;
     z-index: 1031;
-    max-height: calc(100vh - 5rem);
+    max-height: calc(100dvh - 5rem - var(--safe-area-top));
     padding: 0 1rem 0.75rem;
     overflow: visible;
     border-bottom: 0;
@@ -609,7 +625,7 @@ html[data-theme="dark"] {
   .navbar-collapse::after {
     content: "";
     position: absolute;
-    top: -6rem;
+    top: calc(-6rem - var(--safe-area-top));
     right: 0;
     bottom: -2.5rem;
     left: 0;
@@ -617,9 +633,19 @@ html[data-theme="dark"] {
     pointer-events: none;
   }
 
+  /* The sheet starts above the screen: it is anchored to the navbar's bottom
+     edge and reaches 6rem up, so its own top sits (6rem - navbar height) above
+     the viewport top. Everything down to that point must be the opaque page
+     background, because the rule below switches the bar's own glass off while
+     the menu is open, making this sheet the page's top edge — and iOS paints
+     the status bar as a flat fill of the root background-color. It then ramps
+     to the normal glass mix over 1.25rem, matching the bar's treatment. */
   .navbar-collapse::before {
     background: linear-gradient(
       to bottom,
+      var(--global-bg-color) 0,
+      var(--global-bg-color) calc(6rem - var(--navbar-height)),
+      color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(6rem - var(--navbar-height) + 1.25rem),
       color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(100% - 2.75rem),
       color-mix(in srgb, var(--global-bg-color) 32%, transparent) calc(100% - 1rem),
       transparent

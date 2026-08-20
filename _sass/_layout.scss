@@ -6,6 +6,11 @@
 
 body {
   padding-bottom: 70px;
+  /* Edge-to-edge layout (Safari 26+ / viewport-fit=cover): keep content clear
+     of the notch and rounded corners in landscape. The fixed navbar gets the
+     same insets so the two stay aligned. */
+  padding-right: env(safe-area-inset-right, 0px);
+  padding-left: env(safe-area-inset-left, 0px);
   color: var(--global-text-color);
   background-color: var(--global-bg-color);
 
@@ -15,7 +20,7 @@ body {
   h4,
   h5,
   h6 {
-    scroll-margin-top: 66px;
+    scroll-margin-top: calc(66px + var(--safe-area-top));
   }
 }
 
@@ -34,8 +39,8 @@ body::before {
 }
 
 body.fixed-top-nav {
-  // Add some padding for the nav-bar.
-  padding-top: 57px;
+  // Add some padding for the nav-bar (plus the iOS status-bar inset).
+  padding-top: var(--navbar-offset);
 }
 
 body.sticky-bottom-footer {

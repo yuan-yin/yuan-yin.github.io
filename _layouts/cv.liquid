@@ -11,7 +11,7 @@ layout: default
        room; once pinned below the navbar it floats over the scrolling CV. */
     .cv-toolbar-anchor {
       position: sticky;
-      top: var(--cv-toolbar-top, 57px);
+      top: var(--cv-toolbar-top, var(--navbar-offset));
       z-index: 10;
       line-height: normal;
     }
@@ -24,14 +24,19 @@ layout: default
        extends 5.5rem past the anchor) and melts into the CV below it. */
     .cv-toolbar-backdrop {
       position: absolute;
-      top: calc(-1 * var(--cv-toolbar-top, 57px));
+      top: calc(-1 * var(--cv-toolbar-top, var(--navbar-offset)));
       bottom: -9rem;
       left: calc(50% - 50vw);
       right: calc(50% - 50vw);
       pointer-events: none;
+      /* Opaque at the very top for the same reason as the navbar's sheet: this
+         one replaces the navbar glass once pinned (see cv-glass-extended
+         below), so it becomes the page's top edge and has to match the flat
+         status bar iOS paints from the root background-color. */
       background: linear-gradient(
         to bottom,
-        color-mix(in srgb, var(--global-bg-color) 72%, transparent),
+        var(--global-bg-color) 0,
+        color-mix(in srgb, var(--global-bg-color) 72%, transparent) 1.25rem,
         color-mix(in srgb, var(--global-bg-color) 42%, transparent) calc(100% - 9rem),
         transparent calc(100% - 1.5rem)
       );

@@ -25,6 +25,7 @@ hide_hero: true
 <div class="pub-controls-anchor">
   <div class="pub-controls">
     <div class="pub-controls__backdrop" aria-hidden="true"></div>
+    <div class="pub-controls__bleed" aria-hidden="true"></div>
     {% include bib_search.liquid %}
     <div class="scholar-profile-cta">
       <a

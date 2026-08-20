@@ -63,7 +63,7 @@ progress {
   /* Positioning */
   position: fixed;
   left: 0;
-  top: 56px;
+  top: calc(56px + var(--safe-area-top));
   /* Above sticky page toolbars (e.g. the CV controls at z-index 10) */
   z-index: 11;
 
@@ -102,7 +102,7 @@ progress::-moz-progress-bar {
   width: 100%;
   background-color: transparent;
   position: fixed;
-  top: 56px;
+  top: calc(56px + var(--safe-area-top));
   left: 0;
   height: 5px;
   display: block;

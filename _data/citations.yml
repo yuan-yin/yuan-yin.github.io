@@ -1,5 +1,5 @@
 metadata:
-  last_updated: '2026-08-14'
+  last_updated: '2026-08-19'
 papers:
   ynep174AAAAJ:0EnyYjriUFMC:
     citations: 31
@@ -34,7 +34,7 @@ papers:
     title: Exemplars and counterexemplars explanations for skin lesion classifiers
     year: '2022'
   ynep174AAAAJ:QIV2ME_5wuYC:
-    citations: 16
+    citations: 17
     title: Driving on Registers
     year: '2026'
   ynep174AAAAJ:ULOm3_A8WrAC:
@@ -78,7 +78,7 @@ papers:
     title: Exemplars and counterexemplars explanations for image classifiers, targeting skin lesion labeling
     year: '2021'
   ynep174AAAAJ:hqOjcs7Dif8C:
-    citations: 121
+    citations: 122
     title: 'Operator Learning with Neural Fields: Tackling PDEs on General Geometries'
     year: '2023'
   ynep174AAAAJ:kNdYIx-mwKoC:

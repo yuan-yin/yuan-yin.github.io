@@ -1,5 +1,5 @@
 metadata:
-  last_updated: '2026-08-23'
+  last_updated: '2026-08-28'
 papers:
   ynep174AAAAJ:0EnyYjriUFMC:
     citations: 31
@@ -34,7 +34,7 @@ papers:
     title: Exemplars and counterexemplars explanations for skin lesion classifiers
     year: '2022'
   ynep174AAAAJ:QIV2ME_5wuYC:
-    citations: 19
+    citations: 20
     title: Driving on Registers
     year: '2026'
   ynep174AAAAJ:ULOm3_A8WrAC:
@@ -42,11 +42,11 @@ papers:
     title: Learning a Neural Solver for Parametric PDE to Enhance Physics-Informed Methods
     year: '2024'
   ynep174AAAAJ:UeHWp8X0CEIC:
-    citations: 50
+    citations: 51
     title: Local Feature Approach to Dorsal Hand Vein Recognition by Centroid-based Circular Key-point Grid and Fine-grained Matching
     year: '2017'
   ynep174AAAAJ:UebtZRa9Y70C:
-    citations: 19
+    citations: 20
     title: Time Series Continuous Modeling for Imputation and Forecasting with Implicit Neural Representations
     year: '2023'
   ynep174AAAAJ:WF5omc3nYNoC:
@@ -74,7 +74,7 @@ papers:
     title: Test-Time Trajectory Optimization for Autonomous Driving
     year: '2026'
   ynep174AAAAJ:eQOLeE2rZwMC:
-    citations: 26
+    citations: 27
     title: Exemplars and counterexemplars explanations for image classifiers, targeting skin lesion labeling
     year: '2021'
   ynep174AAAAJ:hqOjcs7Dif8C:
@@ -94,7 +94,7 @@ papers:
     title: Continuous PDE Dynamics Forecasting with Implicit Neural Representations
     year: '2022'
   ynep174AAAAJ:ufrVoPGSRksC:
-    citations: 265
+    citations: 266
     title: Augmenting Physical Models with Deep Networks for Complex Dynamics Forecasting
     year: '2021'
   ynep174AAAAJ:zYLM7Y9cAGgC:

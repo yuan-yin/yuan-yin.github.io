@@ -1,12 +1,12 @@
 metadata:
-  last_updated: '2026-08-28'
+  last_updated: '2026-08-31'
 papers:
   ynep174AAAAJ:0EnyYjriUFMC:
     citations: 31
     title: Improving trust and confidence in medical skin lesion diagnosis through explainable deep learning
     year: '2025'
   ynep174AAAAJ:4TOpqqG69KYC:
-    citations: 17
+    citations: 18
     title: 'GEPS: Boosting Generalization in Parametric PDE Neural Solvers through Adaptive Conditioning'
     year: '2024'
   ynep174AAAAJ:5nxA0vEk-isC:
@@ -26,7 +26,7 @@ papers:
     title: 'IPA: An Information-Reconstructive Input Projection Frame-work for Efficient Foundation Model Adaptation'
     year: '2025'
   ynep174AAAAJ:KlAtU1dfN6UC:
-    citations: 38
+    citations: 39
     title: 'Advancing dermatological diagnostics: Interpretable AI for enhanced skin lesion classification'
     year: '2024'
   ynep174AAAAJ:LkGwnXOMwfcC:
@@ -34,11 +34,11 @@ papers:
     title: Exemplars and counterexemplars explanations for skin lesion classifiers
     year: '2022'
   ynep174AAAAJ:QIV2ME_5wuYC:
-    citations: 20
+    citations: 21
     title: Driving on Registers
     year: '2026'
   ynep174AAAAJ:ULOm3_A8WrAC:
-    citations: 15
+    citations: 16
     title: Learning a Neural Solver for Parametric PDE to Enhance Physics-Informed Methods
     year: '2024'
   ynep174AAAAJ:UeHWp8X0CEIC:

@@ -439,6 +439,8 @@ layout: default
     /* The center page needs its own shadow to visually sit on top of the deck */
     .pdf-page--current canvas {
       box-shadow: 0 6px 26px rgba(0, 0, 0, 0.16);
+      /* Shrink with the stage until a resize re-render catches up */
+      max-width: 100%;
     }
 
     .pdf-page canvas {
@@ -817,6 +819,8 @@ layout: default
       let firstPageRendered = false;
       let hasLoadedOnce = false;
       let pendingDirection = 0; // 1 = navigating forward, -1 = back, 0 = reload
+      let renderedWidth = 0; // stage width the current pages were rendered at
+      let resizeRender = false; // re-rendering in place after a resize: skip the enter animation
 
       const urls = {
         en: {
@@ -981,6 +985,7 @@ layout: default
         // Side slots are narrow clipping windows; the page inside them still
         // renders at full stage width so all three pages share one scale.
         const desiredWidth = stage.getBoundingClientRect().width || postElement.getBoundingClientRect().width;
+        if (slot === currentSlot) renderedWidth = desiredWidth;
         const origViewport = page.getViewport({ scale: 1 });
         const viewport = page.getViewport({ scale: desiredWidth / origViewport.width });
         // Side slots only peek in from the edges, so render them at 1x —
@@ -1027,16 +1032,20 @@ layout: default
         const canvas = slot.canvas;
         // Reset to the hidden pre-enter state without animating the jump
         canvas.style.transition = 'none';
-        canvas.classList.remove('is-rendered');
-        if (slot === currentSlot) {
-          // Incoming page starts shifted toward the side it navigates from
-          canvas.style.setProperty('--enter-x', pendingDirection > 0 ? '7%' : pendingDirection < 0 ? '-7%' : '0px');
-          canvas.style.setProperty('--enter-y', pendingDirection ? '0px' : '6px');
+        if (!resizeRender) {
+          canvas.classList.remove('is-rendered');
+          if (slot === currentSlot) {
+            // Incoming page starts shifted toward the side it navigates from
+            canvas.style.setProperty('--enter-x', pendingDirection > 0 ? '7%' : pendingDirection < 0 ? '-7%' : '0px');
+            canvas.style.setProperty('--enter-y', pendingDirection ? '0px' : '6px');
+          }
         }
         canvas.width = renderCanvas.width;
         canvas.height = renderCanvas.height;
         canvas.style.width = renderCanvas.style.width;
-        canvas.style.height = renderCanvas.style.height;
+        // The current page keeps its aspect ratio from the bitmap so its
+        // max-width can scale it down while a resize re-render is pending
+        canvas.style.height = slot === currentSlot ? '' : renderCanvas.style.height;
         slot.ctx.clearRect(0, 0, canvas.width, canvas.height);
         slot.ctx.drawImage(renderCanvas, 0, 0);
         void canvas.offsetWidth; // flush styles before re-enabling transitions
@@ -1207,6 +1216,25 @@ layout: default
           renderPage(num).finally(() => canvas.classList.remove('is-updating'));
         }
       }
+
+      // Pages render at a fixed pixel width, so re-render them (and their
+      // link overlays) once the stage settles at a new width
+      let resizeTimer = null;
+      new ResizeObserver(() => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+          const width = stage.getBoundingClientRect().width;
+          if (!pdfDoc || !renderedWidth || Math.abs(width - renderedWidth) < 1) return;
+          if (pageRendering) {
+            pageNumPending = pageNum;
+            return;
+          }
+          resizeRender = true;
+          renderPage(pageNum).finally(() => {
+            resizeRender = false;
+          });
+        }, 150);
+      }).observe(stage);
 
       function onPrevPage() {
         if (!pdfDoc || pageNum <= 1) return;

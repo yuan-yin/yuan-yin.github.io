@@ -784,7 +784,27 @@ html[data-theme="dark"] {
 
     > .contact-icons {
       justify-content: center;
+      // Groups wrap onto separate lines here, where a divider would dangle at
+      // the start of a line; separate them with wider spacing instead
+      column-gap: 1.25rem;
     }
+
+    .social-icon-group + .social-icon-group {
+      padding-left: 0;
+
+      &::before {
+        content: none;
+      }
+    }
+  }
+
+  // Full-width thumbnails range from ~70px to ~220px tall here, and every
+  // slide reserves the tallest one's height, leaving a large empty band in
+  // the slides with short figures. Cap them so the slides stay close in size.
+  .publications.about-selected-publications__list ol.bibliography .publication-card__preview {
+    width: auto;
+    max-width: 100%;
+    max-height: 6rem;
   }
 }
 

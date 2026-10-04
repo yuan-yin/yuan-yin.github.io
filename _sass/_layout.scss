@@ -293,25 +293,36 @@ body.sticky-bottom-footer {
       margin-bottom: 0;
     }
   }
+}
 
-  // The bio is dense with links (people, institutions); in full theme color
-  // they turn the paragraph into a wall of purple. Keep them in text color
-  // and mark them with a soft underline that strengthens on hover.
-  a {
-    color: inherit;
+// Links in running text (bio, news, talk titles, footer) share one style:
+// text color with a soft theme-colored underline that strengthens on hover.
+// In full theme color, dense passages turned into a wall of purple.
+// Publication author links keep their own dashed underline.
+.about-hero__intro a,
+.about-hero__copy .desc a,
+.about-news-card__text a,
+.news-list__content a,
+.talk-card__title a,
+.publication-card__actions .award a,
+footer .container a {
+  // The token, not `inherit`: an inherited color changes every frame of
+  // the parent's theme-switch transition, restarting the link's own
+  // transition each time, so the links visibly lag behind the text
+  color: var(--global-text-color);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--global-theme-color) 45%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+  transition:
+    color 150ms ease,
+    text-decoration-color 150ms ease;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--global-theme-color);
     text-decoration: underline;
-    text-decoration-color: color-mix(in srgb, var(--global-theme-color) 45%, transparent);
-    text-decoration-thickness: 1px;
-    text-underline-offset: 0.2em;
-    transition:
-      color 150ms ease,
-      text-decoration-color 150ms ease;
-
-    &:hover,
-    &:focus-visible {
-      color: var(--global-theme-color);
-      text-decoration-color: currentColor;
-    }
+    text-decoration-color: currentColor;
   }
 }
 

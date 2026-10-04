@@ -3,7 +3,9 @@
   data-home-carousel
   data-carousel-items="ol.bibliography > li"
   data-carousel-item-class="about-selected-publications__item"
-  data-carousel-interval="5200"
+  data-carousel-interval="{{ include.roll_interval | default: 5200 }}"
+  data-carousel-per-page="{{ include.visible | default: 1 }}"
+  data-carousel-per-page-narrow="{{ include.visible_narrow | default: include.visible | default: 1 }}"
 >
   <div class="about-selected-publications__viewport" data-carousel-viewport>
     <div class="publications about-selected-publications__list">

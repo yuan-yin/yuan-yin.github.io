@@ -2,11 +2,15 @@
   {% assign news = site.news | reverse %}
   {% assign news_limit = include.limit | default: page.announcements.limit | default: 6 %}
   {% assign roll_interval = include.roll_interval | default: page.announcements.roll_interval | default: 4200 %}
+  {% assign visible = include.visible | default: page.announcements.visible | default: 1 %}
   <div
     class="about-news-card"
+    style="--about-news-visible-count: {{ visible }}"
     data-home-carousel
     data-carousel-items=".about-news-card__item"
     data-carousel-interval="{{ roll_interval }}"
+    data-carousel-per-page="{{ visible }}"
+    data-carousel-uniform-height="false"
   >
     <div
       class="about-news-card__viewport"

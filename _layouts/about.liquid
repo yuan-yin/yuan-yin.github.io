@@ -81,7 +81,7 @@ layout: default
       <section class="home-news-section" aria-labelledby="home-news-title">
         <div class="home-news-section__header">
           <div>
-            <h2 id="home-news-title">Latest update</h2>
+            <h2 id="home-news-title">Latest updates</h2>
           </div>
           <a class="home-news-section__archive" href="{{ '/news/' | relative_url }}">View all news</a>
         </div>
@@ -106,7 +106,7 @@ layout: default
           </div>
           <a class="home-news-section__archive" href="{{ '/publications/' | relative_url }}">View all publications</a>
         </div>
-        {% include selected_papers.liquid %}
+        {% include selected_papers.liquid visible=page.selected_papers_display.visible visible_narrow=page.selected_papers_display.visible_narrow roll_interval=page.selected_papers_display.roll_interval %}
       </section>
     {% endif %}
   </article>

@@ -942,7 +942,7 @@ html[data-theme="dark"] {
 }
 
 .about-news-card {
-  --about-news-row-height: 6.25rem;
+  --about-news-row-height: 5.25rem;
   --about-news-visible-count: 1;
 
   position: relative;
@@ -962,7 +962,8 @@ html[data-theme="dark"] {
 
 .about-news-card__viewport {
   position: relative;
-  height: var(--about-news-row-height);
+  // Pre-script estimate; the carousel then sets the active slide's height
+  height: calc(var(--about-news-row-height) * var(--about-news-visible-count));
   overflow: visible;
   transition: height 220ms ease;
 }
@@ -985,8 +986,9 @@ html[data-theme="dark"] {
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  height: var(--about-news-row-height);
-  padding: 1rem 1.1rem;
+  // Rows size to their text (one or two clamped lines); the viewport
+  // follows the active slide's total height
+  padding: 0.85rem 1.1rem;
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
@@ -1006,6 +1008,10 @@ html[data-theme="dark"] {
       opacity 180ms ease,
       transform 180ms ease,
       visibility 0s;
+  }
+  // Several rows share a slide: separate them with a hairline
+  &.is-active + &.is-active {
+    border-top: 1px solid color-mix(in srgb, var(--global-text-color) 8%, transparent);
   }
 }
 
@@ -1245,6 +1251,11 @@ html[data-theme="dark"] {
        slack keeps the actions row at the bottom on shorter entries */
     .publication-card {
       grid-template-rows: 1fr auto;
+    }
+
+    // Several papers share a slide: space them like the publications list
+    > li.is-active + li.is-active {
+      margin-top: 1.15rem;
     }
 
     /* MDB gives every anchor transition: all .2s — during the slide's

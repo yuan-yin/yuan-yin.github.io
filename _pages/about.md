@@ -12,15 +12,19 @@ profile:
 news: true  # includes a list of news items
 latest_posts: false  # includes a list of the newest posts
 selected_papers: true # includes a list of papers marked as "selected={true}"
+selected_papers_display:
+  visible: 3 # papers per slide in the about-page carousel
+  visible_narrow: 2 # papers per slide on phones (< 768px)
+  roll_interval: 9000 # milliseconds between automatic rolls
 social: true  # includes social icons at the bottom of the page
 
 announcements:
   enabled: true # includes a list of news items
   scrollable: true # adds a vertical scroll bar if there are more than 3 news items
-  limit: 6 # first items shown on the about page
-  visible: 1 # number of news items visible in the about-page rolling card
+  limit: 9 # first items shown on the about page
+  visible: 3 # number of news items per slide in the about-page rolling card
   roll_step: 1 # number of news items advanced per automatic roll
-  roll_interval: 4800 # milliseconds between automatic rolls
+  roll_interval: 7000 # milliseconds between automatic rolls
 
 latest_posts:
   enabled: false

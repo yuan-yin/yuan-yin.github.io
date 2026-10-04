@@ -3,8 +3,8 @@ name: Update Google Scholar Citations
 on:
   workflow_dispatch:
   schedule:
-    # Daily at 04:30 UTC
-    - cron: "30 4 * * *"
+    # Weekly, Mondays at 04:30 UTC
+    - cron: "30 4 * * 1"
 
 permissions:
   contents: write
@@ -61,6 +61,10 @@ jobs:
           else
             echo "❌ Citation update script failed with exit code $status (started at $start_time, ended at $end_time)."
             echo "❌ Citation update script failed with exit code $status." >> $GITHUB_STEP_SUMMARY
+            # Fail the run so it shows red and GitHub sends a notification;
+            # swallowing the error let the data go stale for weeks unnoticed
+            echo "::error::Citation update script failed with exit code $status"
+            exit $status
           fi
           set -e
 

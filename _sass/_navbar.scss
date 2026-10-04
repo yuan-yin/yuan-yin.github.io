@@ -18,6 +18,12 @@
   padding-top: calc(0.5rem + var(--safe-area-top));
   padding-right: calc(1rem + env(safe-area-inset-right, 0px));
   padding-left: calc(1rem + env(safe-area-inset-left, 0px));
+  /* Pull-to-refresh / rubber-band overscroll drags the fixed bar down and
+     exposes whatever sits above it. Paint the glass's opaque top color far
+     up off-screen so the revealed band continues the bar seamlessly instead
+     of showing the blur's top edge. An outer box-shadow is never painted
+     under its own box, so the glass itself is untouched. */
+  box-shadow: 0 -100vh 0 100vh var(--global-bg-color);
 }
 
 /* iOS-style progressive navbar blur: two stacked backdrop-filter layers
@@ -582,10 +588,6 @@ html.about-brand-handoff.about-brand-shown .navbar-brand .name-lockup {
 }
 
 html[data-theme="dark"] {
-  .navbar {
-    box-shadow: none;
-  }
-
   .navbar .dropdown-menu,
   .btn-group.dropdown .dropdown-menu {
     box-shadow: 0 18px 45px rgba(0, 0, 0, 0.32);

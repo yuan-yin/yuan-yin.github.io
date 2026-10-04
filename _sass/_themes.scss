@@ -16,10 +16,12 @@
   --global-bg-color: #{v.$white-color};
   --global-code-bg-color: #{v.$code-bg-color-light};
   --global-text-color: #{v.$black-color};
-  --global-text-color-light: #{v.$grey-color};
+  --global-text-color-light: #{v.$grey-text-color};
   --global-theme-color: #{v.$lavander-color};
   --global-hover-color: #{v.$lavander-color};
   --global-hover-text-color: #{v.$white-color};
+  /* Text on a solid theme-color fill (active pills): white on the deep light-mode lavender */
+  --global-on-theme-color: #{v.$white-color};
   --global-footer-bg-color: #{v.$grey-color-dark};
   --global-footer-text-color: #{v.$grey-color-light};
   --global-footer-link-color: #{v.$white-color};
@@ -133,9 +135,11 @@ html[data-theme="dark"] {
   --global-bg-color: #{v.$grey-color-dark};
   --global-code-bg-color: #{v.$code-bg-color-dark};
   --global-text-color: #{v.$grey-color-light};
-  --global-text-color-light: #{v.$grey-color};
+  --global-text-color-light: #{v.$grey-text-color-on-dark};
   --global-theme-color: #{v.$lavander-color-bright};
   --global-hover-color: #{v.$lavander-color-bright};
+  /* The dark-mode lavender is light (white on it is ~2.4:1), so pills get dark text (7.3:1) */
+  --global-on-theme-color: #{v.$grey-color-dark};
   --global-hover-text-color: #{v.$white-color};
   --global-footer-bg-color: #{v.$grey-color-light};
   --global-footer-text-color: #{v.$grey-color-dark};

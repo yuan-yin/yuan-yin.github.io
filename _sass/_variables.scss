@@ -23,13 +23,19 @@ $light-purple-color: color.adjust($purple-color, $lightness: 25%);
 $pink-color: #f92080 !default;
 $pink-color-light: #ffdddd !default;
 $yellow-color: #efcc00 !default;
-$lavander-color: #9678b6 !default;
+/* Darkest-needed shade of the brand lavender: 5.1:1 on white, 4.5:1 on
+   lavender-tinted cards, so it passes WCAG AA as body-size link text */
+$lavander-color: #815da8 !default;
 /* Brighter variant for dark backgrounds: same hue, ~7:1 contrast on $grey-color-dark */
 $lavander-color-bright: #b6a0d6 !default;
 
 $grey-color: #828282 !default;
 $grey-color-light: color.adjust($grey-color, $lightness: 40%);
 $grey-color-dark: #1c1c1d;
+/* Secondary text greys tuned for WCAG AA (4.5:1) body text: on white and
+   tinted cards in light mode, on $grey-color-dark in dark mode */
+$grey-text-color: #6d6d6d !default;
+$grey-text-color-on-dark: #8c8c8c !default;
 $grey-900: #212529;
 
 $white-color: #ffffff !default;

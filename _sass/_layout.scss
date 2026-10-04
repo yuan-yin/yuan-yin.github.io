@@ -293,6 +293,26 @@ body.sticky-bottom-footer {
       margin-bottom: 0;
     }
   }
+
+  // The bio is dense with links (people, institutions); in full theme color
+  // they turn the paragraph into a wall of purple. Keep them in text color
+  // and mark them with a soft underline that strengthens on hover.
+  a {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--global-theme-color) 45%, transparent);
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    transition:
+      color 150ms ease,
+      text-decoration-color 150ms ease;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--global-theme-color);
+      text-decoration-color: currentColor;
+    }
+  }
 }
 
 .about-hero__cv-button {

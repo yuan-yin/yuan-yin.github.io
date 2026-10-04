@@ -161,13 +161,13 @@ html.about-brand-handoff.about-brand-shown .navbar-brand .name-lockup {
   border-color: transparent;
   background: var(--global-theme-color);
   box-shadow: 0 2px 8px color-mix(in srgb, var(--global-theme-color) 45%, transparent);
-  color: #ffffff !important;
+  color: var(--global-on-theme-color) !important;
   font-weight: 500;
 
   &:hover {
     border-color: transparent;
     background: var(--global-theme-color);
-    color: #ffffff !important;
+    color: var(--global-on-theme-color) !important;
   }
 }
 
@@ -290,10 +290,10 @@ html.about-brand-handoff.about-brand-shown .navbar-brand .name-lockup {
   }
 
   .nav-capsule .nav-link.active {
-    color: #ffffff;
+    color: var(--global-on-theme-color);
 
     &:hover {
-      color: #ffffff;
+      color: var(--global-on-theme-color);
       background-color: transparent;
     }
   }
@@ -742,7 +742,7 @@ html[data-theme="dark"] {
 
   .navbar.navbar-light .nav-capsule .nav-link.active {
     background: var(--global-theme-color);
-    color: #ffffff;
+    color: var(--global-on-theme-color);
   }
 
   .navbar-nav > .nav-item--tail {
@@ -772,7 +772,7 @@ html[data-theme="dark"] {
   .navbar.navbar-light .nav-mobile-expanded .nav-link.active {
     border-color: transparent;
     background: var(--global-theme-color);
-    color: #ffffff;
+    color: var(--global-on-theme-color);
   }
 
   .navbar .navbar-nav .nav-item--more .dropdown-menu {

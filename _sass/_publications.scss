@@ -10,7 +10,8 @@
   padding: 0.3rem 0.75rem;
   border-radius: 999px;
   background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
-  color: var(--global-theme-color);
+  // Plain theme color falls just under 4.5:1 on the pill's own lavender tint
+  color: color-mix(in srgb, var(--global-theme-color) 85%, var(--global-text-color));
   font-size: 1.05rem;
   font-weight: 700;
 }

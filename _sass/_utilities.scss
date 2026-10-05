@@ -173,10 +173,7 @@ html.transition .cv-toolbar-backdrop,
 html.transition .cv-toolbar-backdrop::before,
 html.transition .cv-toolbar-backdrop::after,
 html.transition .navbar::before,
-html.transition .navbar::after,
-html.transition .pub-controls__backdrop,
-html.transition .pub-controls__backdrop::before,
-html.transition .pub-controls__backdrop::after {
+html.transition .navbar::after {
   transition: none !important;
 }
 

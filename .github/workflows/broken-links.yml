@@ -3,7 +3,7 @@ name: Check for broken links
 on:
   push:
     branches:
-      - master
+      - main
       - main
     paths:
       - "assets/**"
@@ -21,7 +21,7 @@ on:
       - "!lighthouse_results/**"
   pull_request:
     branches:
-      - master
+      - main
       - main
     paths:
       - "assets/**"

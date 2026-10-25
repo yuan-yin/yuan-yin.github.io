@@ -333,17 +333,26 @@ footer .container a {
 }
 
 .about-hero__cv-button {
-  --cv-border-color: rgba(255, 255, 255, 0.74);
-  --cv-ring-color: rgba(255, 255, 255, 0.34);
-  --cv-highlight-color: rgba(255, 255, 255, 0.35);
+  // Near-opaque over the light page so the white label keeps its contrast;
+  // dark mode thins it out so the ambient backdrop shows through
+  --cv-fill: linear-gradient(135deg, rgba(150, 120, 182, 0.96) 0%, rgba(17, 133, 254, 0.92) 48%, rgba(66, 185, 131, 0.92) 100%);
+  --cv-border-color: rgba(255, 255, 255, 0.5);
+  --cv-ring-color: rgba(255, 255, 255, 0.16);
   --cv-hover-ring-color: rgba(255, 255, 255, 0.38);
-  --cv-hover-highlight-color: rgba(255, 255, 255, 0.42);
   --cv-glow-filter: drop-shadow(0 0 18px rgba(150, 120, 182, 0.24)) drop-shadow(0 0 10px rgba(17, 133, 254, 0.16));
   --cv-hover-glow-filter: drop-shadow(0 0 22px rgba(17, 133, 254, 0.3)) drop-shadow(0 0 12px rgba(66, 185, 131, 0.18));
   --cv-water-light: rgba(255, 255, 255, 0.24);
   --cv-current-light: rgba(255, 255, 255, 0.26);
   --cv-sheen-light: rgba(255, 255, 255, 0.18);
   --cv-surface-light: rgba(255, 255, 255, 0.2);
+  // Glass optics: a specular rim (bright top-left catch light, fainter
+  // bottom-right return), a gloss over the upper half, and light glowing
+  // from inside the body of the pill
+  --cv-glass-optics:
+    inset 0 1px 0.5px rgba(255, 255, 255, 0.85), inset 0 -1px 0.5px rgba(255, 255, 255, 0.32),
+    inset 0.2rem 0.3rem 0.5rem -0.22rem rgba(255, 255, 255, 0.7), inset -0.16rem -0.26rem 0.45rem -0.22rem rgba(255, 255, 255, 0.38),
+    inset 0 1.1rem 1rem -0.7rem rgba(255, 255, 255, 0.2), inset 0 0 1.1rem rgba(255, 255, 255, 0.06);
+  --cv-text-glow: 0 0 0.75rem rgba(255, 255, 255, 0.55), 0 1px 0.15rem rgba(24, 40, 92, 0.28);
 
   position: relative;
   display: inline-flex;
@@ -360,8 +369,7 @@ footer .container a {
   background:
     radial-gradient(circle at 18% 38%, var(--cv-water-light), transparent 22%),
     radial-gradient(circle at 78% 24%, rgba(66, 185, 131, 0.34), transparent 30%),
-    radial-gradient(circle at 55% 92%, rgba(17, 133, 254, 0.38), transparent 36%),
-    linear-gradient(135deg, rgba(150, 120, 182, 0.98) 0%, rgba(17, 133, 254, 0.92) 48%, rgba(66, 185, 131, 0.92) 100%), var(--global-theme-color);
+    radial-gradient(circle at 55% 92%, rgba(17, 133, 254, 0.38), transparent 36%), var(--cv-fill);
   background-position:
     0% 44%,
     92% 8%,
@@ -382,7 +390,9 @@ footer .container a {
     0 0 0 1px var(--cv-ring-color),
     0 14px 30px rgba(39, 48, 74, 0.18),
     0 0 26px rgba(150, 120, 182, 0.2),
-    inset 0 1px 0 var(--cv-highlight-color);
+    var(--cv-glass-optics);
+  -webkit-backdrop-filter: blur(10px) saturate(1.8);
+  backdrop-filter: blur(10px) saturate(1.8);
   animation:
     cv-button-water 9.5s ease-in-out infinite,
     cv-button-glow 9.5s ease-in-out infinite;
@@ -441,7 +451,7 @@ footer .container a {
       0 0 0 1px var(--cv-hover-ring-color),
       0 17px 34px rgba(39, 48, 74, 0.22),
       0 0 32px rgba(17, 133, 254, 0.24),
-      inset 0 1px 0 var(--cv-hover-highlight-color);
+      var(--cv-glass-optics);
   }
 
   &:hover::before,
@@ -457,6 +467,7 @@ footer .container a {
     position: relative;
     z-index: 1;
     color: #ffffff !important;
+    text-shadow: var(--cv-text-glow);
   }
 
   i {
@@ -728,11 +739,15 @@ html[data-theme="dark"] {
   }
 
   .about-hero__cv-button {
+    --cv-fill: linear-gradient(135deg, rgba(150, 120, 182, 0.84) 0%, rgba(17, 133, 254, 0.78) 48%, rgba(66, 185, 131, 0.8) 100%);
+    // Over the dark page the gloss and inner glow can run brighter
+    --cv-glass-optics:
+      inset 0 1px 0.5px rgba(255, 255, 255, 0.85), inset 0 -1px 0.5px rgba(255, 255, 255, 0.32),
+      inset 0.2rem 0.3rem 0.5rem -0.22rem rgba(255, 255, 255, 0.7), inset -0.16rem -0.26rem 0.45rem -0.22rem rgba(255, 255, 255, 0.38),
+      inset 0 1.1rem 1rem -0.7rem rgba(255, 255, 255, 0.34), inset 0 0 1.1rem rgba(255, 255, 255, 0.16);
     --cv-border-color: rgba(255, 255, 255, 0.42);
     --cv-ring-color: rgba(255, 255, 255, 0.28);
-    --cv-highlight-color: rgba(255, 255, 255, 0.28);
     --cv-hover-ring-color: rgba(255, 255, 255, 0.34);
-    --cv-hover-highlight-color: rgba(255, 255, 255, 0.34);
     --cv-glow-filter: drop-shadow(0 0 18px rgba(118, 158, 255, 0.28)) drop-shadow(0 0 10px rgba(66, 185, 131, 0.14));
     --cv-hover-glow-filter: drop-shadow(0 0 24px rgba(118, 158, 255, 0.34)) drop-shadow(0 0 13px rgba(66, 185, 131, 0.18));
 
@@ -740,7 +755,7 @@ html[data-theme="dark"] {
       0 0 0 1px var(--cv-ring-color),
       0 14px 30px rgba(0, 0, 0, 0.28),
       0 0 28px rgba(118, 158, 255, 0.22),
-      inset 0 1px 0 var(--cv-highlight-color);
+      var(--cv-glass-optics);
 
     &:hover,
     &:focus-visible {
@@ -748,7 +763,7 @@ html[data-theme="dark"] {
         0 0 0 1px var(--cv-hover-ring-color),
         0 17px 34px rgba(0, 0, 0, 0.3),
         0 0 34px rgba(118, 158, 255, 0.24),
-        inset 0 1px 0 var(--cv-hover-highlight-color);
+        var(--cv-glass-optics);
     }
   }
 }

@@ -86,10 +86,15 @@ layout: default
        navbar's own blur layers switch off — stacking the two systems is
        what produced the banding artifacts. Before the toolbar pins, the
        navbar keeps its site-wide glass so the page heading still melts
-       under it; the swap happens with only whitespace behind the bar. */
+       under it; the swap happens with only whitespace behind the bar.
+       The bar's glass only hides once the sheet has finished fading in
+       (and returns at once when it starts fading out): dropping it the
+       moment the sheet starts its fade left the bar's top edge without
+       its opaque band mid-fade, a visible seam under the status bar. */
     html.cv-glass-extended #navbar::before,
     html.cv-glass-extended #navbar::after {
-      content: none;
+      visibility: hidden;
+      transition: visibility 0s linear 240ms;
     }
 
     .header-toolbar {

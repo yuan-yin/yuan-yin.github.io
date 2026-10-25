@@ -87,6 +87,11 @@
   display: none;
 }
 
+/* The phone menu's sliding glass sheet; no menu panel on wider screens */
+.navbar-menu-glass {
+  display: none;
+}
+
 /* About-page large-title handoff (classes set from the about layout):
    the brand name stays hidden while the hero name is on screen and fades
    in once it scrolls under the navbar. Opacity only, so the navbar layout
@@ -605,13 +610,10 @@ html[data-theme="dark"] {
     position: static;
   }
 
-  /* The panel's own box is the whole glass sheet: it starts 6rem above the
-     navbar's bottom edge (behind the bar) and ends 2.5rem below the links,
-     with padding putting the links where they belong. Bootstrap clips the
-     panel (overflow: hidden) while it animates its height, so the box must
-     match the sheet — otherwise the clip cuts the sheet into a hard-edged
-     rectangle mid-transition and its soft bottom fade only appears once the
-     animation lands. The padding regions pass taps through to the page. */
+  /* The panel's own box is the whole glass sheet's footprint: it starts 6rem
+     above the navbar's bottom edge (behind the bar) and ends 2.5rem below
+     the links, with padding putting the links where they belong. The padding
+     regions pass taps through to the page. */
   .navbar-collapse {
     position: absolute;
     top: calc(100% - 6rem - var(--safe-area-top));
@@ -631,59 +633,86 @@ html[data-theme="dark"] {
     }
   }
 
-  /* Progressive glass for the unfolded menu: one sheet extending the bar's
-     glass — it covers the navbar, runs at full blur through the links, and
-     melts out below them with no hard edge */
-  .navbar-collapse::before,
-  .navbar-collapse::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
+  .navbar-collapse > .navbar-menu-glass {
     pointer-events: none;
   }
 
-  /* The sheet starts above the screen: it is anchored to the navbar's bottom
-     edge and reaches 6rem up, so its own top sits (6rem - navbar height) above
-     the viewport top. Everything down to that point must be the opaque page
-     background, because the rule below switches the bar's own glass off while
-     the menu is open, making this sheet the page's top edge — and iOS paints
-     the status bar as a flat fill of the root background-color. It then ramps
-     to the normal glass mix over 1.25rem, matching the bar's treatment. */
-  .navbar-collapse::before {
-    background: linear-gradient(
-      to bottom,
-      var(--global-bg-color) 0,
-      var(--global-bg-color) calc(6rem - var(--navbar-height)),
-      color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(6rem - var(--navbar-height) + 1.25rem),
-      color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(100% - 2.75rem),
-      color-mix(in srgb, var(--global-bg-color) 32%, transparent) calc(100% - 1rem),
-      transparent
-    );
-    -webkit-backdrop-filter: blur(16px) saturate(1.3);
-    backdrop-filter: blur(16px) saturate(1.3);
-    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
-    mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
-  }
+  /* Progressive glass for the unfolded menu, built so its open/close motion
+     is a pure transform — Safari composites that, whereas growing the glass
+     (animating the panel's height) re-lays out and re-masks both blur
+     layers every frame and the growth visibly stutters.
 
-  .navbar-collapse::after {
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
-    mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
+     The sheet (.navbar-menu-glass) is twice the panel's height, reaching a
+     full panel height above it, so it can slide down from behind the bar and
+     still cover the bar region at every step. Its tint is a flat glass mix
+     with the soft melt at its bottom edge, which travels with the slide. */
+  .navbar-menu-glass {
+    display: block;
+    position: absolute;
+    top: -100%;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -2;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+    }
+
+    &::before {
+      background: linear-gradient(
+        to bottom,
+        color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(100% - 2.75rem),
+        color-mix(in srgb, var(--global-bg-color) 32%, transparent) calc(100% - 1rem),
+        transparent
+      );
+      -webkit-backdrop-filter: blur(16px) saturate(1.3);
+      backdrop-filter: blur(16px) saturate(1.3);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
+      mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
+    }
+
+    &::after {
+      -webkit-backdrop-filter: blur(4px);
+      backdrop-filter: blur(4px);
+      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
+      mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
+    }
   }
 
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .navbar-collapse::before {
+    .navbar-menu-glass::before {
       background: linear-gradient(to bottom, var(--global-bg-color) calc(100% - 2.5rem), transparent);
       -webkit-mask-image: none;
       mask-image: none;
     }
   }
 
+  /* The opaque top band stays put while the sheet slides under it. The
+     panel's top sits (6rem - navbar height) above the viewport; down to the
+     viewport top it is the flat page background — the rule below switches
+     the bar's own glass off while the menu is up, making this the page's top
+     edge, and iOS paints the status bar as a flat fill of the root
+     background-color — then it fades into the sheet's glass mix over
+     1.25rem, matching the bar's own treatment. */
+  .navbar-collapse::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: calc(6rem - var(--navbar-height) + 1.25rem);
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(to bottom, var(--global-bg-color) calc(100% - 1.25rem), transparent);
+  }
+
   /* While the menu is open or animating, its sheet covers the navbar region
-     too (even at zero height the padding keeps it bar-sized), so the bar's
-     own layers switch off — stacking the two systems bands. */
+     too, so the bar's own layers switch off — stacking the two systems
+     bands. */
   .navbar:has(.navbar-collapse.show, .navbar-collapse.collapsing)::before,
   .navbar:has(.navbar-collapse.show, .navbar-collapse.collapsing)::after {
     content: none;
@@ -697,26 +726,62 @@ html[data-theme="dark"] {
     z-index: 1032;
   }
 
+  /* Bootstrap still runs its .collapsing phase for its transition duration
+     (it falls back to a timer when no transitionend arrives), but the panel
+     keeps its full size and stays unclipped: the motion is the sheet's
+     slide below. */
   .navbar-collapse.collapsing {
     position: absolute;
-    overflow: hidden;
+    height: auto !important;
+    overflow: visible;
   }
 
-  /* Fade the links with the sheet so none sit crisp in its faded tail while
-     it is near bar size: in on opening, out on closing (the toggler flips to
-     .collapsed as soon as closing starts, and opening clears it) */
+  /* Opening (the toggler loses .collapsed at once; closing adds it): the
+     sheet starts slid up so its bottom edge sits just below the bar, where
+     the bar's own glass ended, and settles into place. -50% of the sheet is
+     one panel height; the 9.25rem + inset is the panel's top padding and
+     bottom melt, which stay in view. */
+  .navbar:has(.navbar-toggler:not(.collapsed)) .navbar-collapse.collapsing > .navbar-menu-glass {
+    animation: navbar-glass-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .navbar:has(.navbar-toggler.collapsed) .navbar-collapse.collapsing > .navbar-menu-glass {
+    transform: translateY(calc(-50% + 9.25rem + var(--safe-area-top)));
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.7, 0.2);
+  }
+
+  @keyframes navbar-glass-in {
+    from {
+      transform: translateY(calc(-50% + 9.25rem + var(--safe-area-top)));
+    }
+  }
+
+  /* The links follow just behind the sheet's edge on the way in, and fade
+     out ahead of it on the way out, so none sit crisp over unblurred page */
   .navbar:has(.navbar-toggler:not(.collapsed)) .navbar-collapse.collapsing > .navbar-nav {
-    animation: navbar-links-in 0.35s ease;
+    animation: navbar-links-in 0.26s ease-out 0.09s both;
   }
 
   .navbar:has(.navbar-toggler.collapsed) .navbar-collapse.collapsing > .navbar-nav {
     opacity: 0;
-    transition: opacity 0.2s ease;
+    transform: translateY(-0.35rem);
+    transition:
+      opacity 0.15s ease,
+      transform 0.15s ease;
   }
 
   @keyframes navbar-links-in {
     from {
       opacity: 0;
+      transform: translateY(-0.35rem);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .navbar-collapse.collapsing > .navbar-menu-glass,
+    .navbar-collapse.collapsing > .navbar-nav {
+      animation: none !important;
+      transition: none !important;
     }
   }
 

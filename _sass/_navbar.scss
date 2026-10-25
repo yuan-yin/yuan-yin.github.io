@@ -605,32 +605,40 @@ html[data-theme="dark"] {
     position: static;
   }
 
+  /* The panel's own box is the whole glass sheet: it starts 6rem above the
+     navbar's bottom edge (behind the bar) and ends 2.5rem below the links,
+     with padding putting the links where they belong. Bootstrap clips the
+     panel (overflow: hidden) while it animates its height, so the box must
+     match the sheet — otherwise the clip cuts the sheet into a hard-edged
+     rectangle mid-transition and its soft bottom fade only appears once the
+     animation lands. The padding regions pass taps through to the page. */
   .navbar-collapse {
     position: absolute;
-    top: 100%;
+    top: calc(100% - 6rem - var(--safe-area-top));
     right: 0;
     left: 0;
     z-index: 1031;
-    max-height: calc(100dvh - 5rem - var(--safe-area-top));
-    padding: 0 1rem 0.75rem;
+    max-height: calc(100dvh + 3.5rem);
+    padding: calc(6rem + var(--safe-area-top)) 1rem 3.25rem;
     overflow: visible;
     border-bottom: 0;
     background: transparent;
     box-shadow: none;
+    pointer-events: none;
+
+    > * {
+      pointer-events: auto;
+    }
   }
 
   /* Progressive glass for the unfolded menu: one sheet extending the bar's
-     glass — it reaches up behind the navbar (the panel is the navbar's
-     child, so negative top covers the bar), runs at full blur through the
-     panel, and melts out below it with no hard edge */
+     glass — it covers the navbar, runs at full blur through the links, and
+     melts out below them with no hard edge */
   .navbar-collapse::before,
   .navbar-collapse::after {
     content: "";
     position: absolute;
-    top: calc(-6rem - var(--safe-area-top));
-    right: 0;
-    bottom: -2.5rem;
-    left: 0;
+    inset: 0;
     z-index: -1;
     pointer-events: none;
   }
@@ -673,12 +681,11 @@ html[data-theme="dark"] {
     }
   }
 
-  /* While the menu is fully open its sheet covers the navbar region too,
-     so the bar's own layers switch off — stacking the two systems bands.
-     During the open/close animation the panel clips its pseudos
-     (overflow: hidden), so the bar keeps its glass until .show lands. */
-  .navbar:has(.navbar-collapse.show:not(.collapsing))::before,
-  .navbar:has(.navbar-collapse.show:not(.collapsing))::after {
+  /* While the menu is open or animating, its sheet covers the navbar region
+     too (even at zero height the padding keeps it bar-sized), so the bar's
+     own layers switch off — stacking the two systems bands. */
+  .navbar:has(.navbar-collapse.show, .navbar-collapse.collapsing)::before,
+  .navbar:has(.navbar-collapse.show, .navbar-collapse.collapsing)::after {
     content: none;
   }
 
@@ -693,6 +700,24 @@ html[data-theme="dark"] {
   .navbar-collapse.collapsing {
     position: absolute;
     overflow: hidden;
+  }
+
+  /* Fade the links with the sheet so none sit crisp in its faded tail while
+     it is near bar size: in on opening, out on closing (the toggler flips to
+     .collapsed as soon as closing starts, and opening clears it) */
+  .navbar:has(.navbar-toggler:not(.collapsed)) .navbar-collapse.collapsing > .navbar-nav {
+    animation: navbar-links-in 0.35s ease;
+  }
+
+  .navbar:has(.navbar-toggler.collapsed) .navbar-collapse.collapsing > .navbar-nav {
+    opacity: 0;
+    transition: opacity 0.2s ease;
+  }
+
+  @keyframes navbar-links-in {
+    from {
+      opacity: 0;
+    }
   }
 
   .navbar-toggler {

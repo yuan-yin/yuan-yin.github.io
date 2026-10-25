@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - main
     paths:
       - ".github/workflows/docker-slim.yml"
   workflow_run:

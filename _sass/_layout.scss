@@ -26,10 +26,16 @@ body {
 
 // Ambient backdrop: large soft brand-hue blobs fixed behind the content so the
 // glass cards' backdrop-filter has actual color to refract instead of flat bg.
+// Sized to the large viewport: iOS Safari fits `inset: 0` fixed boxes to the
+// small one, leaving a flat band under its translucent toolbar.
 body::before {
   content: "";
   position: fixed;
-  inset: 0;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 100vh;
+  height: 100lvh;
   z-index: -1;
   pointer-events: none;
   background:

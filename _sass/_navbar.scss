@@ -729,37 +729,41 @@ html[data-theme="dark"] {
   /* Bootstrap still runs its .collapsing phase for its transition duration
      (it falls back to a timer when no transitionend arrives), but the panel
      keeps its full size and stays unclipped: the motion is the sheet's
-     slide below. */
+     slide below. Bootstrap reads the phase's length from this duration. */
   .navbar-collapse.collapsing {
     position: absolute;
     height: auto !important;
     overflow: visible;
+    transition-duration: 0.4s;
   }
 
   /* Opening (the toggler loses .collapsed at once; closing adds it): the
-     sheet starts slid up so its bottom edge sits just below the bar, where
-     the bar's own glass ended, and settles into place. -50% of the sheet is
-     one panel height; the 9.25rem + inset is the panel's top padding and
-     bottom melt, which stay in view. */
+     sheet starts slid up so its bottom edge sits 2.25rem below the bar,
+     where the bar's own glass ends, and settles into place (and closing
+     comes to rest there, so the hand-back to the bar's glass doesn't snap).
+     -50% of the sheet is one panel height; the 8.25rem + inset is the
+     panel's top padding plus that 2.25rem, which stay in view. The easing stays even: a steep
+     ease-out (e.g. 0.2, 0.8, 0.2, 1) covers three quarters of the slide in
+     its first ~60ms, which reads as a jump on the phone. */
   .navbar:has(.navbar-toggler:not(.collapsed)) .navbar-collapse.collapsing > .navbar-menu-glass {
-    animation: navbar-glass-in 0.35s cubic-bezier(0.2, 0.8, 0.2, 1);
+    animation: navbar-glass-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .navbar:has(.navbar-toggler.collapsed) .navbar-collapse.collapsing > .navbar-menu-glass {
-    transform: translateY(calc(-50% + 9.25rem + var(--safe-area-top)));
-    transition: transform 0.3s cubic-bezier(0.4, 0, 0.7, 0.2);
+    transform: translateY(calc(-50% + 8.25rem + var(--safe-area-top)));
+    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   @keyframes navbar-glass-in {
     from {
-      transform: translateY(calc(-50% + 9.25rem + var(--safe-area-top)));
+      transform: translateY(calc(-50% + 8.25rem + var(--safe-area-top)));
     }
   }
 
   /* The links follow just behind the sheet's edge on the way in, and fade
      out ahead of it on the way out, so none sit crisp over unblurred page */
   .navbar:has(.navbar-toggler:not(.collapsed)) .navbar-collapse.collapsing > .navbar-nav {
-    animation: navbar-links-in 0.26s ease-out 0.09s both;
+    animation: navbar-links-in 0.26s ease-out 0.14s both;
   }
 
   .navbar:has(.navbar-toggler.collapsed) .navbar-collapse.collapsing > .navbar-nav {

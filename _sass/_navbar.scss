@@ -734,7 +734,7 @@ html[data-theme="dark"] {
     position: absolute;
     height: auto !important;
     overflow: visible;
-    transition-duration: 0.4s;
+    transition-duration: 0.45s;
   }
 
   /* Opening (the toggler loses .collapsed at once; closing adds it): the
@@ -749,9 +749,12 @@ html[data-theme="dark"] {
     animation: navbar-glass-in 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
+  /* Closing eases in as well as out: with the opening's decelerating curve
+     the sheet left most of the screen in its first ~120ms, so its soft edge
+     seemed to vanish rather than retreat behind the bar */
   .navbar:has(.navbar-toggler.collapsed) .navbar-collapse.collapsing > .navbar-menu-glass {
     transform: translateY(calc(-50% + 8.25rem + var(--safe-area-top)));
-    transition: transform 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.42s cubic-bezier(0.45, 0, 0.55, 1);
   }
 
   @keyframes navbar-glass-in {

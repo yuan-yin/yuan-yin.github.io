@@ -28,7 +28,12 @@
 
 /* iOS-style progressive navbar blur: two stacked backdrop-filter layers
    reaching below the bar, each faded out downward with a gradient mask,
-   so scrolling content melts into the blur with no hard edge. */
+   so scrolling content melts into the blur with no hard edge. The glass
+   holds full strength through the whole bar and melts out only in the
+   2.25rem below it, with the same tint, blur and fade stops as the bottom
+   edge of the phone menu's sheet (.navbar-menu-glass). An earlier profile
+   thinned out from mid-bar, so the bar looked clearer folded than unfolded
+   and the menu's glass visibly changed character as it handed over. */
 .navbar::before,
 .navbar::after {
   content: "";
@@ -52,20 +57,21 @@
     to bottom,
     var(--global-bg-color) 0,
     color-mix(in srgb, var(--global-bg-color) 78%, transparent) 1.25rem,
-    color-mix(in srgb, var(--global-bg-color) 32%, transparent) 55%,
-    transparent 85%
+    color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(100% - 2.75rem),
+    color-mix(in srgb, var(--global-bg-color) 32%, transparent) calc(100% - 1rem),
+    transparent
   );
   -webkit-backdrop-filter: blur(16px) saturate(1.3);
   backdrop-filter: blur(16px) saturate(1.3);
-  -webkit-mask-image: linear-gradient(to bottom, black 45%, transparent 80%);
-  mask-image: linear-gradient(to bottom, black 45%, transparent 80%);
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
+  mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
 }
 
 .navbar::after {
   -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
-  -webkit-mask-image: linear-gradient(to bottom, black 58%, transparent 100%);
-  mask-image: linear-gradient(to bottom, black 58%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
+  mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

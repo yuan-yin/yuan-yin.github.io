@@ -1,5 +1,5 @@
 metadata:
-  last_updated: '2026-10-23'
+  last_updated: '2026-10-28'
 papers:
   ynep174AAAAJ:0EnyYjriUFMC:
     citations: 32
@@ -14,7 +14,7 @@ papers:
     title: 'Physics-aware deep learning and dynamical systems: Hybrid modeling and generalization'
     year: '2023'
   ynep174AAAAJ:7PzlFSSx8tAC:
-    citations: 2
+    citations: 3
     title: 'Pictura: Perspective-View Self-Play at Scale for Driving'
     year: '2026'
   ynep174AAAAJ:8k81kl-MbHgC:
@@ -26,7 +26,7 @@ papers:
     title: 'IPA: An Information-Reconstructive Input Projection Frame-work for Efficient Foundation Model Adaptation'
     year: '2025'
   ynep174AAAAJ:KlAtU1dfN6UC:
-    citations: 45
+    citations: 47
     title: 'Advancing dermatological diagnostics: Interpretable AI for enhanced skin lesion classification'
     year: '2024'
   ynep174AAAAJ:LkGwnXOMwfcC:
@@ -34,7 +34,7 @@ papers:
     title: Exemplars and counterexemplars explanations for skin lesion classifiers
     year: '2022'
   ynep174AAAAJ:QIV2ME_5wuYC:
-    citations: 47
+    citations: 49
     title: Driving on Registers
     year: '2026'
   ynep174AAAAJ:ULOm3_A8WrAC:
@@ -50,7 +50,7 @@ papers:
     title: Time Series Continuous Modeling for Imputation and Forecasting with Implicit Neural Representations
     year: '2023'
   ynep174AAAAJ:WF5omc3nYNoC:
-    citations: 98
+    citations: 99
     title: Generalizing to New Physical Systems via Context-Informed Dynamics Model
     year: '2022'
   ynep174AAAAJ:Y0pCki6q_DkC:
@@ -78,7 +78,7 @@ papers:
     title: Exemplars and counterexemplars explanations for image classifiers, targeting skin lesion labeling
     year: '2021'
   ynep174AAAAJ:hqOjcs7Dif8C:
-    citations: 139
+    citations: 140
     title: 'Operator Learning with Neural Fields: Tackling PDEs on General Geometries'
     year: '2023'
   ynep174AAAAJ:kNdYIx-mwKoC:
@@ -87,7 +87,7 @@ papers:
     year: '2019'
   ynep174AAAAJ:qxL8FJ1GzNcC:
     citations: 3
-    title: 'Ppt: Pretraining with pseudo-labeled trajectories for motion forecasting'
+    title: 'PPT: Pretraining with pseudo-labeled trajectories for motion forecasting'
     year: '2026'
   ynep174AAAAJ:roLk4NBRz8UC:
     citations: 140

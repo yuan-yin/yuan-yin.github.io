@@ -18,7 +18,7 @@ ninja.data = [{
           },
         },{id: "nav-publications",
           title: "Publications",
-          description: "",
+          description: "Papers, preprints, and thesis by Yuan Yin.",
           section: "Navigation",
           handler: () => {
             window.location.href = "/publications/";
@@ -30,28 +30,21 @@ ninja.data = [{
           handler: () => {
             window.location.href = "/repositories/";
           },
-        },{id: "dropdown-talks",
-              title: "Talks",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/talks/";
-              },
-            },{id: "dropdown-teaching",
-              title: "Teaching",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/teaching/";
-              },
-            },{id: "dropdown-blog",
-              title: "Blog",
-              description: "",
-              section: "Dropdown",
-              handler: () => {
-                window.location.href = "/blog/";
-              },
-            },{id: "teachings-introduction-to-algorithmics-algorithmique-i-1",
+        },{id: "nav-talks",
+          title: "Talks",
+          description: "Conference presentations, invited talks, and seminars.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/talks/";
+          },
+        },{id: "nav-teaching",
+          title: "Teaching",
+          description: "Teaching assistant at Sorbonne Université (UFR 919), taught in French.",
+          section: "Navigation",
+          handler: () => {
+            window.location.href = "/teaching/";
+          },
+        },{id: "teachings-introduction-to-algorithmics-algorithmique-i-1",
             title: 'Introduction to Algorithmics (Algorithmique I) (2021)',
             description: "Tutorial instruction for 2nd-year / L2 undergraduate students introducing algorithmic foundations.",
             section: "Teachings",

@@ -91,37 +91,20 @@ layout: default
        (and returns at once when it starts fading out): dropping it the
        moment the sheet starts its fade left the bar's top edge without
        its opaque band mid-fade, a visible seam under the status bar. */
-    html.cv-glass-extended #navbar::before,
-    html.cv-glass-extended #navbar::after {
+    html.cv-glass-extended #navbar .navbar-glass {
       visibility: hidden;
       transition: visibility 0s linear 240ms;
     }
 
     /* The language controls pin 12px below the navbar (see updateToolbarTop),
-       but the bar's glass melts out 2.25rem below it, so the pinned controls
+       but the bar's glass melts out well below it, so the pinned controls
        first sat under that tail and only came out on top once the sheet
-       above took over. On this page the tail stops where the controls
-       start, with the same tint and fade stops measured from its ends. */
-    #navbar::before,
-    #navbar::after {
+       above took over. On this page the box stops where the controls start.
+       The melt keeps a length the blur can fall off over, so it starts up
+       inside the bar instead of being squeezed into those 12px. */
+    #navbar .navbar-glass {
+      --glass-tail: 2.5rem;
       bottom: -12px;
-    }
-
-    #navbar::before {
-      background: linear-gradient(
-        to bottom,
-        var(--global-bg-color) 0,
-        color-mix(in srgb, var(--global-bg-color) 78%, transparent) 1.25rem,
-        color-mix(in srgb, var(--global-bg-color) 32%, transparent) calc(100% - 15px),
-        transparent 100%
-      );
-      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 26px), transparent 100%);
-      mask-image: linear-gradient(to bottom, black calc(100% - 26px), transparent 100%);
-    }
-
-    #navbar::after {
-      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 12px), transparent 100%);
-      mask-image: linear-gradient(to bottom, black calc(100% - 12px), transparent 100%);
     }
 
     .header-toolbar {

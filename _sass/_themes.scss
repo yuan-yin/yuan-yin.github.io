@@ -13,6 +13,11 @@
   --safe-area-top: env(safe-area-inset-top, 0px);
   --navbar-height: 57px;
   --navbar-offset: calc(var(--navbar-height) + var(--safe-area-top));
+  /* The navbar's glass melts out over this distance below the bar. Anything
+     pinned or scrolled to the top of the page has to clear it, or it sits
+     blurred under the glass: use --navbar-clearance, not a fixed offset. */
+  --glass-tail: 3rem;
+  --navbar-clearance: calc(var(--navbar-offset) + var(--glass-tail));
   --global-bg-color: #{v.$white-color};
   --global-code-bg-color: #{v.$code-bg-color-light};
   --global-text-color: #{v.$black-color};

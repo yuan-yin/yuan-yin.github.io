@@ -20,7 +20,7 @@ body {
   h4,
   h5,
   h6 {
-    scroll-margin-top: calc(66px + var(--safe-area-top));
+    scroll-margin-top: var(--navbar-clearance);
   }
 }
 

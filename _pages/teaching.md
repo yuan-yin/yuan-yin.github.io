@@ -2,10 +2,9 @@
 layout: page
 permalink: /teaching/
 title: Teaching
-description:
-nav: false
+description: Teaching assistant at Sorbonne Université (UFR 919), taught in French.
+nav: true
+nav_order: 5
 ---
 
 {% include courses.liquid %}
-
-<script defer src="{{ '/assets/js/sticky-year-groups.js' | relative_url | bust_file_cache }}"></script>

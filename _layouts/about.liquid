@@ -62,7 +62,7 @@ layout: default
                 {% assign profile_image_class = 'img-fluid z-depth-1 rounded' %}
               {% endif %}
               {% capture sizes %}(min-width: {{ site.max_width }}) 260px, (min-width: 768px) 28vw, 68vw{% endcapture %}
-              {% include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt=page.profile.image cache_bust=true %}
+              {% include figure.liquid loading="eager" path=profile_image_path class=profile_image_class sizes=sizes alt="Portrait of Yuan Yin" cache_bust=true %}
             {% endif %}
             {% if page.profile.more_info %}
               <div class="more-info">{{ page.profile.more_info }}</div>
@@ -76,6 +76,26 @@ layout: default
       </div>
     </section>
 
+    <!-- Research themes -->
+    {% if page.research_themes %}
+      <section class="home-research-section" aria-labelledby="home-research-title">
+        <div class="home-news-section__header">
+          <div>
+            <h2 id="home-research-title">Research themes</h2>
+          </div>
+        </div>
+        {% include research_themes.liquid themes=page.research_themes %}
+      </section>
+    {% endif %}
+
+    <!-- Latest posts -->
+    {% if site.latest_posts.enabled %}
+      <h2>
+        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">Latest posts</a>
+      </h2>
+      {% include latest_posts.liquid %}
+    {% endif %}
+
     <!-- News -->
     {% if page.announcements and page.announcements.enabled %}
       <section class="home-news-section" aria-labelledby="home-news-title">
@@ -87,14 +107,6 @@ layout: default
         </div>
         {% include about_news.liquid limit=page.announcements.limit visible=page.announcements.visible roll_step=page.announcements.roll_step roll_interval=page.announcements.roll_interval %}
       </section>
-    {% endif %}
-
-    <!-- Latest posts -->
-    {% if site.latest_posts.enabled %}
-      <h2>
-        <a href="{{ '/blog/' | relative_url }}" style="color: inherit">Latest posts</a>
-      </h2>
-      {% include latest_posts.liquid %}
     {% endif %}
 
     <!-- Selected papers -->

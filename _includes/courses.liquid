@@ -1,54 +1,51 @@
 {% if site.teachings %}
-  <div class="courses" data-floating-year-container>
-    {% assign courses_by_year = site.teachings | sort: 'year' | reverse | group_by: 'year' %}
+  <div class="courses">
+    {% comment %} One card per course, however many years it ran; newest first {% endcomment %}
+    {% assign course_groups = site.teachings | sort: 'year' | reverse | group_by: 'title' %}
+    <div class="course-list">
+      {% for course_group in course_groups %}
+        {% assign course = course_group.items | first %}
+        {% assign course_type_slug = course.type | downcase | replace: '/', '-' | replace: ' ', '-' %}
+        <article class="course-card course-card--{{ course_type_slug }}">
+          <div class="course-card__meta">
+            <span class="course-card__type">{{ course.type }}</span>
+            <span class="course-card__dot" aria-hidden="true"></span>
+            <span class="course-card__term">
+              {%- for run in course_group.items -%}
+                {{- run.term }}
+                {{ run.year -}}
+                {%- unless forloop.last %}, {% endunless -%}
+              {%- endfor -%}
+            </span>
+          </div>
 
-    {% for year_group in courses_by_year %}
-      <section class="course-year-section">
-        <h2 class="year">{{ year_group.name }}</h2>
-        <div class="course-list">
-          {% assign year_courses = year_group.items | sort: 'term' %}
-          {% for course in year_courses %}
-            {% assign course_type_slug = course.type | downcase | replace: '/', '-' | replace: ' ', '-' %}
-            <article class="course-card course-card--{{ course_type_slug }}">
-              <div class="course-card__meta">
-                <span class="course-card__type">{{ course.type }}</span>
-                {% if course.term %}
-                  <span class="course-card__dot" aria-hidden="true"></span>
-                  <span class="course-card__term">{{ course.term }}</span>
-                {% endif %}
-              </div>
+          <h3 class="course-card__title">{{ course.title }}</h3>
 
-              <h3 class="course-card__title">
-                <a href="{{ course.url | relative_url }}">{{ course.title }}</a>
-              </h3>
-
-              {% if course.instructor or course.time %}
-                <div class="course-card__details">
-                  {% if course.instructor %}
-                    <span class="course-card__detail">
-                      <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
-                      <span>{{ course.instructor }}</span>
-                    </span>
-                  {% endif %}
-                  {% if course.time %}
-                    <span class="course-card__detail">
-                      <i class="fa-regular fa-clock" aria-hidden="true"></i>
-                      <span>{{ course.time }}</span>
-                    </span>
-                  {% endif %}
-                </div>
+          {% if course.instructor or course.time %}
+            <div class="course-card__details">
+              {% if course.instructor %}
+                <span class="course-card__detail">
+                  <i class="fa-solid fa-chalkboard-user" aria-hidden="true"></i>
+                  <span>{{ course.instructor }}</span>
+                </span>
               {% endif %}
-
-              {% if course.description %}
-                <div class="course-card__description">
-                  {{ course.description | markdownify }}
-                </div>
+              {% if course.time %}
+                <span class="course-card__detail">
+                  <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                  <span>{{ course.time }}</span>
+                </span>
               {% endif %}
-            </article>
-          {% endfor %}
-        </div>
-      </section>
-    {% endfor %}
+            </div>
+          {% endif %}
+
+          {% if course.description %}
+            <div class="course-card__description">
+              {{ course.description | markdownify }}
+            </div>
+          {% endif %}
+        </article>
+      {% endfor %}
+    </div>
   </div>
 {% else %}
   <p>No courses available yet.</p>

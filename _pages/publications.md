@@ -2,6 +2,7 @@
 layout: page
 permalink: /publications/
 title: Publications
+description: Papers, preprints, and thesis by Yuan Yin.
 nav: true
 nav_order: 2
 hide_hero: true

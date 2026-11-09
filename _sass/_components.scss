@@ -501,17 +501,43 @@ html[data-theme="dark"] {
   }
 }
 
-.repo-card__link {
+.repo-card__body {
   display: flex;
   flex-direction: column;
   min-height: 100%;
   padding: 1.1rem;
+}
+
+.repo-card__link {
+  min-width: 0;
   color: var(--global-text-color);
+
+  // The whole card opens the repository
+  &::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
 
   &:hover,
   &:focus-visible {
     color: var(--global-text-color);
     text-decoration: none;
+  }
+}
+
+// Sits above the card-wide link so it opens the paper instead
+.repo-card__paper {
+  position: relative;
+  z-index: 1;
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--repo-accent) 45%, transparent);
+  text-underline-offset: 0.2em;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--repo-accent);
+    text-decoration-color: currentColor;
   }
 }
 

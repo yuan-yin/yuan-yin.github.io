@@ -4,39 +4,59 @@ github_users:
 repo_description_lines_max: 2
 
 github_repos:
+  - name: valeoai/Pictura
+    description: "GPU-accelerated multi-agent driving simulator for perspective-view self-play"
+    paper: yin2026pictura
+    venue: "ECCV EmergingAD 2026 (Oral)"
+  - name: valeoai/TOAD
+    description: "Test-time trajectory optimization for end-to-end driving planners"
+    paper: xu2026toad
+    venue: "Preprint 2026"
   - name: valeoai/DrivoR
-    description: "Driving on Registers"
-    language: Python
+    description: "Transformer-based end-to-end driving with camera-aware register tokens"
+    paper: "kirby2026drivingregisters"
+    venue: "CVPR 2026"
   - name: valeoai/peft-ipa
     description: "Efficient foundation model adaptation with information-reconstructive input projection"
-    language: Python
+    paper: "yin2025ipainformationpreservinginputprojection"
+    venue: "TMLR 2025"
   - name: itsakk/geps
     description: "Boosting generalization in parametric PDE neural solvers through adaptive conditioning"
-    language: Python
+    paper: "koupai2024learn"
+    venue: "NeurIPS 2024"
   - name: valeoai/ReGentS
     description: "Real-world safety-critical driving scenario generation made stable"
-    language: Python
+    paper: "yin2024regents"
+    venue: "ECCV W-CODA 2024"
   - name: 2ailesB/neural-parametric-solver
     description: "Learning a neural solver for parametric PDEs to enhance physics-informed methods"
-    language: Python
+    paper: "leboudec2025learning"
+    venue: "ICLR 2025"
   - name: EtienneLnr/TimeFlow
     description: "Time-series continuous modeling for imputation and forecasting"
-    language: Python
+    paper: "DBLP:journals/corr/abs-2306-05880"
+    venue: "TMLR 2024"
   - name: mkirchmeyer/DINo
     description: "Continuous PDE dynamics forecasting with implicit neural representations"
-    language: Python
+    paper: "YinKFRG2022"
+    venue: "ICLR 2023"
   - name: LouisSerrano/coral
     description: "Operator learning with neural fields for PDEs on general geometries"
-    language: Python
+    paper: "serrano2023operator"
+    venue: "NeurIPS 2023"
   - name: yuan-yin/CoDA
     description: "Context-informed dynamics adaptation for generalizing to new physical systems"
-    language: Python
+    paper: "KirchmeyerYDBRG2022"
+    venue: "ICML 2022"
   - name: yuan-yin/LEADS
     description: "Learning dynamical systems that generalize across environments"
-    language: Python
+    paper: "Yin2021LEADS"
+    venue: "NeurIPS 2021"
   - name: yuan-yin/APHYNITY
     description: "Augmenting physical models with deep networks for complex dynamics forecasting"
-    language: Python
+    paper: "Yin2021Aphynity"
+    venue: "ICLR 2021"
   - name: yuan-yin/UNISST
     description: "Unsupervised inpainting for occluded sea surface temperature sequences"
-    language: Python
+    paper: "yin2019"
+    venue: "Climate Informatics 2019"

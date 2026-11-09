@@ -1,69 +1,6 @@
 ---
 ---
-{% assign venue_source = entry.venues | default: '' | replace: ';', '|' %}
-{% assign venue_labels = venue_source | split: '|' %}
-{% assign venue_label = venue_labels | first | strip %}
-{% assign primary_kind = site.data.venues[venue_label].kind | default: 'other' | downcase | strip %}
-{% if primary_kind == blank %}
-  {% assign primary_kind = 'other' %}
-{% endif %}
-{% assign venue_key = venue_label %}
-
-{% assign venue_color = '' %}
-{% if site.data.venues[venue_key].color != blank %}
-  {% assign venue_color = site.data.venues[venue_key].color %}
-{% endif %}
-{% if venue_color == blank %}
-  {% case primary_kind %}
-    {% when 'journal' %}
-      {% assign venue_color = '#0f766e' %}
-    {% when 'conference' %}
-      {% assign venue_color = '#7c3aed' %}
-    {% when 'workshop' %}
-      {% assign venue_color = '#ea580c' %}
-    {% when 'thesis' %}
-      {% assign venue_color = '#475569' %}
-    {% when 'preprint' %}
-      {% assign venue_color = '#64748b' %}
-    {% else %}
-      {% assign venue_color = '#9678b6' %}
-  {% endcase %}
-{% endif %}
-{% capture venue_gradient -%}
-  linear-gradient(135deg
-  {%- for venue_name_raw in venue_labels -%}
-    {%- assign venue_name = venue_name_raw | strip -%}
-    {%- assign venue_chip_color = '' -%}
-    {%- if site.data.venues[venue_name].color != blank -%}
-      {%- assign venue_chip_color = site.data.venues[venue_name].color -%}
-    {%- endif -%}
-    {%- if venue_chip_color == blank -%}
-      {%- assign chip_kind = site.data.venues[venue_name].kind | downcase | strip -%}
-      {%- if chip_kind == blank -%}
-        {%- assign chip_kind = primary_kind -%}
-      {%- endif -%}
-      {%- case chip_kind -%}
-        {%- when 'journal' -%}
-          {%- assign venue_chip_color = '#0f766e' -%}
-        {%- when 'conference' -%}
-          {%- assign venue_chip_color = '#7c3aed' -%}
-        {%- when 'workshop' -%}
-          {%- assign venue_chip_color = '#ea580c' -%}
-        {%- when 'thesis' -%}
-          {%- assign venue_chip_color = '#475569' -%}
-        {%- when 'preprint' -%}
-          {%- assign venue_chip_color = '#64748b' -%}
-        {%- else -%}
-          {%- assign venue_chip_color = venue_color -%}
-      {%- endcase -%}
-    {%- endif -%}
-    , {{ venue_chip_color }}
-  {%- endfor -%}
-  {%- if venue_labels.size == 1 -%}
-    , {{ venue_color }}
-  {%- endif -%}
-  )
-{%- endcapture %}
+{% include publication_venue.liquid %}
 {% assign has_publication_media = false %}
 {% if site.enable_publication_thumbnails and entry.preview %}
   {% assign has_publication_media = true %}
@@ -72,56 +9,12 @@
 <div
   class="publication-card publication-card--{{ primary_kind }}{% unless has_publication_media %} publication-card--no-media{% endunless %}"
   style="--pub-accent: {{ venue_color }};"
+  data-topics="{{ entry.topics }}"
 >
   <!-- Entry bib key -->
   <div id="{{ entry.key }}" class="publication-card__body">
     <div class="publication-card__meta">
-      {%- if entry.venues -%}
-        <div
-          class="badge rounded-pill publication-card__venue publication-card__venue--merged"
-          style="--venue-accent: {{ venue_color }}; --venue-gradient: {{ venue_gradient | strip }};"
-        >
-          {%- for venue_name_raw in venue_labels -%}
-            {% assign venue_name = venue_name_raw | strip %}
-            {% assign item_kind = site.data.venues[venue_name].kind | default: primary_kind | downcase | strip %}
-            {% assign item_color = site.data.venues[venue_name].color %}
-            {% if item_color == blank %}
-              {% case item_kind %}
-                {% when 'journal' %}
-                  {% assign item_color = '#0f766e' %}
-                {% when 'conference' %}
-                  {% assign item_color = '#7c3aed' %}
-                {% when 'workshop' %}
-                  {% assign item_color = '#ea580c' %}
-                {% when 'thesis' %}
-                  {% assign item_color = '#475569' %}
-                {% when 'preprint' %}
-                  {% assign item_color = '#64748b' %}
-                {% else %}
-                  {% assign item_color = venue_color %}
-              {% endcase %}
-            {% endif %}
-            {%- if venue_name != blank -%}
-              <span class="publication-card__venue-item" style="--venue-item-accent: {{ item_color }};">
-                {% unless item_kind == 'preprint' and venue_name == 'Preprint' %}
-                  <span class="publication-card__type">{{ item_kind | capitalize }}</span>
-                  <span class="publication-card__dot" aria-hidden="true"></span>
-                {% endunless %}
-                {% if site.data.venues[venue_name].url %}
-                  <a class="publication-card__venue-name" href="{{ site.data.venues[venue_name].url }}">{{ venue_name }}</a>
-                {% else %}
-                  <span class="publication-card__venue-name">{{ venue_name }}</span>
-                {% endif %}
-              </span>
-              {% unless forloop.last -%}
-                <span class="publication-card__venue-chip-separator" aria-hidden="true">+</span>
-              {%- endunless %}
-            {%- endif -%}
-          {%- endfor -%}
-        </div>
-      {% else %}
-        <span class="publication-card__type">{{ primary_kind | capitalize }}</span>
-      {% endif %}
+      {{ venue_chip }}
     </div>
     <!-- Title -->
     <div class="title">{{ entry.title }}</div>
@@ -267,16 +160,23 @@
   {% if has_publication_media %}
     <div class="publication-card__media">
       {% if entry.preview contains '://' %}
-        <img class="preview publication-card__preview" src="{{ entry.preview }}" alt="{{ entry.preview }}" loading="lazy" decoding="async">
+        <img
+          class="preview publication-card__preview"
+          src="{{ entry.preview }}"
+          alt="Figure from {{ entry.title | strip_html | escape }}"
+          loading="lazy"
+          decoding="async"
+        >
       {% else %}
         {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
+        {% capture preview_alt %}Figure from {{ entry.title | strip_html | escape }}{% endcapture %}
         {%
           include figure.liquid
           loading="lazy"
           path=entry_path
           class="preview publication-card__preview"
           sizes="(max-width: 767.98px) 18rem, 190px"
-          alt=entry.preview
+          alt=preview_alt
         %}
       {% endif %}
     </div>
@@ -303,24 +203,25 @@
           <span>DOI</span>
         </a>
       {% endif %}
-      {% if entry.arxiv %}
-        <a href="http://arxiv.org/abs/{{ entry.arxiv }}" class="btn btn-sm z-depth-0" role="button">
-          <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
-          <span>arXiv</span>
-        </a>
-      {% endif %}
+      {% comment %} When the PDF button already opens arXiv, a second arXiv button adds nothing {% endcomment %}
+      {% unless entry.pdf contains 'arxiv.org' %}
+        {% if entry.arxiv %}
+          <a href="http://arxiv.org/abs/{{ entry.arxiv }}" class="btn btn-sm z-depth-0" role="button">
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            <span>arXiv</span>
+          </a>
+        {% endif %}
+      {% endunless %}
       {% if entry.hal %}
         <a href="https://hal.science/{{ entry.hal }}" class="btn btn-sm z-depth-0" role="button">
           <i class="ai ai-hal" aria-hidden="true"></i>
           <span>HAL</span>
         </a>
       {% endif %}
-      {% if entry.bibtex_show %}
-        <a class="bibtex btn btn-sm z-depth-0" role="button">
-          <i class="fa-solid fa-quote-right" aria-hidden="true"></i>
-          <span>Bib</span>
-        </a>
-      {% endif %}
+      <a class="bibtex btn btn-sm z-depth-0" role="button">
+        <i class="fa-solid fa-quote-right" aria-hidden="true"></i>
+        <span>Bib</span>
+      </a>
       {% if entry.html %}
         {% if entry.html contains '://' %}
           <a href="{{ entry.html }}" class="btn btn-sm z-depth-0" role="button">
@@ -574,14 +475,12 @@
       </div>
     {% endif %}
 
-    {% if entry.bibtex_show %}
-      <!-- Hidden bibtex block -->
-      <div class="bibtex hidden">
-        {% highlight bibtex %}
-        {{- entry.bibtex | hideCustomBibtex -}}
-        {% endhighlight %}
-      </div>
-    {% endif %}
+    <!-- Hidden bibtex block -->
+    <div class="bibtex hidden">
+      {% highlight bibtex %}
+      {{- entry.bibtex | hideCustomBibtex -}}
+      {% endhighlight %}
+    </div>
 
     {% if entry.video and site.enable_video_embedding %}
       <!-- Hidden video block -->

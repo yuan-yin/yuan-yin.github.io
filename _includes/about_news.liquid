@@ -10,7 +10,6 @@
     data-carousel-items=".about-news-card__item"
     data-carousel-interval="{{ roll_interval }}"
     data-carousel-per-page="{{ visible }}"
-    data-carousel-uniform-height="false"
   >
     <div
       class="about-news-card__viewport"
@@ -20,7 +19,7 @@
       <ol class="about-news-card__list">
         {% for item in news limit: news_limit %}
           {% assign news_type = item.type | default: 'default' %}
-          <li class="about-news-card__item">
+          <li class="about-news-card__item about-news-card__item--{{ news_type }}">
             <time class="about-news-card__date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: '%b %e, %Y' }}</time>
             <span class="about-news-card__icon news-icon news-icon--{{ news_type }}" aria-hidden="true">
               {% case item.type %}
@@ -49,7 +48,7 @@
         {% endfor %}
       </ol>
     </div>
-    <div class="about-selected-publications__dots about-news-card__dots" aria-label="Latest news controls" data-carousel-dots></div>
+    <div class="about-selected-publications__dots" aria-label="Latest news controls" data-carousel-dots></div>
   </div>
   <script defer src="{{ '/assets/js/selected-publications-carousel.js' | relative_url | bust_file_cache }}"></script>
 {% else %}

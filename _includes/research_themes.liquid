@@ -1,0 +1,15 @@
+<ul class="home-research-card">
+  {% for theme in include.themes %}
+    <li class="home-research-card__theme">
+      <h3 class="home-research-card__title">{{ theme.title }}</h3>
+      <p class="home-research-card__description">{{ theme.description }}</p>
+      <ul class="home-research-card__papers" aria-label="Key papers on {{ theme.title | downcase }}">
+        {% for paper in theme.papers %}
+          <li>
+            <a href="{{ '/publications/' | relative_url }}#{{ paper.key }}">{{ paper.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>

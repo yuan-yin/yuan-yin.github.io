@@ -9,16 +9,16 @@ document.addEventListener("DOMContentLoaded", function () {
     return body != null && body.id.toLowerCase().indexOf(searchTerm.toLowerCase()) !== -1;
   };
 
+  // Research theme chosen with the chips, on top of the text filter
+  let activeTopic = "";
+
   const filterItems = (searchTerm) => {
     document.querySelectorAll(".bibliography, .unloaded").forEach((element) => element.classList.remove("unloaded"));
 
     // highlight-search-term
     if (CSS.highlights) {
       const nonMatchingElements = highlightSearchTerm({ search: searchTerm, selector: ".bibliography > li" });
-      if (nonMatchingElements == null) {
-        return;
-      }
-      nonMatchingElements.forEach((element) => {
+      (nonMatchingElements ?? []).forEach((element) => {
         if (matchesBibKey(element, searchTerm)) {
           return;
         }
@@ -29,6 +29,15 @@ document.addEventListener("DOMContentLoaded", function () {
       document.querySelectorAll(".bibliography > li").forEach((element, index) => {
         const text = element.innerText.toLowerCase();
         if (text.indexOf(searchTerm) == -1 && !matchesBibKey(element, searchTerm)) {
+          element.classList.add("unloaded");
+        }
+      });
+    }
+
+    if (activeTopic) {
+      document.querySelectorAll(".bibliography > li").forEach((element) => {
+        const topics = element.querySelector(".publication-card")?.dataset.topics ?? "";
+        if (!topics.split("|").includes(activeTopic)) {
           element.classList.add("unloaded");
         }
       });
@@ -80,7 +89,7 @@ document.addEventListener("DOMContentLoaded", function () {
     filterRoot.classList.toggle("pub-filter--active", active);
     listRoot?.classList.toggle("publications--filtering", active);
     if (fieldClearBtn) fieldClearBtn.hidden = !active;
-    if (countEl) countEl.textContent = active ? `${visible} of ${items.length}` : "";
+    if (countEl) countEl.textContent = active || activeTopic ? `${visible} of ${items.length}` : "";
     if (emptyEl) emptyEl.hidden = !active || visible > 0;
     if (emptyTermEl) emptyTermEl.textContent = searchTerm.trim();
   };
@@ -121,6 +130,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   document.querySelectorAll("[data-pub-filter-clear]").forEach((button) => {
     button.addEventListener("click", () => clearFilter({ focus: true }));
+  });
+
+  const topicChips = Array.from(document.querySelectorAll("[data-pub-topic]"));
+  topicChips.forEach((chip) => {
+    chip.addEventListener("click", () => {
+      activeTopic = chip.dataset.pubTopic;
+      topicChips.forEach((other) => other.setAttribute("aria-pressed", String(other === chip)));
+      applyFilter(input.value);
+    });
   });
 
   input.addEventListener("keydown", (event) => {

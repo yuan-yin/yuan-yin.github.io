@@ -16,7 +16,7 @@
 
     <h3 class="talk-card__title">{{ talk.title }}</h3>
 
-    {%- if talk.description and talk.papers == null %}
+    {%- if talk.description %}
       <p class="talk-card__description">{{ talk.description }}</p>
     {%- endif %}
 
@@ -33,21 +33,11 @@
     {%- endif %}
 
     <div class="links">
-      {%- if talk.papers %}
-        {%- for paper in talk.papers %}
-          <a href="{{ '/publications/' | relative_url }}#{{ paper.key }}" class="btn btn-sm z-depth-0 talk-card__paper" role="button">
-            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
-            <span>{{ paper.label | default: 'Paper' }}</span>
-          </a>
-        {%- endfor %}
-        {%- if talk.site or talk.slides or talk.video %}
-          <span class="talk-card__links-divider" aria-hidden="true"></span>
-        {%- endif %}
-      {%- endif %}
-      {%- if talk.site %}
-        <a href="{{ talk.site }}" class="btn btn-sm z-depth-0" role="button">
-          <i class="fa-solid fa-link" aria-hidden="true"></i>
-          <span>Site</span>
+      {%- comment %} Watch and read links first: they are what a visitor came for {%- endcomment %}
+      {%- if talk.video %}
+        <a href="{{ talk.video }}" class="btn btn-sm z-depth-0" role="button">
+          <i class="fa-solid fa-circle-play" aria-hidden="true"></i>
+          <span>Video</span>
         </a>
       {%- endif %}
       {%- if talk.slides %}
@@ -63,10 +53,21 @@
           </a>
         {%- endif %}
       {%- endif %}
-      {%- if talk.video %}
-        <a href="{{ talk.video }}" class="btn btn-sm z-depth-0" role="button">
-          <i class="fa-solid fa-circle-play" aria-hidden="true"></i>
-          <span>Video</span>
+      {%- if talk.papers %}
+        {%- for paper in talk.papers %}
+          <a href="{{ '/publications/' | relative_url }}#{{ paper.key }}" class="btn btn-sm z-depth-0 talk-card__paper" role="button">
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            <span>{{ paper.label | default: 'Paper' }}</span>
+          </a>
+        {%- endfor %}
+        {%- if talk.site %}
+          <span class="talk-card__links-divider" aria-hidden="true"></span>
+        {%- endif %}
+      {%- endif %}
+      {%- if talk.site %}
+        <a href="{{ talk.site }}" class="btn btn-sm z-depth-0" role="button">
+          <i class="fa-solid fa-link" aria-hidden="true"></i>
+          <span>Site</span>
         </a>
       {%- endif %}
     </div>

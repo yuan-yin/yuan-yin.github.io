@@ -1,49 +1,52 @@
 <div class="news">
   {% if site.news != blank %}
-    {% assign news_size = site.news | size %}
-    <div
-      class="news-list"
-      {% if include.limit and page.announcements.scrollable and news_size > 3 %}
-        style="max-height: 30vh"
-      {% endif %}
-    >
-      {% assign news = site.news | reverse %}
-      {% if include.limit and page.announcements.limit %}
-        {% assign news_limit = page.announcements.limit %}
-      {% else %}
-        {% assign news_limit = news_size %}
-      {% endif %}
-      <ol class="news-list__items">
-        {% for item in news limit: news_limit %}
-          {% assign news_type = item.type | default: 'default' %}
-          <li class="news-list__item">
-            <time class="news-list__date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: '%b %e, %Y' }}</time>
-            <span class="news-list__icon news-icon news-icon--{{ news_type }}" aria-hidden="true">
-              {% case item.type %}
-                {% when 'life' %}
-                  <i class="fa-solid fa-seedling"></i>
-                {% when 'talk' %}
-                  <i class="fa-solid fa-chalkboard-user"></i>
-                {% when 'publication' %}
-                  <i class="fa-solid fa-book"></i>
-                {% when 'award' %}
-                  <i class="fa-solid fa-award"></i>
-                {% when 'people' %}
-                  <i class="fa-solid fa-user-plus"></i>
-                {% when 'alert' %}
-                  <i class="fa-solid fa-bell"></i>
-              {% endcase %}
-            </span>
-            <div class="news-list__content">
-              {% if item.inline %}
-                {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
-              {% else %}
-                <a class="news-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
-              {% endif %}
-            </div>
-          </li>
-        {% endfor %}
-      </ol>
+    <div class="filter-chips" role="group" aria-label="Filter news by type" data-news-filters>
+      <button type="button" class="filter-chip" data-news-type="" aria-pressed="true">All</button>
+      <button type="button" class="filter-chip" data-news-type="publication" aria-pressed="false">Publications</button>
+      <button type="button" class="filter-chip" data-news-type="talk" aria-pressed="false">Talks</button>
+      <button type="button" class="filter-chip" data-news-type="award" aria-pressed="false">Awards</button>
+      <button type="button" class="filter-chip" data-news-type="people" aria-pressed="false">People</button>
+      <button type="button" class="filter-chip" data-news-type="life" aria-pressed="false">Life</button>
+    </div>
+
+    <div class="news-list" data-floating-year-container>
+      {% assign news_by_year = site.news | reverse | group_by_exp: 'item', "item.date | date: '%Y'" %}
+      {% for year_group in news_by_year %}
+        <section class="course-year-section" data-news-year>
+          <h2 class="year">{{ year_group.name }}</h2>
+          <ol class="news-list__items">
+            {% for item in year_group.items %}
+              {% assign news_type = item.type | default: 'default' %}
+              <li class="news-list__item" data-news-item="{{ news_type }}">
+                <time class="news-list__date" datetime="{{ item.date | date_to_xmlschema }}">{{ item.date | date: '%b %e' }}</time>
+                <span class="news-list__icon news-icon news-icon--{{ news_type }}" aria-hidden="true">
+                  {% case item.type %}
+                    {% when 'life' %}
+                      <i class="fa-solid fa-seedling"></i>
+                    {% when 'talk' %}
+                      <i class="fa-solid fa-chalkboard-user"></i>
+                    {% when 'publication' %}
+                      <i class="fa-solid fa-book"></i>
+                    {% when 'award' %}
+                      <i class="fa-solid fa-award"></i>
+                    {% when 'people' %}
+                      <i class="fa-solid fa-user-plus"></i>
+                    {% when 'alert' %}
+                      <i class="fa-solid fa-bell"></i>
+                  {% endcase %}
+                </span>
+                <div class="news-list__content">
+                  {% if item.inline %}
+                    {{ item.content | remove: '<p>' | remove: '</p>' | emojify }}
+                  {% else %}
+                    <a class="news-title" href="{{ item.url | relative_url }}">{{ item.title }}</a>
+                  {% endif %}
+                </div>
+              </li>
+            {% endfor %}
+          </ol>
+        </section>
+      {% endfor %}
     </div>
   {% else %}
     <p class="news-list__empty">No news so far...</p>

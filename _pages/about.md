@@ -18,6 +18,39 @@ selected_papers_display:
   roll_interval: 9000 # milliseconds between automatic rolls
 social: true  # includes social icons at the bottom of the page
 
+research_themes:
+  - title: Model adaptation
+    description: Fine-tuning large pretrained models with few trainable parameters, and making learned models generalize to unseen conditions.
+    papers:
+      - key: yin2025ipainformationpreservinginputprojection
+        label: IPA
+      - key: koupai2024learn
+        label: GEPS
+      - key: KirchmeyerYDBRG2022
+        label: CoDA
+      - key: Yin2021LEADS
+        label: LEADS
+  - title: Learning physical dynamics
+    description: Combining physical models with deep networks, and forecasting PDEs continuously across space and time.
+    papers:
+      - key: Yin2021Aphynity
+        label: APHYNITY
+      - key: YinKFRG2022
+        label: DINo
+      - key: serrano2023operator
+        label: CORAL
+  - title: Autonomous driving
+    description: Motion forecasting, end-to-end planning, and simulation for training and stress-testing driving policies.
+    papers:
+      - key: yin2026pictura
+        label: Pictura
+      - key: kirby2026drivingregisters
+        label: DrivoR
+      - key: xu2026ppt
+        label: PPT
+      - key: yin2024regents
+        label: ReGentS
+
 announcements:
   enabled: true # includes a list of news items
   scrollable: true # adds a vertical scroll bar if there are more than 3 news items
@@ -32,11 +65,6 @@ latest_posts:
   limit: # leave blank to include all the blog posts
 ---
 
-My research focuses on machine learning and deep learning for spatiotemporal sequence modeling, simulation, prediction, and analysis of complex behaviors. I also explore methods to extend the generalization of data-driven models, particularly through model adaptation.
+I work on parameter-efficient model adaptation, learning physical dynamics, and autonomous driving. My current research covers perception, motion forecasting, and decision making for self-driving, along with adapting large pretrained models and learning at scale. Across these, I favor methods that exploit the structure of a problem.
 
-<!-- I have explored the following directions in the past few years, with a special emphasis on physical dynamical systems:
-- **physics dynamics modeling** with neural networks,
-- **adaptation and out-of-distribution generalization** of neural networks, and
-- **handling free-form data** and predicting phenomena continuously in time and space.  -->
-
-I defended my [PhD](https://www.theses.fr/2023SORUS161) in June 2023 at [Sorbonne Université](https://www.sorbonne-universite.fr "prev. UPMC (Paris 6)"), under the supervision of Prof. [Patrick Gallinari](https://pages.isir.upmc.fr/gallinari/) and Assoc. Prof. [Nicolas Baskiotis](https://www.isir.upmc.fr/personnel/baskiotis/). Before that, I obtained my BSc in Computer Science from [Beihang University](https://ev.buaa.edu.cn), followed by my MSc in Computer Science from [Université Paris Cité](https://u-paris.fr "prev. Paris-Diderot (Paris 7)") and [Sorbonne Université](https://www.sorbonne-universite.fr "prev. UPMC (Paris 6)").
+I defended my [PhD](https://www.theses.fr/2023SORUS161) on physics-aware deep learning in June 2023 at [Sorbonne Université](https://www.sorbonne-universite.fr "prev. UPMC (Paris 6)"), supervised by Prof. [Patrick Gallinari](https://pages.isir.upmc.fr/gallinari/) and Assoc. Prof. [Nicolas Baskiotis](https://www.isir.upmc.fr/personnel/baskiotis/). I hold a BSc in Computer Science from [Beihang University](https://ev.buaa.edu.cn) and an MSc from [Université Paris Cité](https://u-paris.fr "prev. Paris-Diderot (Paris 7)") and [Sorbonne Université](https://www.sorbonne-universite.fr "prev. UPMC (Paris 6)").

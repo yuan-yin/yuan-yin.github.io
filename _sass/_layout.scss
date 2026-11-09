@@ -314,6 +314,7 @@ body.sticky-bottom-footer {
 .about-hero__intro a,
 .about-hero__copy .desc a,
 .about-news-card__text a,
+.home-research-card__papers a,
 .news-list__content a,
 .talk-card__title a,
 .publication-card__actions .award a,
@@ -823,10 +824,22 @@ html[data-theme="dark"] {
     order: 1;
   }
 
+  // The bio is what phone visitors came for: keep the photo small and drop
+  // its caption so the text starts within the first screen
   .profile.about-hero__profile {
     justify-self: center;
     max-width: 220px;
     order: 2;
+
+    figure {
+      max-width: 9.5rem;
+      margin-right: auto;
+      margin-left: auto;
+    }
+
+    .more-info {
+      display: none;
+    }
   }
 
   .about-hero__intro {
@@ -855,21 +868,10 @@ html[data-theme="dark"] {
       }
     }
   }
-
-  // Full-width thumbnails range from ~70px to ~220px tall here, and every
-  // slide reserves the tallest one's height, leaving a large empty band in
-  // the slides with short figures. Cap them so the slides stay close in size.
-  .publications.about-selected-publications__list ol.bibliography .publication-card__preview {
-    width: auto;
-    max-width: 100%;
-    max-height: 6rem;
-  }
 }
 
-.home-news-section {
-  margin-top: 3rem;
-}
-
+.home-research-section,
+.home-news-section,
 .home-selected-section {
   margin-top: 3rem;
 }
@@ -980,9 +982,10 @@ html[data-theme="dark"] {
 }
 
 .about-news-card {
-  --about-news-row-height: 5.25rem;
   --about-news-visible-count: 1;
+}
 
+.home-research-card {
   position: relative;
   overflow: hidden;
   border: 1px solid color-mix(in srgb, #ffffff 50%, var(--global-divider-color));
@@ -998,58 +1001,122 @@ html[data-theme="dark"] {
   backdrop-filter: blur(18px) saturate(1.14);
 }
 
+.home-research-card {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+.home-research-card__theme {
+  display: flex;
+  flex-direction: column;
+  padding: 1.15rem 1.25rem;
+
+  + .home-research-card__theme {
+    border-left: 1px solid color-mix(in srgb, var(--global-text-color) 8%, transparent);
+  }
+}
+
+.home-research-card__title {
+  margin: 0 0 0.45rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.home-research-card__description {
+  margin: 0 0 0.85rem;
+  font-size: 0.96rem;
+  line-height: 1.5;
+}
+
+.home-research-card__papers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.7rem;
+  // Pin the paper links to the card's bottom so they line up across columns
+  padding: 0;
+  margin: auto 0 0;
+  font-size: 0.92rem;
+  font-weight: 600;
+  list-style: none;
+}
+
+@media (max-width: 767.98px) {
+  .home-research-card {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .home-research-card__theme + .home-research-card__theme {
+    border-top: 1px solid color-mix(in srgb, var(--global-text-color) 8%, transparent);
+    border-left: 0;
+  }
+}
+
 .about-news-card__viewport {
   position: relative;
   // Pre-script estimate; the carousel then sets the active slide's height
-  height: calc(var(--about-news-row-height) * var(--about-news-visible-count));
+  height: 9rem;
   overflow: visible;
   transition: height 220ms ease;
 }
 
 .about-news-card__list {
-  display: grid;
-  gap: 0;
   position: relative;
-  padding: 0.25rem 0 0;
+  display: flex;
+  gap: 1rem;
+  padding: 0;
   margin: 0;
   list-style: none;
 }
 
+// Same format as the compact publication cards, tinted by news type
 .about-news-card__item {
+  --news-accent: var(--news-icon-bg, var(--global-theme-color));
+
   position: absolute;
   inset: 0 auto auto 0;
   display: grid;
-  grid-template-columns: 2.1rem minmax(0, 1fr);
-  gap: 0.35rem 1.05rem;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.55rem 0.6rem;
   align-items: center;
+  align-content: start;
   box-sizing: border-box;
-  width: 100%;
-  // Rows size to their text (one or two clamped lines); the viewport
-  // follows the active slide's total height
-  padding: 0.85rem 1.1rem;
+  // Inactive cards keep a column's width: the carousel measures them to give
+  // every card one height, so rolling the news never moves the papers below
+  width: calc((100% - 2rem) / 3);
+  padding: 0.85rem;
+  border: 1px solid color-mix(in srgb, #ffffff 42%, color-mix(in srgb, var(--news-accent) 24%, var(--global-divider-color)));
+  border-radius: 18px;
+  corner-shape: v.$corner-shape;
+  background:
+    linear-gradient(135deg, color-mix(in srgb, var(--news-accent) 10%, transparent), color-mix(in srgb, var(--news-accent) 4%, transparent)),
+    linear-gradient(145deg, color-mix(in srgb, #ffffff 72%, transparent), color-mix(in srgb, var(--global-card-bg-color) 56%, transparent));
+  box-shadow:
+    0 16px 42px rgba(39, 48, 74, 0.09),
+    inset 0 1px 0 color-mix(in srgb, #ffffff 62%, transparent);
   pointer-events: none;
   visibility: hidden;
   opacity: 0;
   transform: translateY(0.35rem);
-  transition:
-    opacity 180ms ease,
-    transform 180ms ease,
-    visibility 0s linear 180ms;
+  // Outgoing cards leave the row as soon as they deactivate, so fading them
+  // would flash a stack at the left edge; only the incoming cards fade
+  transition: none;
 
   &.is-active {
     position: relative;
+    flex: 1 1 0;
+    width: auto;
+    min-width: 0;
     pointer-events: auto;
     visibility: visible;
     opacity: 1;
     transform: translateY(0);
     transition:
-      opacity 180ms ease,
-      transform 180ms ease,
-      visibility 0s;
-  }
-  // Several rows share a slide: separate them with a hairline
-  &.is-active + &.is-active {
-    border-top: 1px solid color-mix(in srgb, var(--global-text-color) 8%, transparent);
+      opacity 200ms ease,
+      transform 200ms ease;
   }
 }
 
@@ -1066,15 +1133,16 @@ html[data-theme="dark"] {
 }
 
 .about-news-card__icon {
-  grid-row: 1 / span 2;
+  grid-column: 1;
+  grid-row: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2.1rem;
-  height: 2.1rem;
+  width: 1.8rem;
+  height: 1.8rem;
   border-radius: 999px;
   background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
-  font-size: 1rem;
+  font-size: 0.85rem;
 }
 
 .news-icon {
@@ -1092,44 +1160,65 @@ html[data-theme="dark"] {
   }
 }
 
-.news-icon--life {
+.news-icon--life,
+.about-news-card__item--life {
   --news-icon-bg: #2f9e44;
 }
 
-.news-icon--talk {
+.news-icon--talk,
+.about-news-card__item--talk {
   --news-icon-bg: #2563eb;
 }
 
-.news-icon--publication {
+.news-icon--publication,
+.about-news-card__item--publication {
   --news-icon-bg: #9a5b2f;
 }
 
-.news-icon--award {
+.news-icon--award,
+.about-news-card__item--award {
   --news-icon-bg: #ffd84d;
   --news-icon-color: #3f2f00;
 }
 
-.news-icon--people {
+.news-icon--people,
+.about-news-card__item--people {
   --news-icon-bg: #0f766e;
 }
 
-.news-icon--alert {
+.news-icon--alert,
+.about-news-card__item--alert {
   --news-icon-bg: #dc2626;
 }
 
 .about-news-card__text {
-  grid-column: 2;
+  grid-column: 1 / -1;
   grid-row: 2;
-  display: -webkit-box;
-  overflow: hidden;
   min-width: 0;
-  font-size: 1.08rem;
+  font-size: 0.96rem;
   line-height: 1.42;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
 
   p {
     margin: 0;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .about-news-card__viewport {
+    height: calc(7.4rem * var(--about-news-visible-count));
+  }
+
+  .about-news-card__list {
+    flex-direction: column;
+  }
+
+  .about-news-card__item {
+    width: 100%;
+
+    &.is-active {
+      flex: 0 0 auto;
+      width: 100%;
+    }
   }
 }
 
@@ -1137,11 +1226,6 @@ html[data-theme="dark"] {
   margin: 0;
   padding: 0.85rem;
   color: var(--global-text-color-light);
-}
-
-.about-selected-publications__dots.about-news-card__dots {
-  margin: -0.65rem 0 0;
-  padding: 0.8rem 1rem 0.9rem;
 }
 
 .news-list {
@@ -1219,6 +1303,46 @@ html[data-theme="dark"] {
   color: var(--global-text-color-light);
 }
 
+// Filter chips on the publications and news pages
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  margin: 0.85rem 0 0;
+}
+
+.filter-chip {
+  min-height: 2rem;
+  padding: 0.3rem 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--global-theme-color) 32%, var(--global-divider-color));
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--global-theme-color) 6%, transparent);
+  color: var(--global-text-color);
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    background 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease;
+
+  &:hover {
+    border-color: var(--global-theme-color);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--global-theme-color);
+    outline-offset: 2px;
+  }
+
+  &[aria-pressed="true"] {
+    border-color: var(--global-theme-color);
+    background: var(--global-theme-color);
+    color: var(--global-hover-text-color, #ffffff);
+  }
+}
+
 .about-selected-publications {
   margin-top: 0;
 }
@@ -1233,7 +1357,11 @@ html[data-theme="dark"] {
   margin-top: 0;
 
   ol.bibliography {
+    // A slide's cards share a row and split it evenly, so a two-card slide
+    // leaves no empty column
     position: relative;
+    display: flex;
+    gap: 1rem;
     padding: 0;
     margin: 0;
 
@@ -1251,26 +1379,24 @@ html[data-theme="dark"] {
       visibility: hidden;
       opacity: 0;
       transform: translateY(0.35rem);
-      /* Sequential fade: outgoing card clears fully before the incoming one
-         starts, so no text-over-text overlap — overlapping crossfades made
-         low-contrast bits (the venue chip) resolve visibly later than the
-         dark text */
-      transition:
-        opacity 120ms ease,
-        transform 120ms ease,
-        visibility 0s linear 120ms;
+      // Outgoing cards leave the row as soon as they deactivate, so fading them
+      // would flash a full-width stack; only the incoming cards fade
+      transition: none;
     }
 
     > li.is-active {
       position: relative;
+      display: flex;
+      flex: 1 1 0;
+      width: auto;
+      min-width: 0;
       pointer-events: auto;
       visibility: visible;
       opacity: 1;
       transform: translateY(0);
       transition:
-        opacity 170ms ease 130ms,
-        transform 170ms ease 130ms,
-        visibility 0s linear 130ms;
+        opacity 200ms ease,
+        transform 200ms ease;
     }
 
     /* Two fixes for the slide fade: backdrop-filter can't composite while
@@ -1284,23 +1410,132 @@ html[data-theme="dark"] {
       background-color: var(--global-card-bg-color);
     }
 
-    /* With uniform card heights, pin the action buttons to the bottom-left
-       corner: the card grid is [body+media / actions]; giving row 1 the
-       slack keeps the actions row at the bottom on shorter entries */
-    .publication-card {
-      grid-template-rows: 1fr auto;
-    }
-
-    // Several papers share a slide: space them like the publications list
-    > li.is-active + li.is-active {
-      margin-top: 1.15rem;
-    }
-
     /* MDB gives every anchor transition: all .2s — during the slide's
        visibility flip that puts linked text (venue names, authors) on its
        own timeline instead of the card's fade; make links snap with it */
     a {
       transition: none;
+    }
+  }
+}
+
+// Home page card: only what a visitor needs to recognize a paper and open it.
+// The title leads to the full entry on the publications page.
+.publications.about-selected-publications__list ol.bibliography li .publication-card--compact {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.6rem;
+  padding: 0.85rem;
+
+  .publication-card__media {
+    flex: 0 0 auto;
+    height: 6.5rem;
+
+    figure,
+    picture {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+  }
+
+  // White in both themes: most figures are drawn for a white page, and some
+  // have transparent backgrounds with dark labels
+  .publication-card__preview {
+    display: block;
+    height: 100%;
+    max-height: none;
+    background: #ffffff;
+    box-shadow: none;
+    cursor: default;
+  }
+
+  .publication-card__meta {
+    margin-bottom: 0;
+  }
+
+  .publication-card__venue {
+    min-height: 0;
+    padding: 0.18rem 0.55rem;
+    font-size: 0.74rem;
+
+    // Venue names only: "Conference" and "Journal" labels would wrap the chip
+    .publication-card__type,
+    .publication-card__dot {
+      display: none;
+    }
+  }
+
+  .publication-card__year {
+    font-weight: 600;
+    text-transform: none;
+  }
+
+  .title {
+    color: var(--global-text-color);
+    font-size: 1rem;
+    line-height: 1.32;
+
+    &:hover,
+    &:focus-visible {
+      color: var(--global-theme-color);
+      text-decoration: none;
+    }
+  }
+
+  .author {
+    margin-top: 0;
+    color: var(--global-text-color-light);
+    font-size: 0.86rem;
+    line-height: 1.4;
+
+    > em {
+      color: var(--global-text-color);
+    }
+  }
+
+  .publication-card__award {
+    display: flex;
+    gap: 0.4rem;
+    align-items: baseline;
+    font-size: 0.78rem;
+    font-weight: 650;
+    line-height: 1.35;
+
+    i {
+      color: #b45309;
+    }
+  }
+
+  .links {
+    margin-top: auto;
+    padding-top: 0.15rem;
+  }
+}
+
+html[data-theme="dark"] .publications.about-selected-publications__list ol.bibliography li .publication-card--compact .publication-card__award i {
+  color: #ffd84d;
+}
+
+// Phones stack each slide's cards and drop the thumbnails, which would
+// otherwise double the card's height
+@media (max-width: 767.98px) {
+  .publications.about-selected-publications__list ol.bibliography {
+    flex-direction: column;
+
+    > li {
+      width: 100%;
+    }
+
+    > li.is-active {
+      flex: 0 0 auto;
+      width: 100%;
+    }
+
+    li .publication-card--compact .publication-card__media {
+      display: none;
     }
   }
 }
@@ -1348,7 +1583,7 @@ html[data-theme="dark"] {
 
 html[data-theme="dark"] {
   .home-news-section .news .table-responsive,
-  .about-news-card {
+  .home-research-card {
     border-color: color-mix(in srgb, #ffffff 13%, var(--global-divider-color));
     background:
       linear-gradient(145deg, rgba(48, 54, 66, 0.68), rgba(23, 26, 34, 0.44)),
@@ -1363,6 +1598,16 @@ html[data-theme="dark"] {
     background:
       linear-gradient(145deg, rgba(48, 54, 66, 0.66), rgba(23, 26, 34, 0.42)),
       linear-gradient(135deg, rgba(150, 120, 182, 0.15), rgba(17, 133, 254, 0.08)), color-mix(in srgb, var(--global-card-bg-color) 76%, transparent);
+    box-shadow:
+      0 18px 45px rgba(0, 0, 0, 0.24),
+      inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
+  }
+
+  .about-news-card__item {
+    border-color: color-mix(in srgb, var(--news-accent) 24%, color-mix(in srgb, #ffffff 12%, var(--global-divider-color)));
+    background:
+      linear-gradient(135deg, color-mix(in srgb, var(--news-accent) 14%, transparent), color-mix(in srgb, var(--news-accent) 6%, transparent)),
+      linear-gradient(145deg, rgba(48, 54, 66, 0.7), rgba(23, 26, 34, 0.44));
     box-shadow:
       0 18px 45px rgba(0, 0, 0, 0.24),
       inset 0 1px 0 color-mix(in srgb, #ffffff 12%, transparent);
@@ -1396,33 +1641,6 @@ html[data-theme="dark"] {
   .home-news-section .news td {
     padding-right: 0.35rem;
     padding-left: 0.35rem;
-  }
-
-  .about-news-card {
-    --about-news-row-height: 7.4rem;
-  }
-
-  .about-news-card__item {
-    grid-template-columns: 1.8rem minmax(0, 1fr);
-    gap: 0.35rem 0.8rem;
-    padding: 0.9rem 0.85rem;
-  }
-
-  .about-news-card__date {
-    grid-column: 2;
-    white-space: normal;
-  }
-
-  .about-news-card__icon {
-    grid-column: 1;
-    grid-row: 1 / span 2;
-    width: 1.8rem;
-    height: 1.8rem;
-  }
-
-  .about-news-card__text {
-    grid-column: 2;
-    font-size: 1rem;
   }
 
   .news-list__item {

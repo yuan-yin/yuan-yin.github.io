@@ -4,6 +4,7 @@ title: Projects
 permalink: /projects/
 description:
 nav: false
+sitemap: false
 display_categories:
 horizontal: false
 ---

@@ -2,8 +2,9 @@
 layout: page
 title: Talks
 permalink: /talks/
-description:
-nav: false
+description: Conference presentations, invited talks, and seminars.
+nav: true
+nav_order: 4
 ---
 
 <!-- pages/projects.md -->

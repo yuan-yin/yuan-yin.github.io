@@ -1,8 +1,8 @@
 ---
 layout: page
 title:
-nav: true
-nav_order: 6
+nav: false
+sitemap: false
 dropdown: true
 children:
   - title: Talks

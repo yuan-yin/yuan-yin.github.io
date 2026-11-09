@@ -5,15 +5,8 @@
 @use "variables" as v;
 
 .equal-contribution-note {
-  display: inline-flex;
-  align-items: center;
-  padding: 0.3rem 0.75rem;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--global-theme-color) 12%, transparent);
-  // Plain theme color falls just under 4.5:1 on the pill's own lavender tint
-  color: color-mix(in srgb, var(--global-theme-color) 85%, var(--global-text-color));
-  font-size: 1.05rem;
-  font-weight: 700;
+  color: var(--global-text-color-light);
+  font-size: 0.86rem;
 }
 
 .publications {
@@ -317,11 +310,15 @@
         font-size: 0.94rem;
         line-height: 1.55;
 
+        // Co-author links stay dashed but quiet; a full card has up to a dozen
         a {
-          border-bottom: 1px dashed var(--global-theme-color);
+          color: var(--global-text-color);
+          border-bottom: 1px dashed color-mix(in srgb, var(--global-theme-color) 50%, transparent);
 
           &:hover {
+            color: var(--global-theme-color);
             border-bottom-style: solid;
+            border-bottom-color: currentColor;
             text-decoration: none;
           }
         }
@@ -329,6 +326,7 @@
         > em {
           border-bottom: 1px solid;
           font-style: normal;
+          font-weight: 700;
         }
 
         > span.more-authors {

@@ -10,8 +10,8 @@ last_name: Yin
 last_name_alt: 银
 contact_note: >
   Elsewhere online
-description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  Yuan Yin's website
+description: >- # the ">-" folds newlines and drops the trailing one, which would break the Schema.org JSON
+  Yuan Yin is an AI researcher at Valeo.ai working on parameter-efficient model adaptation, learning physical dynamics, and autonomous driving.
 footer_text: >
   Powered by <a href="https://jekyllrb.com/" target="_blank">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
   Hosted by <a href="https://pages.github.com/" target="_blank">GitHub Pages</a>.
@@ -68,9 +68,9 @@ max_width: 930px
 # Open Graph & Schema.org
 # -----------------------------------------------------------------------------
 # Display links to the page with a preview object on social media.
-serve_og_meta: false # Include Open Graph meta tags in the HTML head
-serve_schema_org: false # Include Schema.org in the HTML head
-og_image: # The site-wide (default for all links) Open Graph preview image
+serve_og_meta: true # Include Open Graph meta tags in the HTML head
+serve_schema_org: true # Include Schema.org in the HTML head
+og_image: https://yuan-yin.github.io/assets/img/yuan-yin.jpeg # The site-wide (default for all links) Open Graph preview image
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification
@@ -328,6 +328,12 @@ filtered_bibtex_keywords:
     video,
     venues,
     website,
+    issn,
+    openreview,
+    proceedings,
+    project,
+    publisher_page,
+    topics,
   ]
 
 # Maximum number of authors to be shown for each publication (more authors are visible on click)

@@ -6,6 +6,8 @@
   {% assign repo_forks = include.repository.forks %}
   {% assign repo_updated = include.repository.updated %}
   {% assign repo_url = include.repository.url %}
+  {% assign repo_paper = include.repository.paper %}
+  {% assign repo_venue = include.repository.venue %}
 {% else %}
   {% assign repo_full_name = include.repository %}
 {% endif %}
@@ -22,20 +24,27 @@
 {% assign max_lines = site.data.repositories.repo_description_lines_max | default: 2 %}
 
 <article class="repo-card" style="--repo-description-lines: {{ max_lines }}">
-  <a class="repo-card__link" href="{{ repo_url }}" aria-label="Open {{ repo_full_name }} on GitHub">
+  <div class="repo-card__body">
     <h3 class="repo-card__title">
       <i class="fa-brands fa-github" aria-hidden="true"></i>
-      <span>
+      {% comment %} This link stretches over the whole card; the paper link sits above it {% endcomment %}
+      <a class="repo-card__link" href="{{ repo_url }}" aria-label="Open {{ repo_full_name }} on GitHub">
         <span class="repo-card__owner">{{ repo_owner }}</span>
         <span class="repo-card__slash">/</span>
         <span>{{ repo_name }}</span>
-      </span>
+      </a>
     </h3>
 
     <p class="repo-card__description">{{ repo_description }}</p>
 
     <div class="repo-card__footer">
       <div class="repo-card__stats">
+        {% if repo_venue %}
+          <a class="repo-card__stat repo-card__paper" href="{{ '/publications/' | relative_url }}#{{ repo_paper }}">
+            <i class="fa-solid fa-file-lines" aria-hidden="true"></i>
+            <span>{{ repo_venue }}</span>
+          </a>
+        {% endif %}
         {% if repo_language %}
           <span class="repo-card__stat repo-card__language">
             <span class="repo-card__language-dot" aria-hidden="true"></span>
@@ -66,5 +75,5 @@
         <i class="fa-solid fa-arrow-up-right-from-square"></i>
       </span>
     </div>
-  </a>
+  </div>
 </article>

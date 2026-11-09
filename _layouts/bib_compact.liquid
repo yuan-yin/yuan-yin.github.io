@@ -1,0 +1,109 @@
+---
+---
+{% comment %}
+  Compact publication card for the home page carousel. The full card lives in
+  bib.liquid; the title here links to it on the publications page.
+{% endcomment %}
+{% include publication_venue.liquid %}
+{% assign entry_url = '/publications/' | relative_url | append: '#' | append: entry.key %}
+{% comment %} The thesis title carries its French translation after ". (" {% endcomment %}
+{% assign short_title = entry.title | split: '. (' | first %}
+
+{% comment %}
+  Authors: the first four plus me, the rest folded into "et al." A single
+  leftover name is shown rather than hidden behind "et al."
+{% endcomment %}
+{% assign self_index = -1 %}
+{% for author in entry.author_array %}
+  {% assign author_last_name = author.last | regex_replace: '[*∗†‡§¶‖&^]', '' %}
+  {% if site.scholar.last_name contains author_last_name and site.scholar.first_name contains author.first %}
+    {% assign self_index = forloop.index0 %}
+    {% break %}
+  {% endif %}
+{% endfor %}
+{% assign author_count = entry.author_array | size %}
+{% assign last_index = author_count | minus: 1 %}
+{% assign head_count = 4 %}
+{% assign last_shown = head_count | minus: 1 %}
+{% if self_index > last_shown %}
+  {% assign last_shown = self_index %}
+{% endif %}
+{% assign authors_left = last_index | minus: last_shown %}
+{% if authors_left <= 1 %}
+  {% assign head_count = author_count %}
+  {% assign last_shown = last_index %}
+{% endif %}
+
+<div class="publication-card publication-card--compact" style="--pub-accent: {{ venue_color }};">
+  {% if site.enable_publication_thumbnails and entry.preview %}
+    <div class="publication-card__media">
+      {% assign entry_path = entry.preview | prepend: '/assets/img/publication_preview/' %}
+      {%
+        include figure.liquid
+        loading="lazy"
+        path=entry_path
+        class="preview publication-card__preview"
+        sizes="300px"
+        alt=""
+      %}
+    </div>
+  {% endif %}
+
+  <div class="publication-card__meta">
+    {{ venue_chip }}
+    <span class="publication-card__year">{{ entry.year }}</span>
+  </div>
+
+  <a class="title" href="{{ entry_url }}">{{ short_title }}</a>
+
+  <div class="author">
+    {%- for author in entry.author_array -%}
+      {%- if forloop.index0 < head_count or forloop.index0 == self_index -%}
+        {%- assign author_last_html = author.last | regex_replace: '([*∗†‡§¶‖&^]+)', '<sup>\1</sup>' -%}
+        {%- if forloop.index0 > 0 -%}
+          {%- if forloop.index0 > head_count -%}, …{%- endif -%}
+          ,{{ ' ' }}
+        {%- endif -%}
+        {%- if forloop.index0 == self_index -%}
+          <em>
+            {{- author.first }}
+            {{ author_last_html -}}
+          </em>
+        {%- else -%}
+          {{ author.first }}
+          {{ author_last_html }}
+        {%- endif -%}
+      {%- endif -%}
+    {%- endfor -%}
+    {%- if last_shown < last_index -%}, et al.{%- endif -%}
+  </div>
+
+  {% if entry.award_name %}
+    <div class="publication-card__award">
+      <i class="fa-solid fa-award" aria-hidden="true"></i>
+      <span>{{ entry.award_name }}</span>
+    </div>
+  {% endif %}
+
+  <div class="links">
+    {% if entry.pdf %}
+      {% if entry.pdf contains '://' %}
+        <a href="{{ entry.pdf }}" class="btn btn-sm z-depth-0" role="button">
+          <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+          <span>PDF</span>
+        </a>
+      {% else %}
+        <a href="{{ entry.pdf | prepend: '/assets/pdf/' | relative_url }}" class="btn btn-sm z-depth-0" role="button">
+          <i class="fa-solid fa-file-pdf" aria-hidden="true"></i>
+          <span>PDF</span>
+        </a>
+      {% endif %}
+    {% endif %}
+    {% if entry.code %}
+      <a href="{{ entry.code }}" class="btn btn-sm z-depth-0" role="button">
+        <i class="fa-solid fa-code-branch" aria-hidden="true"></i>
+        <span>Code</span>
+      </a>
+    {% endif %}
+  </div>
+</div>

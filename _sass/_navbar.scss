@@ -2,13 +2,88 @@
  * Navigation bar and header customization
  ******************************************************************************/
 
+@use "sass:list";
 @use "variables" as v;
+
+/* Progressive glass, shared by the bar (.navbar-glass) and the phone menu's
+   sheet (.navbar-menu-glass). A masked backdrop-filter cannot lower its blur
+   radius: at half opacity it shows half the sharp page and half the blurred
+   one, a crisp ghost on a haze. So the falloff is built from many stages an
+   octave apart, each fading out over the one below it, and each pass only
+   softens what the previous one left. Hairlines measured through this stack
+   widen steadily from sharp to full blur; with big jumps (16px -> 4px -> 0)
+   they stayed one pixel wide under a wide haze for the whole melt.
+
+   Stops are fractions of the melt, --glass-tail, measured down from its start
+   to the box's bottom edge: filter, solid until, gone by. */
+$glass-blur-stages: (
+  "blur(16px) saturate(1.3)" 0 0.29,
+  "blur(8px)" 0.125 0.44,
+  "blur(4px)" 0.27 0.58,
+  "blur(2px)" 0.42 0.73,
+  "blur(1px)" 0.56 0.875,
+  "blur(0.5px)" 0.71 1
+);
+
+/* The tint eases out along the melt; a straight ramp has visible knees */
+$glass-tint-stops: (0 78%, 0.12 73%, 0.25 62%, 0.4 45%, 0.55 28%, 0.7 14%, 0.85 5%, 1 0%);
+
+@function glass-stop($fraction) {
+  @return calc(100% - var(--glass-tail) * #{1 - $fraction});
+}
+
+@function glass-tint($stops: $glass-tint-stops) {
+  $gradient: ();
+
+  @each $at, $strength in $stops {
+    $gradient: list.append($gradient, color-mix(in srgb, var(--global-bg-color) $strength, transparent) glass-stop($at), comma);
+  }
+
+  @return $gradient;
+}
+
+/* One <span> per stage plus a last one for the tint. Only the heaviest stage
+   spans the whole box; the rest stop just above the melt, under the solid
+   glass, so a tall sheet doesn't pay for six full-size blurs. */
+@mixin glass-layers {
+  > span {
+    position: absolute;
+    inset: 0;
+  }
+
+  @for $i from 1 through list.length($glass-blur-stages) {
+    $stage: list.nth($glass-blur-stages, $i);
+    $mask: linear-gradient(to bottom, black glass-stop(list.nth($stage, 2)), transparent glass-stop(list.nth($stage, 3)));
+
+    > span:nth-child(#{$i}) {
+      @if $i > 1 {
+        top: glass-stop(-0.5);
+      }
+
+      -webkit-backdrop-filter: #{list.nth($stage, 1)};
+      backdrop-filter: #{list.nth($stage, 1)};
+      -webkit-mask-image: $mask;
+      mask-image: $mask;
+    }
+  }
+}
 
 .navbar {
   box-shadow: none;
   border-bottom: 0;
   background: transparent;
   opacity: 1;
+}
+
+/* Desktop Safari: dragging the page past its top dropped the bar's glass and
+   link labels above the edge of the page while the overscroll lasted. No bounce,
+   no exposed area. Touch screens keep theirs, because on the root this would
+   also turn off pull-to-refresh; the box-shadow below covers them. */
+@media (hover: hover) and (pointer: fine) {
+  html,
+  body {
+    overscroll-behavior-y: none;
+  }
 }
 
 /* iOS edge-to-edge (Safari 26+): grow the bar upward by the status-bar inset
@@ -26,59 +101,42 @@
   box-shadow: 0 -100vh 0 100vh var(--global-bg-color);
 }
 
-/* iOS-style progressive navbar blur: two stacked backdrop-filter layers
-   reaching below the bar, each faded out downward with a gradient mask,
-   so scrolling content melts into the blur with no hard edge. The glass
-   holds full strength through the whole bar and melts out only in the
-   2.25rem below it, with the same tint, blur and fade stops as the bottom
-   edge of the phone menu's sheet (.navbar-menu-glass). An earlier profile
+/* iOS-style progressive navbar blur: the glass reaches below the bar and
+   melts out over --glass-tail, so scrolling content dissolves into it with no
+   hard edge. It holds full strength through the whole bar, with the same
+   profile as the bottom edge of the phone menu's sheet. An earlier version
    thinned out from mid-bar, so the bar looked clearer folded than unfolded
    and the menu's glass visibly changed character as it handed over. */
-.navbar::before,
-.navbar::after {
-  content: "";
+.navbar-glass {
   position: absolute;
   top: 0;
   right: 0;
+  bottom: calc(-1 * var(--glass-tail));
   left: 0;
-  bottom: -2.25rem;
   z-index: -1;
   pointer-events: none;
-}
 
-.navbar::before {
+  @include glass-layers;
+
   /* The first stop is the opaque page background, not 78%: iOS Safari paints
      the status bar as a flat rectangle of the root background-color and gives
      us no way to draw or blur under it, so the only way to hide the join is
      for the bar's own top edge to be that same flat color. It reaches the
      normal glass mix 1.25rem down, which reads as a soft vignette rather than
      the hard seam a translucent first stop produces. */
-  background: linear-gradient(
-    to bottom,
-    var(--global-bg-color) 0,
-    color-mix(in srgb, var(--global-bg-color) 78%, transparent) 1.25rem,
-    color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(100% - 2.75rem),
-    color-mix(in srgb, var(--global-bg-color) 32%, transparent) calc(100% - 1rem),
-    transparent
-  );
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
-  backdrop-filter: blur(16px) saturate(1.3);
-  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
-  mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
-}
-
-.navbar::after {
-  -webkit-backdrop-filter: blur(4px);
-  backdrop-filter: blur(4px);
-  -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
-  mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
+  > span:last-child {
+    background: linear-gradient(
+      to bottom,
+      var(--global-bg-color) 0,
+      color-mix(in srgb, var(--global-bg-color) 78%, transparent) 1.25rem,
+      glass-tint()
+    );
+  }
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .navbar::before {
+  .navbar-glass > span:last-child {
     background: linear-gradient(to bottom, var(--global-bg-color) 55%, transparent);
-    mask-image: none;
-    -webkit-mask-image: none;
   }
 }
 
@@ -661,39 +719,16 @@ html[data-theme="dark"] {
     left: 0;
     z-index: -2;
 
-    &::before,
-    &::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-    }
+    @include glass-layers;
 
-    &::before {
-      background: linear-gradient(
-        to bottom,
-        color-mix(in srgb, var(--global-bg-color) 78%, transparent) calc(100% - 2.75rem),
-        color-mix(in srgb, var(--global-bg-color) 32%, transparent) calc(100% - 1rem),
-        transparent
-      );
-      -webkit-backdrop-filter: blur(16px) saturate(1.3);
-      backdrop-filter: blur(16px) saturate(1.3);
-      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
-      mask-image: linear-gradient(to bottom, black calc(100% - 2.5rem), transparent calc(100% - 0.75rem));
-    }
-
-    &::after {
-      -webkit-backdrop-filter: blur(4px);
-      backdrop-filter: blur(4px);
-      -webkit-mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
-      mask-image: linear-gradient(to bottom, black calc(100% - 1.75rem), transparent 100%);
+    > span:last-child {
+      background: linear-gradient(to bottom, glass-tint());
     }
   }
 
   @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .navbar-menu-glass::before {
+    .navbar-menu-glass > span:last-child {
       background: linear-gradient(to bottom, var(--global-bg-color) calc(100% - 2.5rem), transparent);
-      -webkit-mask-image: none;
-      mask-image: none;
     }
   }
 
@@ -719,9 +754,8 @@ html[data-theme="dark"] {
   /* While the menu is open or animating, its sheet covers the navbar region
      too, so the bar's own layers switch off — stacking the two systems
      bands. */
-  .navbar:has(.navbar-collapse.show, .navbar-collapse.collapsing)::before,
-  .navbar:has(.navbar-collapse.show, .navbar-collapse.collapsing)::after {
-    content: none;
+  .navbar:has(.navbar-collapse.show, .navbar-collapse.collapsing) > .navbar-glass {
+    display: none;
   }
 
   /* The brand and close button ride above the open menu's glass sheet
@@ -744,11 +778,11 @@ html[data-theme="dark"] {
   }
 
   /* Opening (the toggler loses .collapsed at once; closing adds it): the
-     sheet starts slid up so its bottom edge sits 2.25rem below the bar,
-     where the bar's own glass ends, and settles into place (and closing
+     sheet starts slid up so its bottom edge sits one --glass-tail below the
+     bar, where the bar's own glass ends, and settles into place (and closing
      comes to rest there, so the hand-back to the bar's glass doesn't snap).
-     -50% of the sheet is one panel height; the 8.25rem + inset is the
-     panel's top padding plus that 2.25rem, which stay in view. The easing stays even: a steep
+     -50% of the sheet is one panel height; the 6rem + inset is the panel's
+     top padding, which stays in view along with the tail. The easing stays even: a steep
      ease-out (e.g. 0.2, 0.8, 0.2, 1) covers three quarters of the slide in
      its first ~60ms, which reads as a jump on the phone. */
   .navbar:has(.navbar-toggler:not(.collapsed)) .navbar-collapse.collapsing > .navbar-menu-glass {
@@ -759,13 +793,13 @@ html[data-theme="dark"] {
      the sheet left most of the screen in its first ~120ms, so its soft edge
      seemed to vanish rather than retreat behind the bar */
   .navbar:has(.navbar-toggler.collapsed) .navbar-collapse.collapsing > .navbar-menu-glass {
-    transform: translateY(calc(-50% + 8.25rem + var(--safe-area-top)));
+    transform: translateY(calc(-50% + 6rem + var(--glass-tail) + var(--safe-area-top)));
     transition: transform 0.42s cubic-bezier(0.45, 0, 0.55, 1);
   }
 
   @keyframes navbar-glass-in {
     from {
-      transform: translateY(calc(-50% + 8.25rem + var(--safe-area-top)));
+      transform: translateY(calc(-50% + 6rem + var(--glass-tail) + var(--safe-area-top)));
     }
   }
 
@@ -904,5 +938,21 @@ html[data-theme="dark"] {
 
   .toggle-container {
     align-self: center;
+  }
+}
+
+// Small tablets get the full bar but not its width: six links only fit here
+// without the name, whose job the About link covers
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .navbar.navbar-light {
+    .navbar-brand {
+      display: none;
+    }
+
+    .navbar-nav .nav-capsule .nav-link {
+      padding-right: 0.5rem;
+      padding-left: 0.5rem;
+      font-size: 0.85rem;
+    }
   }
 }

@@ -29,7 +29,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const floatingClass = "sticky-year--floating";
   const activeClass = "sticky-year--active";
   const revealDuration = 2000;
-  const markerTop = 88;
+  // The marker sits just below the pill's pin line, which CSS sets from the
+  // navbar's height and the status-bar inset, so read it instead of assuming it.
+  const markerOffset = 15;
   const nearOriginalThreshold = 72;
 
   const isVisible = (container) => {
@@ -44,13 +46,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       sections.forEach((section) => {
         const heading = section.querySelector("h2.bibliography, .year");
+        if (!heading) {
+          return;
+        }
+
+        const markerTop = parseFloat(getComputedStyle(heading).top) + markerOffset;
         const rect = section.getBoundingClientRect();
         const distanceFromOriginalPosition = markerTop - rect.top;
         const isFarFromOriginalPosition = distanceFromOriginalPosition > nearOriginalThreshold;
-        const isFloating = isFarFromOriginalPosition && rect.bottom > markerTop + (heading?.offsetHeight || 0);
+        const isFloating = isFarFromOriginalPosition && rect.bottom > markerTop + heading.offsetHeight;
 
-        heading?.classList.toggle(floatingClass, isFloating);
-        heading?.classList.toggle(activeClass, Boolean(isFloating && showFloatingYears && containerVisible));
+        heading.classList.toggle(floatingClass, isFloating);
+        heading.classList.toggle(activeClass, Boolean(isFloating && showFloatingYears && containerVisible));
       });
     });
   };

@@ -172,8 +172,9 @@ html.transition .pdf-stage *,
 html.transition .cv-toolbar-backdrop,
 html.transition .cv-toolbar-backdrop::before,
 html.transition .cv-toolbar-backdrop::after,
-html.transition .navbar::before,
-html.transition .navbar::after {
+html.transition .navbar-glass,
+html.transition .navbar-glass > span,
+html.transition .navbar-menu-glass > span {
   transition: none !important;
 }
 

@@ -38,7 +38,7 @@
   h2.bibliography {
     position: sticky;
     isolation: isolate;
-    top: 4.55rem;
+    top: calc(var(--navbar-clearance) + 0.6rem);
     z-index: 3;
     display: flex;
     width: fit-content;
@@ -166,7 +166,7 @@
       .publication-card__body {
         min-width: 0;
         // Keep anchored entries (linked from talk cards) clear of the fixed navbar
-        scroll-margin-top: calc(5rem + var(--safe-area-top));
+        scroll-margin-top: var(--navbar-clearance);
       }
 
       .publication-card__actions {
@@ -774,7 +774,7 @@ html[data-theme="dark"] {
 
 .pub-filter--active {
   position: sticky;
-  top: calc(var(--navbar-offset) + 0.4rem);
+  top: var(--navbar-clearance);
   z-index: 8; /* above the cards, under the navbar and its dropdown */
 }
 
@@ -912,7 +912,7 @@ html[data-theme="dark"] {
 
 /* While filtering, the sticky year pills sit below the pinned filter */
 .publications--filtering h2.bibliography {
-  top: calc(4.55rem + 3.2rem);
+  top: calc(var(--navbar-clearance) + 3.8rem); /* the filter's 2.6rem height, plus a gap for the pill's overhang */
 }
 
 .pub-filter-empty {

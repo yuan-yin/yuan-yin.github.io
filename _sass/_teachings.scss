@@ -15,7 +15,7 @@
 .year {
   position: sticky;
   isolation: isolate;
-  top: 4.55rem;
+  top: calc(var(--navbar-clearance) + 0.6rem);
   z-index: 3;
   display: flex;
   width: fit-content;
